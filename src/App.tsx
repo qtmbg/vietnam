@@ -478,11 +478,41 @@ const TRIP_DATA: TripData = {
 // FAMILY PHOTOS MAPPING
 // ------------------------------------------------------------
 const FAMILY_MEMBERS = [
-  { name: "Marilyne", desc: "La Boss", color: "bg-pink-100 text-pink-700", src: "FullSizeRender_Original.jpg", fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200" },
-  { name: "Claudine", desc: "La Sage", color: "bg-indigo-100 text-indigo-700", src: "IMG_4429_Original.jpg", fallback: "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200" },
-  { name: "Nizzar", desc: "Le Pilote", color: "bg-slate-100 text-slate-700", src: "IMG_2022.jpg", fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200" },
-  { name: "Aydann", desc: "L'Ado Cool", color: "bg-blue-100 text-blue-700", src: "IMG_8924_Original.jpg", fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200" },
-  { name: "Milann", desc: "La Mascotte", color: "bg-orange-100 text-orange-700", src: "IMG_8928_Original.jpg", fallback: "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200" },
+  {
+    name: "Marilyne",
+    desc: "La Boss",
+    color: "bg-pink-100 text-pink-700",
+    src: "/family/public:family:marilyne.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
+  },
+  {
+    name: "Claudine",
+    desc: "La Sage",
+    color: "bg-indigo-100 text-indigo-700",
+    src: "/family/public:family:claudine.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
+  },
+  {
+    name: "Nizzar",
+    desc: "Le Pilote",
+    color: "bg-slate-100 text-slate-700",
+    src: "/family/public:family:nizzar.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
+  },
+  {
+    name: "Aydann",
+    desc: "L'Ado Cool",
+    color: "bg-blue-100 text-blue-700",
+    src: "/family/public:family:aydann.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
+  },
+  {
+    name: "Milann",
+    desc: "La Mascotte",
+    color: "bg-orange-100 text-orange-700",
+    src: "/family/public:family:milann.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
+  },
 ];
 
 const CHECKLIST_ITEMS = [
