@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import {
   MapPin, Calendar, Users, Battery, BatteryCharging, BatteryFull,
   Hotel, BookOpen, Utensils, CheckSquare, Printer, Heart, ArrowRight,
