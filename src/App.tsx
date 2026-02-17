@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import {
   MapPin, Calendar, Users, Battery, BatteryCharging, BatteryFull,
   Hotel, BookOpen, Utensils, CheckSquare, Printer, Heart, ArrowRight,
-  Plane, Bus, Ship, Wallet, Info, Sparkles, Star
+  Plane, Bus, Ship
 } from 'lucide-react';
 
 // ------------------------------------------------------------
