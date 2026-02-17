@@ -1,9 +1,24 @@
 import { useState, useEffect, useMemo } from "react";
 import {
-  MapPin, Calendar, Users, Battery, BatteryCharging, BatteryFull,
-  Hotel, BookOpen, Utensils, CheckSquare, Printer, Heart, ArrowRight,
-  Plane
-} from 'lucide-react';
+  MapPin,
+  Calendar,
+  Users,
+  Battery,
+  BatteryCharging,
+  BatteryFull,
+  Hotel,
+  BookOpen,
+  Utensils,
+  CheckSquare,
+  Printer,
+  Heart,
+  ArrowRight,
+  Plane,
+  Wallet,
+  Info,
+  Sparkles,
+  Star,
+} from "lucide-react";
 
 // ------------------------------------------------------------
 // TYPES
