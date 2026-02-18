@@ -911,29 +911,46 @@ const getBaseCity = (raw: string) => {
   if (s.includes("hanoi")) return "Hanoi";
   return first;
 };
+const cityCoverFromLabel = (label: string) => {
+  const city = getBaseCity(label);
+  return CITY_COVERS[city] ?? "/covers/cities/default.jpg";
+};
+
+const momentCoverFromText = (text: string) => {
+  const t = text.toLowerCase();
+
+  if (t.includes("vol") || t.includes("aéroport") || t.includes("airport") || t.includes("flight")) return MOMENT_COVERS.plane;
+  if (t.includes("bateau") || t.includes("croisi") || t.includes("cruise") || t.includes("boat")) return MOMENT_COVERS.boat;
+  if (t.includes("plage") || t.includes("beach")) return MOMENT_COVERS.beach;
+  if (t.includes("marché") || t.includes("marche") || t.includes("market")) return MOMENT_COVERS.market;
+  if (t.includes("café") || t.includes("cafe") || t.includes("coffee")) return MOMENT_COVERS.coffee;
+  if (t.includes("street food") || t.includes("street-food") || t.includes("streetfood") || t.includes("food") || t.includes("dîner") || t.includes("diner")) return MOMENT_COVERS.streetfood;
+  if (t.includes("musée") || t.includes("musee") || t.includes("museum")) return MOMENT_COVERS.museum;
+  if (t.includes("temple")) return MOMENT_COVERS.temple;
+  if (t.includes("massage")) return MOMENT_COVERS.massage;
+  if (t.includes("arrivée") || t.includes("arrivee") || t.includes("check-in") || t.includes("check in") || t.includes("arrival")) return MOMENT_COVERS.arrival;
+  if (t.includes("transfert") || t.includes("transfer") || t.includes("limousine") || t.includes("drive")) return MOMENT_COVERS.transfer;
+  if (t.includes("soir") || t.includes("night") || t.includes("lantern")) return MOMENT_COVERS.night;
+
+  return null;
+};
 
 const dayCoverFromDay = (day: ItineraryDay) => {
   const city = getBaseCity(day.city);
 
-  const text = (day.theme.join(" ") + " " + day.blocks.map((b) => b.plan).join(" ")).toLowerCase();
+  const text =
+    (day.theme?.join(" ") ?? "") +
+    " " +
+    (day.blocks?.map((b) => b.plan).join(" ") ?? "");
 
   // moments d’abord
-  if (text.includes("vol") || text.includes("aéroport") || text.includes("flight")) return ASSETS.covers.moments.plane;
-  if (text.includes("bateau") || text.includes("cruise") || text.includes("boat")) return ASSETS.covers.moments.boat;
-  if (text.includes("plage") || text.includes("beach")) return ASSETS.covers.moments.beach;
-  if (text.includes("marché") || text.includes("market")) return ASSETS.covers.moments.market;
-  if (text.includes("café") || text.includes("coffee")) return ASSETS.covers.moments.coffee;
-  if (text.includes("street food") || text.includes("food") || text.includes("dîner")) return ASSETS.covers.moments.streetfood;
-  if (text.includes("musée") || text.includes("museum")) return ASSETS.covers.moments.museum;
-  if (text.includes("temple")) return ASSETS.covers.moments.temple;
-  if (text.includes("massage")) return ASSETS.covers.moments.massage;
-  if (text.includes("arrivée") || text.includes("check-in")) return ASSETS.covers.moments.arrival;
-  if (text.includes("transfert") || text.includes("limousine") || text.includes("drive")) return ASSETS.covers.moments.transfer;
-  if (text.includes("soir") || text.includes("lantern") || text.includes("night")) return ASSETS.covers.moments.night;
+  const moment = momentCoverFromText(text);
+  if (moment) return moment;
 
-  // sinon cover de ville via label
+  // sinon cover de ville
   return cityCoverFromLabel(city);
 };
+
 
 const googleMapsSearchUrl = (q: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
