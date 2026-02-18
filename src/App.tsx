@@ -912,26 +912,29 @@ const getBaseCity = (raw: string) => {
   return first;
 };
 
-const dayCoverFromDay = (day: { city: string; theme: string[]; blocks: { plan: string }[] }) => {
+const getBaseCity = (raw: string) => raw.split("→")[0].trim();
+
+const dayCoverFromDay = (day: ItineraryDay) => {
   const city = getBaseCity(day.city);
-  const cityCover = CITY_COVERS[city];
 
   const text = (day.theme.join(" ") + " " + day.blocks.map((b) => b.plan).join(" ")).toLowerCase();
 
-  if (text.includes("vol") || text.includes("aéroport") || text.includes("flight")) return MOMENT_COVERS.plane;
-  if (text.includes("bateau") || text.includes("cruise") || text.includes("boat")) return MOMENT_COVERS.boat;
-  if (text.includes("plage") || text.includes("beach")) return MOMENT_COVERS.beach;
-  if (text.includes("marché") || text.includes("market")) return MOMENT_COVERS.market;
-  if (text.includes("café") || text.includes("coffee")) return MOMENT_COVERS.coffee;
-  if (text.includes("street food") || text.includes("food") || text.includes("dîner")) return MOMENT_COVERS.streetfood;
-  if (text.includes("musée") || text.includes("museum")) return MOMENT_COVERS.museum;
-  if (text.includes("temple")) return MOMENT_COVERS.temple;
-  if (text.includes("massage")) return MOMENT_COVERS.massage;
-  if (text.includes("arrivée") || text.includes("check-in")) return MOMENT_COVERS.arrival;
-  if (text.includes("transfert") || text.includes("limousine") || text.includes("drive")) return MOMENT_COVERS.transfer;
-  if (text.includes("soir") || text.includes("lantern") || text.includes("night")) return MOMENT_COVERS.night;
+  // moments d’abord
+  if (text.includes("vol") || text.includes("aéroport") || text.includes("flight")) return ASSETS.covers.moments.plane;
+  if (text.includes("bateau") || text.includes("cruise") || text.includes("boat")) return ASSETS.covers.moments.boat;
+  if (text.includes("plage") || text.includes("beach")) return ASSETS.covers.moments.beach;
+  if (text.includes("marché") || text.includes("market")) return ASSETS.covers.moments.market;
+  if (text.includes("café") || text.includes("coffee")) return ASSETS.covers.moments.coffee;
+  if (text.includes("street food") || text.includes("food") || text.includes("dîner")) return ASSETS.covers.moments.streetfood;
+  if (text.includes("musée") || text.includes("museum")) return ASSETS.covers.moments.museum;
+  if (text.includes("temple")) return ASSETS.covers.moments.temple;
+  if (text.includes("massage")) return ASSETS.covers.moments.massage;
+  if (text.includes("arrivée") || text.includes("check-in")) return ASSETS.covers.moments.arrival;
+  if (text.includes("transfert") || text.includes("limousine") || text.includes("drive")) return ASSETS.covers.moments.transfer;
+  if (text.includes("soir") || text.includes("lantern") || text.includes("night")) return ASSETS.covers.moments.night;
 
-  return cityCover || MOMENT_COVERS.family;
+  // sinon cover de ville via label
+  return cityCoverFromLabel(city);
 };
 
 const googleMapsSearchUrl = (q: string) =>
@@ -1240,7 +1243,7 @@ const DayCardMobile = ({
   kidsMode,
 }: {
   day: ItineraryDay;
-  coverSrc?: string;
+  coverSrc: string;
   mood: Mood;
   isFav: boolean;
   onFav: () => void;
@@ -1248,27 +1251,49 @@ const DayCardMobile = ({
 }) => {
   const isFatigue = mood === "fatigue";
 
-  const fallbackKey = cityKeyFromName(day.city);
-  const fallbackCover = TRIP_DATA.hero_images[fallbackKey]?.src;
-  const cover = coverSrc || fallbackCover;
-
   const shouldHideImpact = (text: string) => {
     const t = text.toLowerCase();
-    return t.includes("prison") || t.includes("war") || t.includes("remnants") || t.includes("impact") || t.includes("fort");
+    return (
+      t.includes("prison") ||
+      t.includes("war") ||
+      t.includes("remnants") ||
+      t.includes("impact") ||
+      t.includes("fort")
+    );
   };
 
   return (
     <div className="relative bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="relative h-28">
-        <img src={cover} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img
+          src={coverSrc}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+          onError={(e) => {
+            // fallback "safe" si un path est faux
+            e.currentTarget.src = ASSETS.covers.sections.itinerary;
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-black/20" />
         <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-3">
           <div>
-            <div className="text-xs text-slate-600 font-semibold">{safeDateLabel(day.date)}</div>
-            <div className="text-lg font-extrabold text-slate-900 leading-tight">{day.city}</div>
+            <div className="text-xs text-slate-600 font-semibold">
+              {safeDateLabel(day.date)}
+            </div>
+            <div className="text-lg font-extrabold text-slate-900 leading-tight">
+              {day.city}
+            </div>
           </div>
-          <button onClick={onFav} className="p-2 rounded-2xl bg-white/80 border border-white shadow">
-            <Heart size={18} className={isFav ? "text-amber-500" : "text-slate-400"} fill={isFav ? "currentColor" : "none"} />
+          <button
+            onClick={onFav}
+            className="p-2 rounded-2xl bg-white/80 border border-white shadow"
+          >
+            <Heart
+              size={18}
+              className={isFav ? "text-amber-500" : "text-slate-400"}
+              fill={isFav ? "currentColor" : "none"}
+            />
           </button>
         </div>
       </div>
@@ -1276,7 +1301,10 @@ const DayCardMobile = ({
       <div className="p-4">
         <div className="flex flex-wrap gap-2 mb-3">
           {day.theme.map((t) => (
-            <span key={t} className="text-[10px] uppercase tracking-wide text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
+            <span
+              key={t}
+              className="text-[10px] uppercase tracking-wide text-slate-500 bg-slate-100 px-2 py-1 rounded-full"
+            >
               {t}
             </span>
           ))}
@@ -1300,12 +1328,20 @@ const DayCardMobile = ({
             }
             return (
               <div key={idx} className="rounded-2xl bg-slate-50 border border-slate-100 p-3">
-                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">{b.label}</div>
+                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">
+                  {b.label}
+                </div>
                 <div className="text-sm text-slate-800 leading-relaxed">{b.plan}</div>
                 {b.links?.length ? (
                   <div className="mt-2 flex flex-wrap gap-2">
                     {b.links.map((l, i) => (
-                      <a key={i} href={l} target="_blank" rel="noreferrer" className="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-xl">
+                      <a
+                        key={i}
+                        href={l}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-xl"
+                      >
                         Lien
                       </a>
                     ))}
@@ -1325,6 +1361,7 @@ const DayCardMobile = ({
     </div>
   );
 };
+
 
 const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
   const link = hotel.booking_url || hotel.official_url;
