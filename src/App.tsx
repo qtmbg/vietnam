@@ -912,8 +912,6 @@ const getBaseCity = (raw: string) => {
   return first;
 };
 
-const getBaseCity = (raw: string) => raw.split("→")[0].trim();
-
 const dayCoverFromDay = (day: ItineraryDay) => {
   const city = getBaseCity(day.city);
 
