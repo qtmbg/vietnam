@@ -1235,11 +1235,7 @@ export default function App() {
   // RENDER
   // ------------------------------------------------------------
   return (
-    return (
-  <div
-    className={`min-h-screen w-full overflow-x-hidden bg-slate-50 text-slate-900 pb-24 print:bg-white print:pb-0 ${
-      cinemaMode ? "" : ""
-    }`}
+  <div className="min-h-screen w-full overflow-x-hidden bg-slate-50 text-slate-900 pb-24 print:bg-white print:pb-0">
   >
       {/* TOP BAR */}
       <header className="sticky top-0 z-50 print:hidden">
@@ -1270,7 +1266,7 @@ export default function App() {
 
       <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
-<main className="mx-auto w-full max-w-[520px] px-4 py-5 space-y-6 sm:max-w-[640px] lg:max-w-[1120px] lg:px-8">
+<main className="mx-auto w-full max-w-[1120px] px-4 py-5 space-y-6">
         {/* HOME */}
         {view === "home" && (
           <div className="space-y-6">
