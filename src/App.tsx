@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Banknote,
   BatteryCharging,
@@ -33,7 +33,6 @@ import {
 // ASSETS (public/)
 // ------------------------------------------------------------
 const ASSETS = {
-  // Family (public/family/)
   family: {
     marilyne: "/family/marilyne.jpg",
     claudine: "/family/claudine.jpg",
@@ -42,7 +41,6 @@ const ASSETS = {
     milann: "/family/milann.jpg",
   },
 
-  // Covers (public/covers/)
   covers: {
     sections: {
       home: "/covers/sections/cover-home.jpg",
@@ -81,7 +79,7 @@ const ASSETS = {
       love: "/covers/moments/love.jpg",
       family: "/covers/moments/family.jpg",
 
-      // exemples spécifiques (si tu les gardes)
+      // spécifiques (optionnel)
       hanoi_train_street: "/covers/moments/hanoi-train-street.jpg",
       hanoi_lan_ong: "/covers/moments/hanoi-lan-ong.jpg",
       hanoi_hoan_kiem: "/covers/moments/hanoi-hoan-kiem.jpg",
@@ -105,7 +103,6 @@ const ASSETS = {
       pont_dragon_da_nang: "/covers/moments/pont-dragon-da-nang.jpg",
     },
 
-    // Hotels (public/covers/hotels/)
     hotels: {
       hanoi_ja_cosmo: "/covers/hotels/hanoi-ja-cosmo.jpg",
       ninh_binh_tam_coc_golden_fields: "/covers/hotels/ninh-binh-tam-coc-golden-fields.jpg",
@@ -119,7 +116,6 @@ const ASSETS = {
   },
 } as const;
 
-// Helper function moved outside of the object
 const cityCoverFromLabel = (label?: string) => {
   const s = (label ?? "").toLowerCase();
 
@@ -128,8 +124,7 @@ const cityCoverFromLabel = (label?: string) => {
   if (s.includes("ha long") || s.includes("halong")) return ASSETS.covers.cities.ha_long;
   if (s.includes("hoi an") || s.includes("hoian")) return ASSETS.covers.cities.hoi_an;
   if (s.includes("da nang") || s.includes("danang")) return ASSETS.covers.cities.da_nang;
-  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon"))
-    return ASSETS.covers.cities.hcmc;
+  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return ASSETS.covers.cities.hcmc;
   if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
 
   return ASSETS.covers.sections.home;
@@ -156,7 +151,7 @@ type HotelItem = {
   official_url?: string;
   why: string;
   note?: string;
-  imageKey?: keyof typeof TRIP_DATA.hero_images;
+  imageKey?: string; // (on garde simple; éviter typeof TRIP_DATA dans les types)
   cover?: string;
 };
 
@@ -415,94 +410,218 @@ const TRIP_DATA: TripData = {
   ],
 
   itinerary_days: [
-    { date: "2026-07-25", city: "Hanoi", theme: ["arrivée", "dîner", "repos"], blocks: [{ label: "Soir", plan: "Arrivée 19:30, transfert, check-in, dîner simple local, dodo." }] },
-    { date: "2026-07-26", city: "Hanoi", theme: ["culture", "street-life", "kids"], blocks: [
-      { label: "Matin", plan: "Old Quarter + lac + cafés." },
-      { label: "Aprem", plan: "Sieste / recharge kids." },
-      { label: "Soir", plan: "Street food + Water Puppet show (ludique & culturel).", links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"] },
-    ]},
-    { date: "2026-07-27", city: "Hanoi", theme: ["histoire", "colonial", "esthétique"], blocks: [
-      { label: "Matin", plan: "Temple of Literature (beau, symbolique)." },
-      { label: "Aprem", plan: "Quartier colonial + Opéra (extérieur / zone)." },
-      { label: "Soir", plan: "Dîner calme, balade." },
-    ]},
-    { date: "2026-07-28", city: "Hanoi → Ninh Binh", theme: ["histoire", "transfert"], blocks: [
-      { label: "Matin", plan: "Hoa Lo Prison (fort, bien fait).", links: ["https://hoalo.vn/EN"] },
-      { label: "Midi", plan: "Départ limousine vers Ninh Binh + check-in." },
-      { label: "Soir", plan: "Rizières au coucher, dîner au calme." },
-    ]},
-    { date: "2026-07-29", city: "Ninh Binh", theme: ["nature", "wow", "boat"], blocks: [
-      { label: "Matin", plan: "Trang An boat tour (spectaculaire UNESCO).", links: ["https://whc.unesco.org/en/list/1438/"] },
-      { label: "Aprem", plan: "Repos + vélo doux si énergie." },
-      { label: "Soir", plan: "Dîner local." },
-    ]},
-    { date: "2026-07-30", city: "Ninh Binh → Ha Long", theme: ["nature", "transfert"], blocks: [
-      { label: "Matin", plan: "Balade courte + café, départ vers Ha Long." },
-      { label: "Aprem", plan: "Check-in Wyndham, repos." },
-      { label: "Soir", plan: "Seafood + promenade." },
-    ]},
-    { date: "2026-07-31", city: "Ha Long", theme: ["unesco", "cruise"], blocks: [
-      { label: "Matin", plan: "Transition douce + port." },
-      { label: "Midi/Soir", plan: "Embarquement Renea Cruise (Baie / karsts).", links: ["https://whc.unesco.org/en/list/672/"] },
-    ]},
-    { date: "2026-08-01", city: "Ha Long → Da Nang → Hoi An", theme: ["transit", "buffer"], blocks: [
-      { label: "Matin", plan: "Fin croisière + transfert HPH." },
-      { label: "Soir", plan: "Vol HPH 19:00 → DAD, transfert Hoi An, dodo." },
-    ]},
-    { date: "2026-08-02", city: "Hoi An", theme: ["plage", "slow", "night"], blocks: [
-      { label: "Matin", plan: "Installation + repos." },
-      { label: "Aprem", plan: "Plage An Bang." },
-      { label: "Soir", plan: "Old Town lanterns + food + flânerie.", links: ["https://whc.unesco.org/en/list/948/"] },
-    ]},
-    { date: "2026-08-03", city: "Hoi An", theme: ["culture", "plage"], blocks: [
-      { label: "Matin", plan: "Old Town tôt (avant chaleur)." },
-      { label: "Aprem", plan: "Plage + sieste." },
-      { label: "Soir", plan: "Marché de nuit, desserts." },
-    ]},
-    { date: "2026-08-04", city: "Hoi An", theme: ["local", "cuisine", "kids"], blocks: [
-      { label: "Matin", plan: "Campagne + cuisine simple (Tra Que vibe)." },
-      { label: "Aprem", plan: "Plage." },
-      { label: "Soir", plan: "Lanternes + slow." },
-    ]},
-    { date: "2026-08-05", city: "Hoi An", theme: ["libre", "famille"], blocks: [{ label: "Journée", plan: "Journée libre: plage, massages, shopping ciblé, repos." }]},
-    { date: "2026-08-06", city: "Hoi An → Da Nang", theme: ["transfert", "city"], blocks: [
-      { label: "Matin", plan: "Plage courte, départ." },
-      { label: "Aprem", plan: "Check-in Da Nang." },
-      { label: "Soir", plan: "Rivière / ponts + dinner." },
-    ]},
-    { date: "2026-08-07", city: "Da Nang", theme: ["culture", "art", "histoire"], blocks: [
-      { label: "Matin", plan: "Cham Museum (immanquable).", links: ["https://chammuseum.vn/"] },
-      { label: "Aprem", plan: "Option Marble Mountains ou repos selon énergie." },
-      { label: "Soir", plan: "Seafood + balade." },
-    ]},
-    { date: "2026-08-08", city: "Da Nang → Whale Island", theme: ["early", "nature"], blocks: [
-      { label: "Très tôt", plan: "Départ aéroport, vol 06:00 DAD→CXR." },
-      { label: "Jour", plan: "Transfert port + bateau vers Whale Island, installation." },
-    ]},
-    { date: "2026-08-09", city: "Whale Island", theme: ["nature", "déconnexion"], blocks: [{ label: "Journée", plan: "Baignade / snorkeling doux, sieste, coucher de soleil." }]},
-    { date: "2026-08-10", city: "Whale Island", theme: ["nature", "slow"], blocks: [{ label: "Journée", plan: "Marche, plage, lecture, ciel étoilé." }]},
-    { date: "2026-08-11", city: "Whale Island", theme: ["slow", "famille"], blocks: [{ label: "Journée", plan: "Dernier jour complet: photos, repos, mer." }]},
-    { date: "2026-08-12", city: "Whale Island → Ho Chi Minh City", theme: ["transit"], blocks: [{ label: "Jour", plan: "Bateau + transfert CXR, vol 16:00 vers SGN, check-in Alagon." }]},
-    { date: "2026-08-13", city: "Ho Chi Minh City", theme: ["colonial", "histoire", "fr-vibe"], blocks: [
-      { label: "Matin", plan: "Post Office + zone coloniale (balade)." },
-      { label: "Aprem", plan: "Independence Palace.", links: ["https://dinhdoclap.gov.vn/en/visiting-hours/"] },
-      { label: "Soir", plan: "Street food + marche." },
-    ]},
-    { date: "2026-08-14", city: "Ho Chi Minh City", theme: ["histoire", "culture"], blocks: [
-      { label: "Matin", plan: "War Remnants Museum (à faire si kids OK).", links: ["https://baotangchungtichchientranh.vn/en"] },
-      { label: "Aprem", plan: "Cholon / temples / ruelles (incarné)." },
-      { label: "Soir", plan: "Dîner simple + retour tôt." },
-    ]},
-    { date: "2026-08-15", city: "Ho Chi Minh City → Hanoi", theme: ["transit"], blocks: [
-      { label: "Matin", plan: "Vol 11:00 SGN→HAN, check-in Ja Cosmo." },
-      { label: "Soir", plan: "Balade douce, shopping ciblé, cafés." },
-    ]},
-    { date: "2026-08-16", city: "Hanoi", theme: ["best-of", "libre"], blocks: [{ label: "Journée", plan: "Best-of selon mood: ruelles / cafés / marchés + lac." }]},
-    { date: "2026-08-17", city: "Hanoi", theme: ["départ"], blocks: [
-      { label: "Matin", plan: "Derniers cadeaux + café." },
-      { label: "Aprem", plan: "Départ aéroport (tampon trafic)." },
-      { label: "Soir", plan: "Vol 19:30." },
-    ]},
+    {
+      date: "2026-07-25",
+      city: "Hanoi",
+      theme: ["arrivée", "dîner", "repos"],
+      blocks: [{ label: "Soir", plan: "Arrivée 19:30, transfert, check-in, dîner simple local, dodo." }],
+    },
+    {
+      date: "2026-07-26",
+      city: "Hanoi",
+      theme: ["culture", "street-life", "kids"],
+      blocks: [
+        { label: "Matin", plan: "Old Quarter + lac + cafés." },
+        { label: "Aprem", plan: "Sieste / recharge kids." },
+        {
+          label: "Soir",
+          plan: "Street food + Water Puppet show (ludique & culturel).",
+          links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"],
+        },
+      ],
+    },
+    {
+      date: "2026-07-27",
+      city: "Hanoi",
+      theme: ["histoire", "colonial", "esthétique"],
+      blocks: [
+        { label: "Matin", plan: "Temple of Literature (beau, symbolique)." },
+        { label: "Aprem", plan: "Quartier colonial + Opéra (extérieur / zone)." },
+        { label: "Soir", plan: "Dîner calme, balade." },
+      ],
+    },
+    {
+      date: "2026-07-28",
+      city: "Hanoi → Ninh Binh",
+      theme: ["histoire", "transfert"],
+      blocks: [
+        { label: "Matin", plan: "Hoa Lo Prison (fort, bien fait).", links: ["https://hoalo.vn/EN"] },
+        { label: "Midi", plan: "Départ limousine vers Ninh Binh + check-in." },
+        { label: "Soir", plan: "Rizières au coucher, dîner au calme." },
+      ],
+    },
+    {
+      date: "2026-07-29",
+      city: "Ninh Binh",
+      theme: ["nature", "wow", "boat"],
+      blocks: [
+        { label: "Matin", plan: "Trang An boat tour (spectaculaire UNESCO).", links: ["https://whc.unesco.org/en/list/1438/"] },
+        { label: "Aprem", plan: "Repos + vélo doux si énergie." },
+        { label: "Soir", plan: "Dîner local." },
+      ],
+    },
+    {
+      date: "2026-07-30",
+      city: "Ninh Binh → Ha Long",
+      theme: ["nature", "transfert"],
+      blocks: [
+        { label: "Matin", plan: "Balade courte + café, départ vers Ha Long." },
+        { label: "Aprem", plan: "Check-in Wyndham, repos." },
+        { label: "Soir", plan: "Seafood + promenade." },
+      ],
+    },
+    {
+      date: "2026-07-31",
+      city: "Ha Long",
+      theme: ["unesco", "cruise"],
+      blocks: [
+        { label: "Matin", plan: "Transition douce + port." },
+        { label: "Midi/Soir", plan: "Embarquement Renea Cruise (Baie / karsts).", links: ["https://whc.unesco.org/en/list/672/"] },
+      ],
+    },
+    {
+      date: "2026-08-01",
+      city: "Ha Long → Da Nang → Hoi An",
+      theme: ["transit", "buffer"],
+      blocks: [
+        { label: "Matin", plan: "Fin croisière + transfert HPH." },
+        { label: "Soir", plan: "Vol HPH 19:00 → DAD, transfert Hoi An, dodo." },
+      ],
+    },
+    {
+      date: "2026-08-02",
+      city: "Hoi An",
+      theme: ["plage", "slow", "night"],
+      blocks: [
+        { label: "Matin", plan: "Installation + repos." },
+        { label: "Aprem", plan: "Plage An Bang." },
+        { label: "Soir", plan: "Old Town lanterns + food + flânerie.", links: ["https://whc.unesco.org/en/list/948/"] },
+      ],
+    },
+    {
+      date: "2026-08-03",
+      city: "Hoi An",
+      theme: ["culture", "plage"],
+      blocks: [
+        { label: "Matin", plan: "Old Town tôt (avant chaleur)." },
+        { label: "Aprem", plan: "Plage + sieste." },
+        { label: "Soir", plan: "Marché de nuit, desserts." },
+      ],
+    },
+    {
+      date: "2026-08-04",
+      city: "Hoi An",
+      theme: ["local", "cuisine", "kids"],
+      blocks: [
+        { label: "Matin", plan: "Campagne + cuisine simple (Tra Que vibe)." },
+        { label: "Aprem", plan: "Plage." },
+        { label: "Soir", plan: "Lanternes + slow." },
+      ],
+    },
+    {
+      date: "2026-08-05",
+      city: "Hoi An",
+      theme: ["libre", "famille"],
+      blocks: [{ label: "Journée", plan: "Journée libre: plage, massages, shopping ciblé, repos." }],
+    },
+    {
+      date: "2026-08-06",
+      city: "Hoi An → Da Nang",
+      theme: ["transfert", "city"],
+      blocks: [
+        { label: "Matin", plan: "Plage courte, départ." },
+        { label: "Aprem", plan: "Check-in Da Nang." },
+        { label: "Soir", plan: "Rivière / ponts + dinner." },
+      ],
+    },
+    {
+      date: "2026-08-07",
+      city: "Da Nang",
+      theme: ["culture", "art", "histoire"],
+      blocks: [
+        { label: "Matin", plan: "Cham Museum (immanquable).", links: ["https://chammuseum.vn/"] },
+        { label: "Aprem", plan: "Option Marble Mountains ou repos selon énergie." },
+        { label: "Soir", plan: "Seafood + balade." },
+      ],
+    },
+    {
+      date: "2026-08-08",
+      city: "Da Nang → Whale Island",
+      theme: ["early", "nature"],
+      blocks: [
+        { label: "Très tôt", plan: "Départ aéroport, vol 06:00 DAD→CXR." },
+        { label: "Jour", plan: "Transfert port + bateau vers Whale Island, installation." },
+      ],
+    },
+    {
+      date: "2026-08-09",
+      city: "Whale Island",
+      theme: ["nature", "déconnexion"],
+      blocks: [{ label: "Journée", plan: "Baignade / snorkeling doux, sieste, coucher de soleil." }],
+    },
+    {
+      date: "2026-08-10",
+      city: "Whale Island",
+      theme: ["nature", "slow"],
+      blocks: [{ label: "Journée", plan: "Marche, plage, lecture, ciel étoilé." }],
+    },
+    {
+      date: "2026-08-11",
+      city: "Whale Island",
+      theme: ["slow", "famille"],
+      blocks: [{ label: "Journée", plan: "Dernier jour complet: photos, repos, mer." }],
+    },
+    {
+      date: "2026-08-12",
+      city: "Whale Island → Ho Chi Minh City",
+      theme: ["transit"],
+      blocks: [{ label: "Jour", plan: "Bateau + transfert CXR, vol 16:00 vers SGN, check-in Alagon." }],
+    },
+    {
+      date: "2026-08-13",
+      city: "Ho Chi Minh City",
+      theme: ["colonial", "histoire", "fr-vibe"],
+      blocks: [
+        { label: "Matin", plan: "Post Office + zone coloniale (balade)." },
+        { label: "Aprem", plan: "Independence Palace.", links: ["https://dinhdoclap.gov.vn/en/visiting-hours/"] },
+        { label: "Soir", plan: "Street food + marche." },
+      ],
+    },
+    {
+      date: "2026-08-14",
+      city: "Ho Chi Minh City",
+      theme: ["histoire", "culture"],
+      blocks: [
+        { label: "Matin", plan: "War Remnants Museum (à faire si kids OK).", links: ["https://baotangchungtichchientranh.vn/en"] },
+        { label: "Aprem", plan: "Cholon / temples / ruelles (incarné)." },
+        { label: "Soir", plan: "Dîner simple + retour tôt." },
+      ],
+    },
+    {
+      date: "2026-08-15",
+      city: "Ho Chi Minh City → Hanoi",
+      theme: ["transit"],
+      blocks: [
+        { label: "Matin", plan: "Vol 11:00 SGN→HAN, check-in Ja Cosmo." },
+        { label: "Soir", plan: "Balade douce, shopping ciblé, cafés." },
+      ],
+    },
+    {
+      date: "2026-08-16",
+      city: "Hanoi",
+      theme: ["best-of", "libre"],
+      blocks: [{ label: "Journée", plan: "Best-of selon mood: ruelles / cafés / marchés + lac." }],
+    },
+    {
+      date: "2026-08-17",
+      city: "Hanoi",
+      theme: ["départ"],
+      blocks: [
+        { label: "Matin", plan: "Derniers cadeaux + café." },
+        { label: "Aprem", plan: "Départ aéroport (tampon trafic)." },
+        { label: "Soir", plan: "Vol 19:30." },
+      ],
+    },
   ],
 
   glossary: [
@@ -520,25 +639,112 @@ const TRIP_DATA: TripData = {
   },
 
   activities: [
-    { id: "hoa-lo", city: "Hanoi", name: "Hoa Lo Prison (ticket)", link: "https://hoalo.vn/EN", cost: { currency: "VND", adult_vnd: 50000, notes: "Prix publié comme 50,000 VND/person (vérifier sur place). Enfants <15 parfois gratuits." }, tags: ["histoire", "impact"] },
-    { id: "water-puppets", city: "Hanoi", name: "Thang Long Water Puppet Show (ticket)", link: "https://nhahatmuaroithanglong.vn/en/ticket-book/", cost: { currency: "VND", adult_vnd: 150000, notes: "Fourchette souvent 100k–200k VND selon placement." }, tags: ["culture", "kids-friendly"] },
-    { id: "trang-an", city: "Ninh Binh", name: "Trang An Boat Tour (ticket)", link: "https://whc.unesco.org/en/list/1438/", cost: { currency: "VND", adult_vnd: 250000, child_vnd: 120000, notes: "Enfant 1m–1.3m: 120k; >1.3m plein tarif; <1m gratuit." }, tags: ["nature", "wow"] },
-    { id: "hoi-an-old-town", city: "Hoi An", name: "Hoi An Ancient Town (ticket)", link: "https://whc.unesco.org/en/list/948/", cost: { currency: "VND", adult_vnd: 120000, child_vnd: 50000, notes: "Ticket international souvent 120k VND; enfants 1–1.4m 50k (selon barème local)." }, tags: ["unesco", "lanternes"] },
-    { id: "cham-museum", city: "Da Nang", name: "Da Nang Museum of Cham Sculpture (ticket)", link: "https://chammuseum.vn/", cost: { currency: "VND", adult_vnd: 60000, child_vnd: 10000, notes: "Souvent 60k adulte, 10k enfant." }, tags: ["art", "histoire"] },
-    { id: "marble-mountains", city: "Da Nang", name: "Marble Mountains (ticket)", link: "https://vietnam.travel/things-to-do/around-marble-mountains", cost: { currency: "VND", adult_vnd: 40000, notes: "Entrée ~40k; ascenseur ~15k si utilisé." }, tags: ["nature", "temples"] },
-    { id: "war-remnants", city: "Ho Chi Minh City", name: "War Remnants Museum (ticket)", link: "https://baotangchungtichchientranh.vn/en", cost: { currency: "VND", adult_vnd: 40000, child_vnd: 20000, notes: "Adultes 40k; enfants (souvent 6–16) 20k; <6 gratuit (variable)." }, tags: ["histoire", "impact"] },
-    { id: "independence-palace", city: "Ho Chi Minh City", name: "Independence Palace (ticket)", link: "https://dinhdoclap.gov.vn/en/visiting-hours/", cost: { currency: "VND", adult_vnd: 80000, child_vnd: 20000, notes: "Billet général publié (exhibit + palace): adultes 80k; enfants 20k." }, tags: ["colonial", "histoire"] },
+    {
+      id: "hoa-lo",
+      city: "Hanoi",
+      name: "Hoa Lo Prison (ticket)",
+      link: "https://hoalo.vn/EN",
+      cost: { currency: "VND", adult_vnd: 50000, notes: "Prix publié comme 50,000 VND/person (vérifier sur place). Enfants <15 parfois gratuits." },
+      tags: ["histoire", "impact"],
+    },
+    {
+      id: "water-puppets",
+      city: "Hanoi",
+      name: "Thang Long Water Puppet Show (ticket)",
+      link: "https://nhahatmuaroithanglong.vn/en/ticket-book/",
+      cost: { currency: "VND", adult_vnd: 150000, notes: "Fourchette souvent 100k–200k VND selon placement." },
+      tags: ["culture", "kids-friendly"],
+    },
+    {
+      id: "trang-an",
+      city: "Ninh Binh",
+      name: "Trang An Boat Tour (ticket)",
+      link: "https://whc.unesco.org/en/list/1438/",
+      cost: { currency: "VND", adult_vnd: 250000, child_vnd: 120000, notes: "Enfant 1m–1.3m: 120k; >1.3m plein tarif; <1m gratuit." },
+      tags: ["nature", "wow"],
+    },
+    {
+      id: "hoi-an-old-town",
+      city: "Hoi An",
+      name: "Hoi An Ancient Town (ticket)",
+      link: "https://whc.unesco.org/en/list/948/",
+      cost: { currency: "VND", adult_vnd: 120000, child_vnd: 50000, notes: "Ticket international souvent 120k VND; enfants 1–1.4m 50k (selon barème local)." },
+      tags: ["unesco", "lanternes"],
+    },
+    {
+      id: "cham-museum",
+      city: "Da Nang",
+      name: "Da Nang Museum of Cham Sculpture (ticket)",
+      link: "https://chammuseum.vn/",
+      cost: { currency: "VND", adult_vnd: 60000, child_vnd: 10000, notes: "Souvent 60k adulte, 10k enfant." },
+      tags: ["art", "histoire"],
+    },
+    {
+      id: "marble-mountains",
+      city: "Da Nang",
+      name: "Marble Mountains (ticket)",
+      link: "https://vietnam.travel/things-to-do/around-marble-mountains",
+      cost: { currency: "VND", adult_vnd: 40000, notes: "Entrée ~40k; ascenseur ~15k si utilisé." },
+      tags: ["nature", "temples"],
+    },
+    {
+      id: "war-remnants",
+      city: "Ho Chi Minh City",
+      name: "War Remnants Museum (ticket)",
+      link: "https://baotangchungtichchientranh.vn/en",
+      cost: { currency: "VND", adult_vnd: 40000, child_vnd: 20000, notes: "Adultes 40k; enfants (souvent 6–16) 20k; <6 gratuit (variable)." },
+      tags: ["histoire", "impact"],
+    },
+    {
+      id: "independence-palace",
+      city: "Ho Chi Minh City",
+      name: "Independence Palace (ticket)",
+      link: "https://dinhdoclap.gov.vn/en/visiting-hours/",
+      cost: { currency: "VND", adult_vnd: 80000, child_vnd: 20000, notes: "Billet général publié (exhibit + palace): adultes 80k; enfants 20k." },
+      tags: ["colonial", "histoire"],
+    },
   ],
 };
+
 // ------------------------------------------------------------
 // FAMILY
 // ------------------------------------------------------------
 const FAMILY_MEMBERS = [
-  { name: "Marilyne", desc: "La Boss", color: "bg-pink-100 text-pink-700", src: "/family/public:family:marilyne.jpg", fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200" },
-  { name: "Claudine", desc: "La Sage", color: "bg-indigo-100 text-indigo-700", src: "/family/public:family:claudine.jpg", fallback: "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200" },
-  { name: "Nizzar", desc: "Le Pilote", color: "bg-slate-100 text-slate-700", src: "/family/public:family:nizzar.jpg", fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200" },
-  { name: "Aydann", desc: "L'Ado", color: "bg-blue-100 text-blue-700", src: "/family/public:family:aydann.jpg", fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200" },
-  { name: "Milann", desc: "La Mascotte", color: "bg-orange-100 text-orange-700", src: "/family/public:family:milann.jpg", fallback: "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200" },
+  {
+    name: "Marilyne",
+    desc: "La Boss",
+    color: "bg-pink-100 text-pink-700",
+    src: ASSETS.family.marilyne,
+    fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
+  },
+  {
+    name: "Claudine",
+    desc: "La Sage",
+    color: "bg-indigo-100 text-indigo-700",
+    src: ASSETS.family.claudine,
+    fallback: "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
+  },
+  {
+    name: "Nizzar",
+    desc: "Le Pilote",
+    color: "bg-slate-100 text-slate-700",
+    src: ASSETS.family.nizzar,
+    fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
+  },
+  {
+    name: "Aydann",
+    desc: "L'Ado",
+    color: "bg-blue-100 text-blue-700",
+    src: ASSETS.family.aydann,
+    fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
+  },
+  {
+    name: "Milann",
+    desc: "La Mascotte",
+    color: "bg-orange-100 text-orange-700",
+    src: ASSETS.family.milann,
+    fallback: "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
+  },
 ];
 
 // ------------------------------------------------------------
@@ -571,10 +777,7 @@ const MONEY_TIPS = [
   "Marchés: je vérifie le prix avant, et je négocie (c’est attendu).",
 ];
 
-const STREET_CROSSING = [
-  "Je marche doucement et régulièrement (sans courir).",
-  "Je garde une trajectoire stable: les scooters m’évitent.",
-];
+const STREET_CROSSING = ["Je marche doucement et régulièrement (sans courir).", "Je garde une trajectoire stable: les scooters m’évitent."];
 
 const FIRST_DAY_HANOI = [
   "Lac de l’Épée Restituée (balade, + animé le week-end)",
@@ -619,8 +822,12 @@ const PHRASEBOOK: PhraseItem[] = [
 // ------------------------------------------------------------
 // HELPERS
 // ------------------------------------------------------------
-const formatUSD = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-const formatVND = (n: number) => n.toLocaleString("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 });
+const formatUSD = (n: number) =>
+  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+
+const formatVND = (n: number) =>
+  n.toLocaleString("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 });
+
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
 const safeDateLabel = (iso: string) =>
@@ -630,7 +837,7 @@ const toISO = (d: Date) => d.toISOString().slice(0, 10);
 
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 
-const cityKeyFromName = (city: string): keyof typeof TRIP_DATA.hero_images => {
+const cityKeyFromName = (city: string) => {
   if (city.includes("Hanoi")) return "Hanoi";
   if (city.includes("Ninh Binh")) return "NinhBinh_TrangAn";
   if (city.includes("Ha Long")) return "HaLong";
@@ -639,11 +846,12 @@ const cityKeyFromName = (city: string): keyof typeof TRIP_DATA.hero_images => {
   if (city.includes("Ho Chi Minh")) return "HCMC";
   return "Hanoi";
 };
+
 // ------------------------------------------------------------
 // COVERS (Focus du jour / Itinéraire)
 // ------------------------------------------------------------
 const CITY_COVERS: Record<string, string> = {
-  "Hanoi": "/covers/cities/hanoi.jpg",
+  Hanoi: "/covers/cities/hanoi.jpg",
   "Ninh Binh": "/covers/cities/ninh-binh.jpg",
   "Ha Long": "/covers/cities/ha-long.jpg",
   "Hoi An": "/covers/cities/hoi-an.jpg",
@@ -671,25 +879,23 @@ const MOMENT_COVERS: Record<string, string> = {
 
 const getBaseCity = (raw: string) => {
   const first = raw.split("→")[0].trim();
-  // normalise
-  if (first.toLowerCase().includes("ninh binh")) return "Ninh Binh";
-  if (first.toLowerCase().includes("ha long")) return "Ha Long";
-  if (first.toLowerCase().includes("hoi an")) return "Hoi An";
-  if (first.toLowerCase().includes("da nang")) return "Da Nang";
-  if (first.toLowerCase().includes("whale")) return "Whale Island";
-  if (first.toLowerCase().includes("ho chi minh")) return "Ho Chi Minh City";
-  if (first.toLowerCase().includes("hanoi")) return "Hanoi";
+  const s = first.toLowerCase();
+  if (s.includes("ninh binh")) return "Ninh Binh";
+  if (s.includes("ha long")) return "Ha Long";
+  if (s.includes("hoi an")) return "Hoi An";
+  if (s.includes("da nang")) return "Da Nang";
+  if (s.includes("whale")) return "Whale Island";
+  if (s.includes("ho chi minh")) return "Ho Chi Minh City";
+  if (s.includes("hanoi")) return "Hanoi";
   return first;
 };
 
-// 👉 la fonction que tu veux
 const dayCoverFromDay = (day: { city: string; theme: string[]; blocks: { plan: string }[] }) => {
   const city = getBaseCity(day.city);
   const cityCover = CITY_COVERS[city];
 
-  const text = (day.theme.join(" ") + " " + day.blocks.map(b => b.plan).join(" ")).toLowerCase();
+  const text = (day.theme.join(" ") + " " + day.blocks.map((b) => b.plan).join(" ")).toLowerCase();
 
-  // priorité aux “moments”
   if (text.includes("vol") || text.includes("aéroport") || text.includes("flight")) return MOMENT_COVERS.plane;
   if (text.includes("bateau") || text.includes("cruise") || text.includes("boat")) return MOMENT_COVERS.boat;
   if (text.includes("plage") || text.includes("beach")) return MOMENT_COVERS.beach;
@@ -703,11 +909,11 @@ const dayCoverFromDay = (day: { city: string; theme: string[]; blocks: { plan: s
   if (text.includes("transfert") || text.includes("limousine") || text.includes("drive")) return MOMENT_COVERS.transfer;
   if (text.includes("soir") || text.includes("lantern") || text.includes("night")) return MOMENT_COVERS.night;
 
-  // fallback ville
   return cityCover || MOMENT_COVERS.family;
 };
 
-const googleMapsSearchUrl = (q: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const googleMapsSearchUrl = (q: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 
 const uniqCitiesByOrder = (days: ItineraryDay[]) => {
   const out: string[] = [];
@@ -721,7 +927,7 @@ const uniqCitiesByOrder = (days: ItineraryDay[]) => {
 // ------------------------------------------------------------
 // UI ATOMS V2
 // ------------------------------------------------------------
-const Glass = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+const Glass = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
   <div className={`bg-white/80 backdrop-blur-md border border-white/60 shadow-sm ${className}`}>{children}</div>
 );
 
@@ -731,7 +937,7 @@ const Pill = ({
   onClick,
 }: {
   active?: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
   onClick?: () => void;
 }) => (
   <button
@@ -754,7 +960,7 @@ const Toggle = ({
   hint,
 }: {
   label: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   value: boolean;
   onChange: (v: boolean) => void;
   hint?: string;
@@ -772,10 +978,15 @@ const Toggle = ({
       className={`w-12 h-7 rounded-full p-1 transition-colors ${value ? "bg-emerald-500" : "bg-slate-200"}`}
       aria-label={label}
     >
-      <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${value ? "translate-x-5" : "translate-x-0"}`} />
+      <div
+        className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${
+          value ? "translate-x-5" : "translate-x-0"
+        }`}
+      />
     </button>
   </div>
 );
+
 const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m: Mood) => void }) => {
   return (
     <div className="flex bg-white/70 backdrop-blur-md rounded-full p-1 border border-white shadow-sm">
@@ -810,7 +1021,10 @@ const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m
 const FamilyStrip = () => (
   <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
     {FAMILY_MEMBERS.map((m) => (
-      <div key={m.name} className="shrink-0 flex items-center gap-3 bg-white rounded-2xl border border-slate-100 px-3 py-2 shadow-sm">
+      <div
+        key={m.name}
+        className="shrink-0 flex items-center gap-3 bg-white rounded-2xl border border-slate-100 px-3 py-2 shadow-sm"
+      >
         <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 ring-2 ring-white">
           <img
             src={m.src}
@@ -831,17 +1045,20 @@ const FamilyStrip = () => (
 const CinemaHero = ({
   onOpenQuick,
   activeCity,
+  coverSrc,
 }: {
   onOpenQuick: () => void;
   activeCity: string;
+  coverSrc?: string;
 }) => {
   const key = cityKeyFromName(activeCity);
   const hero = TRIP_DATA.hero_images[key];
+  const src = coverSrc || hero?.src;
 
   return (
     <div className="relative rounded-3xl overflow-hidden shadow-xl">
       <div className="absolute inset-0">
-        <img src={hero.src} alt="Hero" className="w-full h-full object-cover scale-[1.02]" />
+        <img src={src} alt="Hero" className="w-full h-full object-cover scale-[1.02]" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent" />
         <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#818cf8_0%,transparent_40%),radial-gradient(circle_at_55%_85%,#fbbf24_0%,transparent_35%)]" />
       </div>
@@ -871,7 +1088,7 @@ const CinemaHero = ({
             <span className="block text-emerald-200 font-light mt-2">Family Trip</span>
           </div>
           <p className="mt-3 text-white/90 text-base sm:text-lg">
-            Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d'amour.
+            Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d&apos;amour.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
@@ -917,28 +1134,42 @@ const QuickSheet = ({
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <button onClick={() => (onGoto("tips"), onClose())} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left">
+          <button
+            onClick={() => (onGoto("tips"), onClose())}
+            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
+          >
             <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Lightbulb size={16} className="text-emerald-600" /> Bon à savoir
             </div>
             <div className="text-xs text-slate-500 mt-1">Checklist + argent + règles street</div>
           </button>
 
-          <button onClick={() => (onGoto("guide"), onClose())} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left">
+          <button
+            onClick={() => (onGoto("guide"), onClose())}
+            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
+          >
             <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Utensils size={16} className="text-orange-600" /> Food + logistique
             </div>
             <div className="text-xs text-slate-500 mt-1">Plats cultes + transferts</div>
           </button>
 
-          <a href={googleMapsSearchUrl("Grab Vietnam")} target="_blank" rel="noreferrer" className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left">
+          <a
+            href={googleMapsSearchUrl("Grab Vietnam")}
+            target="_blank"
+            rel="noreferrer"
+            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
+          >
             <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Smartphone size={16} className="text-indigo-600" /> Grab (rappel)
             </div>
             <div className="text-xs text-slate-500 mt-1">Au besoin: recherche rapide</div>
           </a>
 
-          <button onClick={() => (onGoto("budget"), onClose())} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left">
+          <button
+            onClick={() => (onGoto("budget"), onClose())}
+            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
+          >
             <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Wallet size={16} className="text-slate-800" /> Budget
             </div>
@@ -946,9 +1177,7 @@ const QuickSheet = ({
           </button>
         </div>
 
-        <div className="mt-4 text-xs text-slate-500">
-          Astuce: sur mobile, l’écran “Home” sert de hub. Tout le reste = navigation.
-        </div>
+        <div className="mt-4 text-xs text-slate-500">Astuce: sur mobile, l’écran “Home” sert de hub. Tout le reste = navigation.</div>
       </div>
     </div>
   );
@@ -982,22 +1211,25 @@ const CityTimeline = ({
 
 const DayCardMobile = ({
   day,
+  coverSrc,
   mood,
   isFav,
   onFav,
   kidsMode,
 }: {
   day: ItineraryDay;
+  coverSrc?: string;
   mood: Mood;
   isFav: boolean;
   onFav: () => void;
   kidsMode: boolean;
 }) => {
   const isFatigue = mood === "fatigue";
-  const coverKey = cityKeyFromName(day.city);
-  const cover = TRIP_DATA.hero_images[coverKey].src;
 
-  // kidsMode: on masque les blocs “impact” si repérable par mot-clé
+  const fallbackKey = cityKeyFromName(day.city);
+  const fallbackCover = TRIP_DATA.hero_images[fallbackKey]?.src;
+  const cover = coverSrc || fallbackCover;
+
   const shouldHideImpact = (text: string) => {
     const t = text.toLowerCase();
     return t.includes("prison") || t.includes("war") || t.includes("remnants") || t.includes("impact") || t.includes("fort");
@@ -1169,7 +1401,11 @@ const TipsChecklist = () => {
             onClick={() => toggle(item)}
             className="w-full flex items-center gap-3 text-left p-3 rounded-2xl border border-slate-100 bg-slate-50"
           >
-            <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${checked.includes(item) ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"}`}>
+            <div
+              className={`w-5 h-5 rounded-md border flex items-center justify-center ${
+                checked.includes(item) ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"
+              }`}
+            >
               <CheckSquare size={14} />
             </div>
             <div className={`text-sm ${checked.includes(item) ? "text-slate-400 line-through" : "text-slate-800"}`}>{item}</div>
@@ -1180,7 +1416,7 @@ const TipsChecklist = () => {
   );
 };
 
-const SimpleListCard = ({ title, icon, items }: { title: string; icon: React.ReactNode; items: string[] }) => (
+const SimpleListCard = ({ title, icon, items }: { title: string; icon: ReactNode; items: string[] }) => (
   <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
     <div className="flex items-center gap-2 mb-3">
       <div className="text-emerald-700">{icon}</div>
@@ -1247,19 +1483,22 @@ const AirportGlossary = () => (
     </div>
   </div>
 );
+
+// ------------------------------------------------------------
+// APP
+// ------------------------------------------------------------
 export default function App() {
   const [view, setView] = useState<View>("home");
   const [mood, setMood] = useState<Mood>("normal");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [kidsMode, setKidsMode] = useState<boolean>(false);
-  const [cinemaMode, setCinemaMode] = useState<boolean>(true);
+  const [cinemaMode, setCinemaMode] = useState<boolean>(true); // gardé (UI)
   const [quickOpen, setQuickOpen] = useState(false);
 
   const [vndPerUsd, setVndPerUsd] = useState<number>(26000);
   const [includeActivities, setIncludeActivities] = useState<Record<string, boolean>>({});
   const [search, setSearch] = useState("");
 
-  // timeline
   const cities = useMemo(() => uniqCitiesByOrder(TRIP_DATA.itinerary_days), []);
   const [activeCity, setActiveCity] = useState<string>(cities[0] || "Hanoi");
 
@@ -1271,9 +1510,7 @@ export default function App() {
 
   const todayIndex = useMemo(() => {
     const idx = TRIP_DATA.itinerary_days.findIndex((d) => d.date === todayISO);
-    if (idx >= 0) return idx;
-    // si on est hors trip: on met le 1er jour
-    return 0;
+    return idx >= 0 ? idx : 0;
   }, [todayISO]);
 
   const [focusDayIndex, setFocusDayIndex] = useState<number>(todayIndex);
@@ -1334,6 +1571,8 @@ export default function App() {
   const budgetSplit = useMemo(() => {
     const adults = TRIP_DATA.meta.travelers_count.adults;
     const kids = TRIP_DATA.meta.travelers_count.kids;
+
+    // split simple
     const RATIO_FAM = 0.8;
     const RATIO_CLAU = 0.2;
 
@@ -1353,7 +1592,6 @@ export default function App() {
       TRIP_DATA.activities.map((a) => {
         const enabled = includeActivities[a.id] ?? true;
         if (!enabled || !a.cost) return 0;
-        // kidsMode: on retire les activités tag impact (souvent)
         if (kidsMode && a.tags?.includes("impact")) return 0;
         return a.cost.adult_vnd / vndPerUsd;
       })
@@ -1365,7 +1603,7 @@ export default function App() {
         if (!enabled || !a.cost) return 0;
         if (kidsMode && a.tags?.includes("impact")) return 0;
 
-        const famAdults = adults - 1;
+        const famAdults = adults - 1; // Claudine séparée
         const famKids = kids;
         const childVnd = a.cost.child_vnd ?? a.cost.adult_vnd;
         const groupVnd = a.cost.adult_vnd * famAdults + childVnd * famKids;
@@ -1374,8 +1612,20 @@ export default function App() {
     );
 
     return {
-      fam: { hotels: hotelsFam, flights: flightsFam, transfers: transfersFam, activities: famActUsd, total: hotelsFam + flightsFam + transfersFam + famActUsd },
-      claudine: { hotels: hotelsClaudine, flights: flightsClaudine, transfers: transfersClaudine, activities: claudineActUsd, total: hotelsClaudine + flightsClaudine + transfersClaudine + claudineActUsd },
+      fam: {
+        hotels: hotelsFam,
+        flights: flightsFam,
+        transfers: transfersFam,
+        activities: famActUsd,
+        total: hotelsFam + flightsFam + transfersFam + famActUsd,
+      },
+      claudine: {
+        hotels: hotelsClaudine,
+        flights: flightsClaudine,
+        transfers: transfersClaudine,
+        activities: claudineActUsd,
+        total: hotelsClaudine + flightsClaudine + transfersClaudine + claudineActUsd,
+      },
     };
   }, [includeActivities, vndPerUsd, kidsMode]);
 
@@ -1404,9 +1654,6 @@ export default function App() {
     setActiveCity(base);
   };
 
-    // ------------------------------------------------------------
-  // RENDER
-  // ------------------------------------------------------------
   return (
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 pb-24 print:bg-white print:pb-0">
       {/* TOP BAR */}
@@ -1438,16 +1685,14 @@ export default function App() {
 
       <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
-<main className="mx-auto w-full min-w-0 max-w-[560px] px-4 py-5 space-y-6 sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
+      <main className="mx-auto w-full min-w-0 max-w-[560px] px-4 py-5 space-y-6 sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
         {/* HOME */}
         {view === "home" && (
           <div className="space-y-6">
-            <CinemaHero
-  onOpenQuick={() => setQuickOpen(true)}
-  activeCity={activeCity}
-/>
+            <CinemaHero onOpenQuick={() => setQuickOpen(true)} activeCity={activeCity} coverSrc={cityCoverFromLabel(activeCity)} />
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left / Mobile top stack */}
+              {/* Left */}
               <div className="lg:col-span-2 space-y-6 min-w-0">
                 <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
                   <div className="flex items-center justify-between gap-3 mb-3">
@@ -1458,7 +1703,10 @@ export default function App() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => setView("itinerary")} className="px-3 py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold flex items-center gap-2">
+                      <button
+                        onClick={() => setView("itinerary")}
+                        className="px-3 py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold flex items-center gap-2"
+                      >
                         Itinéraire <ChevronRight size={14} />
                       </button>
                     </div>
@@ -1489,7 +1737,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* TODAY / NEXT */}
+                {/* FOCUS DAY */}
                 <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
                   <div className="flex items-center justify-between mb-3">
                     <div>
@@ -1518,13 +1766,14 @@ export default function App() {
                     </button>
                   </div>
 
-<DayCardMobile
-  day={focusDay}
-  mood={mood}
-  isFav={favorites.includes(focusDay.date)}
-  onFav={() => toggleFavorite(focusDay.date)}
-  kidsMode={kidsMode}
-/>
+                  <DayCardMobile
+                    day={focusDay}
+                    coverSrc={dayCoverFromDay(focusDay)}
+                    mood={mood}
+                    isFav={favorites.includes(focusDay.date)}
+                    onFav={() => toggleFavorite(focusDay.date)}
+                    kidsMode={kidsMode}
+                  />
                 </div>
 
                 {/* SEARCH */}
@@ -1556,7 +1805,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Right column */}
+              {/* Right */}
               <div className="lg:col-span-1 space-y-6">
                 <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
                   <div className="text-lg font-extrabold text-slate-900 mb-3">Shortcuts</div>
@@ -1622,22 +1871,22 @@ export default function App() {
               </button>
             </div>
 
-            {/* City filter */}
             <CityTimeline cities={cities} activeCity={activeCity} onSelect={setActiveCity} />
 
             <div className="grid lg:grid-cols-2 gap-5">
               {(search.trim() ? filteredDays : TRIP_DATA.itinerary_days)
                 .filter((d) => (search.trim() ? true : d.city.toLowerCase().includes(activeCity.toLowerCase())))
-         .map((day) => (
-  <DayCardMobile
-    key={day.date}
-    day={day}
-    mood={mood}
-    isFav={favorites.includes(day.date)}
-    onFav={() => toggleFavorite(day.date)}
-    kidsMode={kidsMode}
-  />
-))}
+                .map((day) => (
+                  <DayCardMobile
+                    key={day.date}
+                    day={day}
+                    coverSrc={dayCoverFromDay(day)}
+                    mood={mood}
+                    isFav={favorites.includes(day.date)}
+                    onFav={() => toggleFavorite(day.date)}
+                    kidsMode={kidsMode}
+                  />
+                ))}
             </div>
           </div>
         )}
@@ -1862,6 +2111,7 @@ export default function App() {
                         const c = a.cost;
                         let usd = 0;
                         let vnd = 0;
+
                         if (c) {
                           const child = c.child_vnd ?? c.adult_vnd;
                           vnd = c.adult_vnd * TRIP_DATA.meta.travelers_count.adults + child * TRIP_DATA.meta.travelers_count.kids;
@@ -1876,7 +2126,11 @@ export default function App() {
                                   onClick={() => setIncludeActivities({ ...includeActivities, [a.id]: !(includeActivities[a.id] ?? true) })}
                                   className="flex items-center gap-2 text-left"
                                 >
-                                  <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${enabled ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"}`}>
+                                  <div
+                                    className={`w-5 h-5 rounded-md border flex items-center justify-center ${
+                                      enabled ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"
+                                    }`}
+                                  >
                                     <CheckSquare size={14} />
                                   </div>
                                   <div>
@@ -1888,7 +2142,10 @@ export default function App() {
                                 {a.tags?.length ? (
                                   <div className="mt-2 flex flex-wrap gap-2">
                                     {a.tags.map((t) => (
-                                      <span key={t} className="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-white border border-slate-200 text-slate-600">
+                                      <span
+                                        key={t}
+                                        className="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-white border border-slate-200 text-slate-600"
+                                      >
                                         {t}
                                       </span>
                                     ))}
@@ -1896,7 +2153,12 @@ export default function App() {
                                 ) : null}
 
                                 {a.link ? (
-                                  <a href={a.link} target="_blank" rel="noreferrer" className="inline-block mt-2 text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-2xl">
+                                  <a
+                                    href={a.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-block mt-2 text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-2xl"
+                                  >
                                     Lien
                                   </a>
                                 ) : null}
@@ -1920,11 +2182,7 @@ export default function App() {
                       })}
                   </div>
 
-                  {kidsMode && (
-                    <div className="mt-4 text-xs text-emerald-700 font-semibold">
-                      Mode kids ON: activités “impact” masquées ici.
-                    </div>
-                  )}
+                  {kidsMode && <div className="mt-4 text-xs text-emerald-700 font-semibold">Mode kids ON: activités “impact” masquées ici.</div>}
                 </div>
 
                 <AirportGlossary />
@@ -1933,7 +2191,7 @@ export default function App() {
           </div>
         )}
 
-        {/* CULTURE (optionnel - gardé, mais dans V2 on passe via Guide/Quick) */}
+        {/* CULTURE (optionnel) */}
         {view === "culture" && (
           <div className="space-y-5">
             <div className="flex items-center justify-between gap-3">
