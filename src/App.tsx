@@ -28,128 +28,10 @@ import {
   Shield,
   Search,
 } from "lucide-react";
-// ------------------------------------------------------------
-// ASSET URL (Vite) — works locally + Vercel + base path
-// Put your files in /public/covers/... and /public/family/...
-// ------------------------------------------------------------
-const assetUrl = (path: string) => {
-  const base = (import.meta as any)?.env?.BASE_URL ?? "/";
-  const cleanBase = base.endsWith("/") ? base.slice(0, -1) : base;
-  const cleanPath = path.startsWith("/") ? path : `/${path}`;
-  return `${cleanBase}${cleanPath}`;
-};
 
-// Helper to build public paths safely
-const P = (p: string) => assetUrl(p);
-
-// ------------------------------------------------------------
-// ASSETS (public/)
-// ------------------------------------------------------------
-const ASSETS = {
-  // Family (public/family/)
-  family: {
-    marilyne: P("/family/marilyne.jpg"),
-    claudine: P("/family/claudine.jpg"),
-    nizzar: P("/family/nizzar.jpg"),
-    aydann: P("/family/aydann.jpg"),
-    milann: P("/family/milann.jpg"),
-  },
-
-  // Covers (public/covers/)
-  covers: {
-    sections: {
-      home: P("/covers/sections/cover-home.jpg"),
-      itinerary: P("/covers/sections/cover-itinerary.jpg"),
-      hotels: P("/covers/sections/cover-hotels.jpg"),
-      guide: P("/covers/sections/cover-guide.jpg"),
-      tips: P("/covers/sections/cover-tips.jpg"),
-      budget: P("/covers/sections/cover-budget.jpg"),
-    },
-
-    cities: {
-      hanoi: P("/covers/cities/hanoi.jpg"),
-      ninh_binh: P("/covers/cities/ninh-binh.jpg"),
-      ha_long: P("/covers/cities/ha-long.jpg"),
-      hoi_an: P("/covers/cities/hoi-an.jpg"),
-      da_nang: P("/covers/cities/da-nang.jpg"),
-      hcmc: P("/covers/cities/hcmc.jpg"),
-      whale_island: P("/covers/cities/whale-island.jpg"),
-    },
-
-    moments: {
-      arrival: P("/covers/moments/arrival.jpg"),
-      transfer: P("/covers/moments/transfer.jpg"),
-      airport: P("/covers/moments/airport.jpg"),
-      plane: P("/covers/moments/plane.jpg"),
-      train: P("/covers/moments/train.jpg"),
-      night: P("/covers/moments/night.jpg"),
-      beach: P("/covers/moments/beach.jpg"),
-      boat: P("/covers/moments/boat.jpg"),
-      market: P("/covers/moments/market.jpg"),
-      coffee: P("/covers/moments/coffee.jpg"),
-      streetfood: P("/covers/moments/streetfood.jpg"),
-      museum: P("/covers/moments/museum.jpg"),
-      temple: P("/covers/moments/temple.jpg"),
-      massage: P("/covers/moments/massage.jpg"),
-      love: P("/covers/moments/love.jpg"),
-      family: P("/covers/moments/family.jpg"),
-
-      // spécifiques (si présents)
-      hanoi_train_street: P("/covers/moments/hanoi-train-street.jpg"),
-      hanoi_lan_ong: P("/covers/moments/hanoi-lan-ong.jpg"),
-      hanoi_hoan_kiem: P("/covers/moments/hanoi-hoan-kiem.jpg"),
-      hanoi_temple_of_literature: P("/covers/moments/hanoi-temple-of-literature.jpg"),
-
-      ninhbinh_hang_mua: P("/covers/moments/ninhbinh-hang-mua.jpg"),
-      ninh_binh_trang_an: P("/covers/moments/ninh-binh-trang-an.jpg"),
-      ninh_binh_tam_coc: P("/covers/moments/ninh-binh-tam-coc.jpg"),
-
-      ha_long_sunset: P("/covers/moments/ha-long-sunset.jpg"),
-      ha_long_cruise: P("/covers/moments/ha-long-cruise.jpg"),
-
-      hoi_an_an_bang: P("/covers/moments/hoi-an-an-bang.jpg"),
-      hoi_an_old_town_night: P("/covers/moments/hoi-an-old-town-night.jpg"),
-
-      hcmc_war_museum: P("/covers/moments/hcmc-war-museum.jpg"),
-      hcmc_ben_thanh: P("/covers/moments/hcmc-ben-thanh.jpg"),
-      hcmc_central_post_office: P("/covers/moments/hcmc-central-post-office.jpg"),
-
-      whale_island_ponton: P("/covers/moments/whale-island-ponton.jpg"),
-      pont_dragon_da_nang: P("/covers/moments/pont-dragon-da-nang.jpg"),
-    },
-
-    // Hotels (public/covers/hotels/)
-    hotels: {
-      hanoi_ja_cosmo: P("/covers/hotels/hanoi-ja-cosmo.jpg"),
-      ninh_binh_tam_coc_golden_fields: P("/covers/hotels/ninh-binh-tam-coc-golden-fields.jpg"),
-      ha_long_wyndham_legend: P("/covers/hotels/ha-long-wyndham-legend.jpg"),
-      ha_long_renea_cruise: P("/covers/hotels/ha-long-renea-cruise.jpg"),
-      hoi_an_sea_la_vie: P("/covers/hotels/hoi-an-sea-la-vie.jpg"),
-      da_nang_seahorse_signature: P("/covers/hotels/da-nang-seahorse-signature.jpg"),
-      whale_island_resort: P("/covers/hotels/whale-island-resort.jpg"),
-      hcmc_alagon_spa: P("/covers/hotels/hcmc-alagon-spa.jpg"),
-    },
-  },
-} as const;
-
-
-const cityCoverFromLabel = (label?: string) => {
-  const s = (label ?? "").toLowerCase();
-
-  if (s.includes("hanoi")) return ASSETS.covers.cities.hanoi;
-  if (s.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
-  if (s.includes("ha long") || s.includes("halong")) return ASSETS.covers.cities.ha_long;
-  if (s.includes("hoi an") || s.includes("hoian")) return ASSETS.covers.cities.hoi_an;
-  if (s.includes("da nang") || s.includes("danang")) return ASSETS.covers.cities.da_nang;
-  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return ASSETS.covers.cities.hcmc;
-  if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
-
-  return ASSETS.covers.sections.home;
-};
-
-// ------------------------------------------------------------
+// ============================================================
 // TYPES
-// ------------------------------------------------------------
+// ============================================================
 type Mood = "fatigue" | "normal" | "energy";
 type View = "home" | "itinerary" | "hotels" | "culture" | "guide" | "tips" | "budget";
 
@@ -168,8 +50,6 @@ type HotelItem = {
   official_url?: string;
   why: string;
   note?: string;
-  imageKey?: string; // (on garde simple; éviter typeof TRIP_DATA dans les types)
-  cover?: string;
 };
 
 type LinkItem = { name: string; url: string };
@@ -243,7 +123,6 @@ interface TripData {
       return_arrive_marrakech: { date: string; time: string };
     };
   };
-  hero_images: Record<string, { src: string; source: string }>;
   hotels: HotelItem[];
   culture_links: CultureLinks;
   internal_flights: FlightItem[];
@@ -254,9 +133,9 @@ interface TripData {
   activities: Activity[];
 }
 
-// ------------------------------------------------------------
+// ============================================================
 // DATA
-// ------------------------------------------------------------
+// ============================================================
 const TRIP_DATA: TripData = {
   meta: {
     title: "Vietnam 2026 — Family Trip",
@@ -271,33 +150,6 @@ const TRIP_DATA: TripData = {
     },
   },
 
-  hero_images: {
-    Hanoi: {
-      src: "https://images.unsplash.com/photo-1528127269322-81bef729b60c?auto=format&fit=crop&w=1600&q=80",
-      source: "Unsplash - Huc Bridge",
-    },
-    NinhBinh_TrangAn: {
-      src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Tour_boats_at_Trang_An_Landscape_Complex%2C_Ninh_Binh_Province%2C_Vietnam%2C_20240202_1446_5308.jpg/1600px-Tour_boats_at_Trang_An_Landscape_Complex%2C_Ninh_Binh_Province%2C_Vietnam%2C_20240202_1446_5308.jpg",
-      source: "Wikimedia",
-    },
-    HaLong: {
-      src: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/The_karsts_stretch_as_far_as_the_eye_can_see_%2831263636870%29.jpg/1600px-The_karsts_stretch_as_far_as_the_eye_can_see_%2831263636870%29.jpg",
-      source: "Wikimedia",
-    },
-    HoiAn: {
-      src: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Lanterns_in_Hoi_An_4.jpg/1600px-Lanterns_in_Hoi_An_4.jpg",
-      source: "Wikimedia",
-    },
-    DaNang: {
-      src: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Museum_of_Cham_Sculpture.jpg/1600px-Museum_of_Cham_Sculpture.jpg",
-      source: "Wikimedia",
-    },
-    HCMC: {
-      src: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Saigon_Central_Post_Office_2025.jpg/1600px-Saigon_Central_Post_Office_2025.jpg",
-      source: "Wikimedia",
-    },
-  },
-
   hotels: [
     {
       city: "Hanoi",
@@ -306,8 +158,6 @@ const TRIP_DATA: TripData = {
       budget: { us: 180, claudine: 110, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/ja-cosmo-and-spa.html",
       why: "Central pour ruelles, cafés, culture; simple avec kids + Claudine.",
-      imageKey: "Hanoi",
-      cover: "/covers/hanoi-ja-cosmo.jpg",
     },
     {
       city: "Ninh Binh (Tam Coc)",
@@ -316,8 +166,6 @@ const TRIP_DATA: TripData = {
       budget: { us: 140, claudine: 110, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/tam-coc-golden-fields-homestay.html",
       why: "Base rizières + liberté; parfait pour le ‘wow’ Trang An sans galère.",
-      imageKey: "NinhBinh_TrangAn",
-      cover: "/covers/ninh-binh-tam-coc-golden-fields.jpg",
     },
     {
       city: "Ha Long",
@@ -326,8 +174,6 @@ const TRIP_DATA: TripData = {
       budget: { us: 130, claudine: 80, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html",
       why: "Transition confortable avant croisière, logistique simple.",
-      imageKey: "HaLong",
-      cover: "/covers/ha-long-wyndham-legend.jpg",
     },
     {
       city: "Ha Long (Cruise)",
@@ -337,8 +183,6 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/renea-cruises-halong-ha-long.html",
       note: "Départ : Halong International Cruise Port",
       why: "Le cœur ‘cinéma’ du voyage: karsts, baie, expérience famille.",
-      imageKey: "HaLong",
-      cover: "/covers/ha-long-renea-cruise.jpg",
     },
     {
       city: "Hoi An (An Bang Beach)",
@@ -348,8 +192,6 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/sea-39-lavie-boutique-resort.html",
       why: "Plage + slow nights Old Town; bon équilibre famille/ambiance.",
       note: "À surveiller: selon saison, certains accès plage peuvent changer.",
-      imageKey: "HoiAn",
-      cover: "/covers/hoi-an-sea-la-vie.jpg",
     },
     {
       city: "Da Nang",
@@ -358,8 +200,6 @@ const TRIP_DATA: TripData = {
       budget: { us: 129, claudine: 92, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/seahorse-signature-danang-by-haviland.html",
       why: "Base urbaine efficace pour culture + musées + ponts.",
-      imageKey: "DaNang",
-      cover: "/covers/da-nang-seahorse-signature.jpg",
     },
     {
       city: "Whale Island (Hon Ong)",
@@ -368,8 +208,6 @@ const TRIP_DATA: TripData = {
       budget: { us: 415, claudine: 415, currency: "USD" },
       official_url: "https://whaleislandresort.com/",
       why: "Déconnexion nature pure, rythme famille, mer & ciel.",
-      imageKey: "DaNang",
-      cover: "/covers/whale-island-resort.jpg",
     },
     {
       city: "Ho Chi Minh City",
@@ -378,8 +216,6 @@ const TRIP_DATA: TripData = {
       budget: { us: 275, claudine: 211, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/alagon-saigon.html",
       why: "Très central pour histoire, colonial, street life.",
-      imageKey: "HCMC",
-      cover: "/covers/hcmc-alagon-spa.jpg",
     },
   ],
 
@@ -427,12 +263,7 @@ const TRIP_DATA: TripData = {
   ],
 
   itinerary_days: [
-    {
-      date: "2026-07-25",
-      city: "Hanoi",
-      theme: ["arrivée", "dîner", "repos"],
-      blocks: [{ label: "Soir", plan: "Arrivée 19:30, transfert, check-in, dîner simple local, dodo." }],
-    },
+    { date: "2026-07-25", city: "Hanoi", theme: ["arrivée", "dîner", "repos"], blocks: [{ label: "Soir", plan: "Arrivée 19:30, transfert, check-in, dîner simple local, dodo." }] },
     {
       date: "2026-07-26",
       city: "Hanoi",
@@ -440,11 +271,7 @@ const TRIP_DATA: TripData = {
       blocks: [
         { label: "Matin", plan: "Old Quarter + lac + cafés." },
         { label: "Aprem", plan: "Sieste / recharge kids." },
-        {
-          label: "Soir",
-          plan: "Street food + Water Puppet show (ludique & culturel).",
-          links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"],
-        },
+        { label: "Soir", plan: "Street food + Water Puppet show (ludique & culturel).", links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"] },
       ],
     },
     {
@@ -535,12 +362,7 @@ const TRIP_DATA: TripData = {
         { label: "Soir", plan: "Lanternes + slow." },
       ],
     },
-    {
-      date: "2026-08-05",
-      city: "Hoi An",
-      theme: ["libre", "famille"],
-      blocks: [{ label: "Journée", plan: "Journée libre: plage, massages, shopping ciblé, repos." }],
-    },
+    { date: "2026-08-05", city: "Hoi An", theme: ["libre", "famille"], blocks: [{ label: "Journée", plan: "Journée libre: plage, massages, shopping ciblé, repos." }] },
     {
       date: "2026-08-06",
       city: "Hoi An → Da Nang",
@@ -570,30 +392,10 @@ const TRIP_DATA: TripData = {
         { label: "Jour", plan: "Transfert port + bateau vers Whale Island, installation." },
       ],
     },
-    {
-      date: "2026-08-09",
-      city: "Whale Island",
-      theme: ["nature", "déconnexion"],
-      blocks: [{ label: "Journée", plan: "Baignade / snorkeling doux, sieste, coucher de soleil." }],
-    },
-    {
-      date: "2026-08-10",
-      city: "Whale Island",
-      theme: ["nature", "slow"],
-      blocks: [{ label: "Journée", plan: "Marche, plage, lecture, ciel étoilé." }],
-    },
-    {
-      date: "2026-08-11",
-      city: "Whale Island",
-      theme: ["slow", "famille"],
-      blocks: [{ label: "Journée", plan: "Dernier jour complet: photos, repos, mer." }],
-    },
-    {
-      date: "2026-08-12",
-      city: "Whale Island → Ho Chi Minh City",
-      theme: ["transit"],
-      blocks: [{ label: "Jour", plan: "Bateau + transfert CXR, vol 16:00 vers SGN, check-in Alagon." }],
-    },
+    { date: "2026-08-09", city: "Whale Island", theme: ["nature", "déconnexion"], blocks: [{ label: "Journée", plan: "Baignade / snorkeling doux, sieste, coucher de soleil." }] },
+    { date: "2026-08-10", city: "Whale Island", theme: ["nature", "slow"], blocks: [{ label: "Journée", plan: "Marche, plage, lecture, ciel étoilé." }] },
+    { date: "2026-08-11", city: "Whale Island", theme: ["slow", "famille"], blocks: [{ label: "Journée", plan: "Dernier jour complet: photos, repos, mer." }] },
+    { date: "2026-08-12", city: "Whale Island → Ho Chi Minh City", theme: ["transit"], blocks: [{ label: "Jour", plan: "Bateau + transfert CXR, vol 16:00 vers SGN, check-in Alagon." }] },
     {
       date: "2026-08-13",
       city: "Ho Chi Minh City",
@@ -623,12 +425,7 @@ const TRIP_DATA: TripData = {
         { label: "Soir", plan: "Balade douce, shopping ciblé, cafés." },
       ],
     },
-    {
-      date: "2026-08-16",
-      city: "Hanoi",
-      theme: ["best-of", "libre"],
-      blocks: [{ label: "Journée", plan: "Best-of selon mood: ruelles / cafés / marchés + lac." }],
-    },
+    { date: "2026-08-16", city: "Hanoi", theme: ["best-of", "libre"], blocks: [{ label: "Journée", plan: "Best-of selon mood: ruelles / cafés / marchés + lac." }] },
     {
       date: "2026-08-17",
       city: "Hanoi",
@@ -723,55 +520,51 @@ const TRIP_DATA: TripData = {
   ],
 };
 
-// ------------------------------------------------------------
-// FAMILY
-// ------------------------------------------------------------
+// ============================================================
+// FAMILY IMAGES (ONLY PHOTOS WE KEEP)
+// Put these in /public/family/...
+// ============================================================
 const FAMILY_MEMBERS = [
   {
     name: "Marilyne",
     desc: "La Boss",
     color: "bg-pink-100 text-pink-700",
-    src: "/family/public:family:marilyne.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
+    src: "/family/marilyne.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
   },
   {
     name: "Claudine",
     desc: "La Sage",
     color: "bg-indigo-100 text-indigo-700",
-    src: "/family/public:family:claudine.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
+    src: "/family/claudine.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
   },
   {
     name: "Nizzar",
     desc: "Le Pilote",
     color: "bg-slate-100 text-slate-700",
-    src: "/family/public:family:nizzar.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
+    src: "/family/nizzar.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
   },
   {
     name: "Aydann",
     desc: "L'Ado",
     color: "bg-blue-100 text-blue-700",
-    src: "/family/public:family:aydann.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
+    src: "/family/aydann.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
   },
   {
     name: "Milann",
     desc: "La Mascotte",
     color: "bg-orange-100 text-orange-700",
-    src: "/family/public:family:milann.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
+    src: "/family/milann.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
   },
 ];
 
-// ------------------------------------------------------------
-// BON A SAVOIR / ESSENTIELS (1ère personne)
-// ------------------------------------------------------------
+// ============================================================
+// BON A SAVOIR / ESSENTIELS
+// ============================================================
 const ESSENTIALS_CHECKLIST = [
   "Passeports (validité 6 mois)",
   "Trousse pharma (Doliprane, Smecta)",
@@ -841,62 +634,26 @@ const PHRASEBOOK: PhraseItem[] = [
   { fr: "Toilettes ?", vi: "Nhà vệ sinh ở đâu?", phon: "nia ve sin eu da-ou" },
 ];
 
-// ------------------------------------------------------------
+// ============================================================
 // HELPERS
-// ------------------------------------------------------------
-const formatUSD = (n: number) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-
-const formatVND = (n: number) =>
-  n.toLocaleString("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 });
-
+// ============================================================
+const formatUSD = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+const formatVND = (n: number) => n.toLocaleString("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 });
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
-const safeDateLabel = (iso: string) =>
-  new Date(iso).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
-
+const safeDateLabel = (iso: string) => new Date(iso).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
 const toISO = (d: Date) => d.toISOString().slice(0, 10);
-
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 
-const cityKeyFromName = (city: string) => {
-  if (city.includes("Hanoi")) return "Hanoi";
-  if (city.includes("Ninh Binh")) return "NinhBinh_TrangAn";
-  if (city.includes("Ha Long")) return "HaLong";
-  if (city.includes("Hoi An")) return "HoiAn";
-  if (city.includes("Da Nang")) return "DaNang";
-  if (city.includes("Ho Chi Minh")) return "HCMC";
-  return "Hanoi";
-};
+const googleMapsSearchUrl = (q: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 
-// ------------------------------------------------------------
-// COVERS (Focus du jour / Itinéraire)
-// ------------------------------------------------------------
-const CITY_COVERS: Record<string, string> = {
-  Hanoi: "/covers/cities/hanoi.jpg",
-  "Ninh Binh": "/covers/cities/ninh-binh.jpg",
-  "Ha Long": "/covers/cities/ha-long.jpg",
-  "Hoi An": "/covers/cities/hoi-an.jpg",
-  "Da Nang": "/covers/cities/da-nang.jpg",
-  "Whale Island": "/covers/cities/whale-island.jpg",
-  "Ho Chi Minh City": "/covers/cities/ho-chi-minh.jpg",
-};
-
-const MOMENT_COVERS: Record<string, string> = {
-  arrival: "/covers/moments/arrival.jpg",
-  transfer: "/covers/moments/transfer.jpg",
-  plane: "/covers/moments/plane.jpg",
-  boat: "/covers/moments/boat.jpg",
-  beach: "/covers/moments/beach.jpg",
-  night: "/covers/moments/night.jpg",
-  market: "/covers/moments/market.jpg",
-  coffee: "/covers/moments/coffee.jpg",
-  streetfood: "/covers/moments/streetfood.jpg",
-  museum: "/covers/moments/museum.jpg",
-  temple: "/covers/moments/temple.jpg",
-  massage: "/covers/moments/massage.jpg",
-  family: "/covers/moments/family.jpg",
-  love: "/covers/moments/love.jpg",
+const uniqCitiesByOrder = (days: ItineraryDay[]) => {
+  const out: string[] = [];
+  for (const d of days) {
+    const base = d.city.split("→").map((s) => s.trim())[0];
+    if (!out.includes(base)) out.push(base);
+  }
+  return out;
 };
 
 const getBaseCity = (raw: string) => {
@@ -912,75 +669,141 @@ const getBaseCity = (raw: string) => {
   return first;
 };
 
-const momentCoverFromText = (text: string) => {
+// ============================================================
+// GRADIENT COVERS (NO PHOTOS)
+// ============================================================
+type CoverKey =
+  | "home"
+  | "itinerary"
+  | "hotels"
+  | "guide"
+  | "tips"
+  | "budget"
+  | "hanoi"
+  | "ninh_binh"
+  | "ha_long"
+  | "hoi_an"
+  | "da_nang"
+  | "whale_island"
+  | "hcmc"
+  | "arrival"
+  | "transfer"
+  | "plane"
+  | "boat"
+  | "beach"
+  | "night"
+  | "market"
+  | "coffee"
+  | "streetfood"
+  | "museum"
+  | "temple"
+  | "massage"
+  | "family"
+  | "love";
+
+const GRADIENTS: Record<CoverKey, string> = {
+  home: "bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900",
+  itinerary: "bg-gradient-to-br from-indigo-950 via-slate-900 to-emerald-800",
+  hotels: "bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900",
+  guide: "bg-gradient-to-br from-orange-950 via-slate-900 to-rose-900",
+  tips: "bg-gradient-to-br from-emerald-950 via-slate-900 to-indigo-900",
+  budget: "bg-gradient-to-br from-slate-950 via-slate-900 to-amber-900",
+
+  hanoi: "bg-gradient-to-br from-slate-950 via-indigo-950 to-emerald-900",
+  ninh_binh: "bg-gradient-to-br from-emerald-950 via-slate-900 to-lime-900",
+  ha_long: "bg-gradient-to-br from-slate-950 via-cyan-950 to-indigo-900",
+  hoi_an: "bg-gradient-to-br from-amber-950 via-slate-900 to-rose-900",
+  da_nang: "bg-gradient-to-br from-indigo-950 via-slate-900 to-cyan-900",
+  whale_island: "bg-gradient-to-br from-emerald-950 via-slate-900 to-sky-900",
+  hcmc: "bg-gradient-to-br from-slate-950 via-rose-950 to-amber-900",
+
+  arrival: "bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-800",
+  transfer: "bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900",
+  plane: "bg-gradient-to-br from-indigo-950 via-slate-900 to-sky-900",
+  boat: "bg-gradient-to-br from-slate-950 via-cyan-950 to-emerald-900",
+  beach: "bg-gradient-to-br from-amber-950 via-orange-900 to-rose-900",
+  night: "bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900",
+  market: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
+  coffee: "bg-gradient-to-br from-amber-950 via-slate-900 to-slate-800",
+  streetfood: "bg-gradient-to-br from-orange-950 via-slate-900 to-amber-900",
+  museum: "bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-900",
+  temple: "bg-gradient-to-br from-indigo-950 via-slate-900 to-emerald-900",
+  massage: "bg-gradient-to-br from-emerald-950 via-slate-900 to-indigo-900",
+  family: "bg-gradient-to-br from-emerald-950 via-slate-900 to-rose-900",
+  love: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
+};
+
+const GradientCover = ({
+  coverKey,
+  className = "",
+  glow = true,
+}: {
+  coverKey: CoverKey;
+  className?: string;
+  glow?: boolean;
+}) => {
+  return (
+    <div className={`relative overflow-hidden ${GRADIENTS[coverKey]} ${className}`}>
+      {glow && (
+        <>
+          <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#818cf8_0%,transparent_40%),radial-gradient(circle_at_55%_85%,#fbbf24_0%,transparent_35%)]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+        </>
+      )}
+    </div>
+  );
+};
+
+const coverKeyFromCityLabel = (label?: string): CoverKey => {
+  const s = (label ?? "").toLowerCase();
+  if (s.includes("hanoi")) return "hanoi";
+  if (s.includes("ninh")) return "ninh_binh";
+  if (s.includes("ha long") || s.includes("halong")) return "ha_long";
+  if (s.includes("hoi an") || s.includes("hoian")) return "hoi_an";
+  if (s.includes("da nang") || s.includes("danang")) return "da_nang";
+  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return "hcmc";
+  if (s.includes("whale")) return "whale_island";
+  return "home";
+};
+
+const momentCoverKeyFromText = (text: string): CoverKey | null => {
   const t = text.toLowerCase();
-
-  if (t.includes("vol") || t.includes("aéroport") || t.includes("airport") || t.includes("flight")) return MOMENT_COVERS.plane;
-  if (t.includes("bateau") || t.includes("croisi") || t.includes("cruise") || t.includes("boat")) return MOMENT_COVERS.boat;
-  if (t.includes("plage") || t.includes("beach")) return MOMENT_COVERS.beach;
-  if (t.includes("marché") || t.includes("marche") || t.includes("market")) return MOMENT_COVERS.market;
-  if (t.includes("café") || t.includes("cafe") || t.includes("coffee")) return MOMENT_COVERS.coffee;
-  if (t.includes("street food") || t.includes("street-food") || t.includes("streetfood") || t.includes("food") || t.includes("dîner") || t.includes("diner")) return MOMENT_COVERS.streetfood;
-  if (t.includes("musée") || t.includes("musee") || t.includes("museum")) return MOMENT_COVERS.museum;
-  if (t.includes("temple")) return MOMENT_COVERS.temple;
-  if (t.includes("massage")) return MOMENT_COVERS.massage;
-  if (t.includes("arrivée") || t.includes("arrivee") || t.includes("check-in") || t.includes("check in") || t.includes("arrival")) return MOMENT_COVERS.arrival;
-  if (t.includes("transfert") || t.includes("transfer") || t.includes("limousine") || t.includes("drive")) return MOMENT_COVERS.transfer;
-  if (t.includes("soir") || t.includes("night") || t.includes("lantern")) return MOMENT_COVERS.night;
-
+  if (t.includes("vol") || t.includes("aéroport") || t.includes("airport") || t.includes("flight")) return "plane";
+  if (t.includes("bateau") || t.includes("croisi") || t.includes("cruise") || t.includes("boat")) return "boat";
+  if (t.includes("plage") || t.includes("beach")) return "beach";
+  if (t.includes("marché") || t.includes("marche") || t.includes("market")) return "market";
+  if (t.includes("café") || t.includes("cafe") || t.includes("coffee")) return "coffee";
+  if (t.includes("street food") || t.includes("street-food") || t.includes("streetfood") || t.includes("food") || t.includes("dîner") || t.includes("diner"))
+    return "streetfood";
+  if (t.includes("musée") || t.includes("musee") || t.includes("museum")) return "museum";
+  if (t.includes("temple")) return "temple";
+  if (t.includes("massage")) return "massage";
+  if (t.includes("arrivée") || t.includes("arrivee") || t.includes("check-in") || t.includes("check in") || t.includes("arrival")) return "arrival";
+  if (t.includes("transfert") || t.includes("transfer") || t.includes("limousine") || t.includes("drive")) return "transfer";
+  if (t.includes("soir") || t.includes("night") || t.includes("lantern")) return "night";
   return null;
 };
 
-const dayCoverFromDay = (day: ItineraryDay) => {
-
-  const text =
-    (day.theme?.join(" ") ?? "") +
-    " " +
-    (day.blocks?.map((b) => b.plan).join(" ") ?? "");
-
-  // moments d’abord
-  const moment = momentCoverFromText(text);
-  if (moment) return moment;
-
-  // sinon cover de ville
-  return cityCoverFromLabel(city);
+const dayCoverKeyFromDay = (day: ItineraryDay): CoverKey => {
+  const text = (day.theme?.join(" ") ?? "") + " " + (day.blocks?.map((b) => b.plan).join(" ") ?? "");
+  const momentKey = momentCoverKeyFromText(text);
+  if (momentKey) return momentKey;
+  const base = getBaseCity(day.city);
+  return coverKeyFromCityLabel(base);
 };
 
-
-const googleMapsSearchUrl = (q: string) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-
-const uniqCitiesByOrder = (days: ItineraryDay[]) => {
-  const out: string[] = [];
-  for (const d of days) {
-    const base = d.city.split("→").map((s) => s.trim())[0];
-    if (!out.includes(base)) out.push(base);
-  }
-  return out;
-};
-
-// ------------------------------------------------------------
-// UI ATOMS V2
-// ------------------------------------------------------------
+// ============================================================
+// UI ATOMS
+// ============================================================
 const Glass = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
   <div className={`bg-white/80 backdrop-blur-md border border-white/60 shadow-sm ${className}`}>{children}</div>
 );
 
-const Pill = ({
-  active,
-  children,
-  onClick,
-}: {
-  active?: boolean;
-  children: ReactNode;
-  onClick?: () => void;
-}) => (
+const Pill = ({ active, children, onClick }: { active?: boolean; children: ReactNode; onClick?: () => void }) => (
   <button
     onClick={onClick}
     className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-      active
-        ? "bg-emerald-600 text-white border-emerald-600 shadow"
-        : "bg-white/70 text-slate-600 border-slate-200 hover:bg-white"
+      active ? "bg-emerald-600 text-white border-emerald-600 shadow" : "bg-white/70 text-slate-600 border-slate-200 hover:bg-white"
     }`}
   >
     {children}
@@ -1013,60 +836,46 @@ const Toggle = ({
       className={`w-12 h-7 rounded-full p-1 transition-colors ${value ? "bg-emerald-500" : "bg-slate-200"}`}
       aria-label={label}
     >
-      <div
-        className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${
-          value ? "translate-x-5" : "translate-x-0"
-        }`}
-      />
+      <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${value ? "translate-x-5" : "translate-x-0"}`} />
     </button>
   </div>
 );
 
-const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m: Mood) => void }) => {
-  return (
-    <div className="flex bg-white/70 backdrop-blur-md rounded-full p-1 border border-white shadow-sm">
-      <button
-        onClick={() => setMood("fatigue")}
-        className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "fatigue" ? "bg-indigo-100 text-indigo-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
-        }`}
-      >
-        <Moon className="w-4 h-4" /> <span className="hidden sm:inline">Repos</span>
-      </button>
-      <button
-        onClick={() => setMood("normal")}
-        className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "normal" ? "bg-emerald-100 text-emerald-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
-        }`}
-      >
-        <BatteryCharging className="w-4 h-4" /> <span className="hidden sm:inline">Normal</span>
-      </button>
-      <button
-        onClick={() => setMood("energy")}
-        className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "energy" ? "bg-amber-100 text-amber-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
-        }`}
-      >
-        <Flame className="w-4 h-4" /> <span className="hidden sm:inline">Énergie</span>
-      </button>
-    </div>
-  );
-};
+const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m: Mood) => void }) => (
+  <div className="flex bg-white/70 backdrop-blur-md rounded-full p-1 border border-white shadow-sm">
+    <button
+      onClick={() => setMood("fatigue")}
+      className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
+        currentMood === "fatigue" ? "bg-indigo-100 text-indigo-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+      }`}
+    >
+      <Moon className="w-4 h-4" /> <span className="hidden sm:inline">Repos</span>
+    </button>
+    <button
+      onClick={() => setMood("normal")}
+      className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
+        currentMood === "normal" ? "bg-emerald-100 text-emerald-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+      }`}
+    >
+      <BatteryCharging className="w-4 h-4" /> <span className="hidden sm:inline">Normal</span>
+    </button>
+    <button
+      onClick={() => setMood("energy")}
+      className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
+        currentMood === "energy" ? "bg-amber-100 text-amber-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+      }`}
+    >
+      <Flame className="w-4 h-4" /> <span className="hidden sm:inline">Énergie</span>
+    </button>
+  </div>
+);
 
 const FamilyStrip = () => (
   <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
     {FAMILY_MEMBERS.map((m) => (
-      <div
-        key={m.name}
-        className="shrink-0 flex items-center gap-3 bg-white rounded-2xl border border-slate-100 px-3 py-2 shadow-sm"
-      >
+      <div key={m.name} className="shrink-0 flex items-center gap-3 bg-white rounded-2xl border border-slate-100 px-3 py-2 shadow-sm">
         <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 ring-2 ring-white">
-          <img
-            src={m.src}
-            alt={m.name}
-            className="w-full h-full object-cover"
-            onError={(e) => (e.currentTarget.src = m.fallback)}
-          />
+          <img src={m.src} alt={m.name} className="w-full h-full object-cover" onError={(e) => (e.currentTarget.src = m.fallback)} />
         </div>
         <div className="leading-tight">
           <div className="text-sm font-bold text-slate-800">{m.name}</div>
@@ -1077,36 +886,16 @@ const FamilyStrip = () => (
   </div>
 );
 
-const CinemaHero = ({
-  onOpenQuick,
-  activeCity,
-  coverSrc,
-}: {
-  onOpenQuick: () => void;
-  activeCity: string;
-  coverSrc?: string;
-}) => {
-  const key = cityKeyFromName(activeCity);
-  const hero = TRIP_DATA.hero_images[key];
-  const src = coverSrc || hero?.src;
-
+const CinemaHero = ({ onOpenQuick, activeCity }: { onOpenQuick: () => void; activeCity: string }) => {
+  const key = coverKeyFromCityLabel(activeCity);
   return (
     <div className="relative rounded-3xl overflow-hidden shadow-xl">
-      <div className="absolute inset-0">
-        <img src={src} alt="Hero" className="w-full h-full object-cover scale-[1.02]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent" />
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#818cf8_0%,transparent_40%),radial-gradient(circle_at_55%_85%,#fbbf24_0%,transparent_35%)]" />
-      </div>
-
+      <GradientCover coverKey={key} className="absolute inset-0" />
       <div className="relative z-10 p-6 sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <div className="flex gap-2 flex-wrap">
-            <span className="px-3 py-1 rounded-full bg-white/15 border border-white/25 text-xs font-semibold text-white">
-              24 Juil → 18 Août
-            </span>
-            <span className="px-3 py-1 rounded-full bg-emerald-500/80 border border-emerald-300/30 text-xs font-semibold text-white">
-              Vietnam 2026
-            </span>
+            <span className="px-3 py-1 rounded-full bg-white/15 border border-white/25 text-xs font-semibold text-white">24 Juil → 18 Août</span>
+            <span className="px-3 py-1 rounded-full bg-emerald-500/80 border border-emerald-300/30 text-xs font-semibold text-white">Vietnam 2026</span>
           </div>
 
           <button
@@ -1122,9 +911,7 @@ const CinemaHero = ({
             VIETNAM
             <span className="block text-emerald-200 font-light mt-2">Family Trip</span>
           </div>
-          <p className="mt-3 text-white/90 text-base sm:text-lg">
-            Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d&apos;amour.
-          </p>
+          <p className="mt-3 text-white/90 text-base sm:text-lg">Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d&apos;amour.</p>
 
           <div className="mt-4 flex flex-wrap gap-2">
             {TRIP_DATA.meta.vibe.map((v) => (
@@ -1143,15 +930,7 @@ const CinemaHero = ({
   );
 };
 
-const QuickSheet = ({
-  open,
-  onClose,
-  onGoto,
-}: {
-  open: boolean;
-  onClose: () => void;
-  onGoto: (v: View) => void;
-}) => {
+const QuickSheet = ({ open, onClose, onGoto }: { open: boolean; onClose: () => void; onGoto: (v: View) => void }) => {
   if (!open) return null;
 
   return (
@@ -1169,42 +948,28 @@ const QuickSheet = ({
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <button
-            onClick={() => (onGoto("tips"), onClose())}
-            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
-          >
+          <button onClick={() => (onGoto("tips"), onClose())} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left">
             <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Lightbulb size={16} className="text-emerald-600" /> Bon à savoir
             </div>
             <div className="text-xs text-slate-500 mt-1">Checklist + argent + règles street</div>
           </button>
 
-          <button
-            onClick={() => (onGoto("guide"), onClose())}
-            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
-          >
+          <button onClick={() => (onGoto("guide"), onClose())} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left">
             <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Utensils size={16} className="text-orange-600" /> Food + logistique
             </div>
             <div className="text-xs text-slate-500 mt-1">Plats cultes + transferts</div>
           </button>
 
-          <a
-            href={googleMapsSearchUrl("Grab Vietnam")}
-            target="_blank"
-            rel="noreferrer"
-            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
-          >
+          <a href={googleMapsSearchUrl("Grab Vietnam")} target="_blank" rel="noreferrer" className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left">
             <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Smartphone size={16} className="text-indigo-600" /> Grab (rappel)
             </div>
             <div className="text-xs text-slate-500 mt-1">Au besoin: recherche rapide</div>
           </a>
 
-          <button
-            onClick={() => (onGoto("budget"), onClose())}
-            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
-          >
+          <button onClick={() => (onGoto("budget"), onClose())} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left">
             <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Wallet size={16} className="text-slate-800" /> Budget
             </div>
@@ -1218,42 +983,32 @@ const QuickSheet = ({
   );
 };
 
-const CityTimeline = ({
-  cities,
-  activeCity,
-  onSelect,
-}: {
-  cities: string[];
-  activeCity: string;
-  onSelect: (c: string) => void;
-}) => {
-  return (
-    <div className="mt-5">
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-sm font-extrabold text-slate-900">Timeline</div>
-        <div className="text-xs text-slate-500">Swipe →</div>
-      </div>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-        {cities.map((c) => (
-          <Pill key={c} active={c === activeCity} onClick={() => onSelect(c)}>
-            {c}
-          </Pill>
-        ))}
-      </div>
+const CityTimeline = ({ cities, activeCity, onSelect }: { cities: string[]; activeCity: string; onSelect: (c: string) => void }) => (
+  <div className="mt-5">
+    <div className="flex items-center justify-between mb-2">
+      <div className="text-sm font-extrabold text-slate-900">Timeline</div>
+      <div className="text-xs text-slate-500">Swipe →</div>
     </div>
-  );
-};
+    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+      {cities.map((c) => (
+        <Pill key={c} active={c === activeCity} onClick={() => onSelect(c)}>
+          {c}
+        </Pill>
+      ))}
+    </div>
+  </div>
+);
 
 const DayCardMobile = ({
   day,
-  coverSrc,
+  coverKey,
   mood,
   isFav,
   onFav,
   kidsMode,
 }: {
   day: ItineraryDay;
-  coverSrc: string;
+  coverKey: CoverKey;
   mood: Mood;
   isFav: boolean;
   onFav: () => void;
@@ -1263,47 +1018,20 @@ const DayCardMobile = ({
 
   const shouldHideImpact = (text: string) => {
     const t = text.toLowerCase();
-    return (
-      t.includes("prison") ||
-      t.includes("war") ||
-      t.includes("remnants") ||
-      t.includes("impact") ||
-      t.includes("fort")
-    );
+    return t.includes("prison") || t.includes("war") || t.includes("remnants") || t.includes("impact") || t.includes("fort");
   };
 
   return (
     <div className="relative bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="relative h-28">
-        <img
-          src={coverSrc}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
-          onError={(e) => {
-            // fallback "safe" si un path est faux
-            e.currentTarget.src = ASSETS.covers.sections.itinerary;
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-black/20" />
+        <GradientCover coverKey={coverKey} className="absolute inset-0" />
         <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-3">
           <div>
-            <div className="text-xs text-slate-600 font-semibold">
-              {safeDateLabel(day.date)}
-            </div>
-            <div className="text-lg font-extrabold text-slate-900 leading-tight">
-              {day.city}
-            </div>
+            <div className="text-xs text-white/80 font-semibold">{safeDateLabel(day.date)}</div>
+            <div className="text-lg font-extrabold text-white leading-tight">{day.city}</div>
           </div>
-          <button
-            onClick={onFav}
-            className="p-2 rounded-2xl bg-white/80 border border-white shadow"
-          >
-            <Heart
-              size={18}
-              className={isFav ? "text-amber-500" : "text-slate-400"}
-              fill={isFav ? "currentColor" : "none"}
-            />
+          <button onClick={onFav} className="p-2 rounded-2xl bg-white/15 border border-white/25 text-white shadow">
+            <Heart size={18} className={isFav ? "text-amber-200" : "text-white/70"} fill={isFav ? "currentColor" : "none"} />
           </button>
         </div>
       </div>
@@ -1311,10 +1039,7 @@ const DayCardMobile = ({
       <div className="p-4">
         <div className="flex flex-wrap gap-2 mb-3">
           {day.theme.map((t) => (
-            <span
-              key={t}
-              className="text-[10px] uppercase tracking-wide text-slate-500 bg-slate-100 px-2 py-1 rounded-full"
-            >
+            <span key={t} className="text-[10px] uppercase tracking-wide text-slate-600 bg-slate-100 px-2 py-1 rounded-full">
               {t}
             </span>
           ))}
@@ -1338,20 +1063,12 @@ const DayCardMobile = ({
             }
             return (
               <div key={idx} className="rounded-2xl bg-slate-50 border border-slate-100 p-3">
-                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">
-                  {b.label}
-                </div>
+                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">{b.label}</div>
                 <div className="text-sm text-slate-800 leading-relaxed">{b.plan}</div>
                 {b.links?.length ? (
                   <div className="mt-2 flex flex-wrap gap-2">
                     {b.links.map((l, i) => (
-                      <a
-                        key={i}
-                        href={l}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-xl"
-                      >
+                      <a key={i} href={l} target="_blank" rel="noreferrer" className="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-xl">
                         Lien
                       </a>
                     ))}
@@ -1372,24 +1089,19 @@ const DayCardMobile = ({
   );
 };
 
-
 const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
   const link = hotel.booking_url || hotel.official_url;
+  const cityKey = coverKeyFromCityLabel(hotel.city);
   return (
     <div className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg transition-shadow">
       <div className="relative h-40">
-        {hotel.cover ? (
-          <img src={hotel.cover} alt={hotel.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-        ) : (
-          <div className="absolute inset-0 bg-slate-100" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/25 to-black/10" />
+        <GradientCover coverKey={cityKey} className="absolute inset-0" />
         <div className="absolute bottom-3 left-4 right-4">
-          <div className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+          <div className="text-[11px] font-bold text-white/85 flex items-center gap-1">
             <MapPin size={12} /> {hotel.city}
           </div>
-          <div className="text-lg font-extrabold text-slate-900 leading-tight">{hotel.name}</div>
-          <div className="text-xs text-slate-500">{hotel.dates}</div>
+          <div className="text-lg font-extrabold text-white leading-tight">{hotel.name}</div>
+          <div className="text-xs text-white/75">{hotel.dates}</div>
         </div>
       </div>
 
@@ -1465,11 +1177,7 @@ const TipsChecklist = () => {
 
       <div className="space-y-2">
         {ESSENTIALS_CHECKLIST.map((item) => (
-          <button
-            key={item}
-            onClick={() => toggle(item)}
-            className="w-full flex items-center gap-3 text-left p-3 rounded-2xl border border-slate-100 bg-slate-50"
-          >
+          <button key={item} onClick={() => toggle(item)} className="w-full flex items-center gap-3 text-left p-3 rounded-2xl border border-slate-100 bg-slate-50">
             <div
               className={`w-5 h-5 rounded-md border flex items-center justify-center ${
                 checked.includes(item) ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"
@@ -1553,15 +1261,15 @@ const AirportGlossary = () => (
   </div>
 );
 
-// ------------------------------------------------------------
+// ============================================================
 // APP
-// ------------------------------------------------------------
+// ============================================================
 export default function App() {
   const [view, setView] = useState<View>("home");
   const [mood, setMood] = useState<Mood>("normal");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [kidsMode, setKidsMode] = useState<boolean>(false);
-  const [cinemaMode, setCinemaMode] = useState<boolean>(true); // gardé (UI)
+  const [cinemaMode, setCinemaMode] = useState<boolean>(true);
   const [quickOpen, setQuickOpen] = useState(false);
 
   const [vndPerUsd, setVndPerUsd] = useState<number>(26000);
@@ -1574,7 +1282,6 @@ export default function App() {
   const todayISO = toISO(new Date());
   const tripStart = TRIP_DATA.itinerary_days[0]?.date;
   const tripEnd = TRIP_DATA.itinerary_days[TRIP_DATA.itinerary_days.length - 1]?.date;
-
   const isWithinTrip = tripStart && tripEnd ? todayISO >= tripStart && todayISO <= tripEnd : false;
 
   const todayIndex = useMemo(() => {
@@ -1597,6 +1304,7 @@ export default function App() {
     const savedKids = localStorage.getItem("trip_kids_mode");
     if (savedKids) setKidsMode(savedKids === "1");
 
+    // ✅ FIX: complete + correct
     const savedCinema = localStorage.getItem("trip_cinema_mode");
     if (savedCinema) setCinemaMode(savedCinema === "1");
 
@@ -1622,9 +1330,6 @@ export default function App() {
 
   const handlePrint = () => window.print();
 
-  // ------------------------------------------------------------
-  // FILTERS
-  // ------------------------------------------------------------
   const filteredDays = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return TRIP_DATA.itinerary_days;
@@ -1634,14 +1339,10 @@ export default function App() {
     });
   }, [search]);
 
-  // ------------------------------------------------------------
-  // BUDGET
-  // ------------------------------------------------------------
   const budgetSplit = useMemo(() => {
     const adults = TRIP_DATA.meta.travelers_count.adults;
     const kids = TRIP_DATA.meta.travelers_count.kids;
 
-    // split simple
     const RATIO_FAM = 0.8;
     const RATIO_CLAU = 0.2;
 
@@ -1681,13 +1382,7 @@ export default function App() {
     );
 
     return {
-      fam: {
-        hotels: hotelsFam,
-        flights: flightsFam,
-        transfers: transfersFam,
-        activities: famActUsd,
-        total: hotelsFam + flightsFam + transfersFam + famActUsd,
-      },
+      fam: { hotels: hotelsFam, flights: flightsFam, transfers: transfersFam, activities: famActUsd, total: hotelsFam + flightsFam + transfersFam + famActUsd },
       claudine: {
         hotels: hotelsClaudine,
         flights: flightsClaudine,
@@ -1698,9 +1393,6 @@ export default function App() {
     };
   }, [includeActivities, vndPerUsd, kidsMode]);
 
-  // ------------------------------------------------------------
-  // NAV
-  // ------------------------------------------------------------
   const Tabs = [
     { id: "home", icon: Star, label: "Home" },
     { id: "itinerary", icon: Calendar, label: "Itinéraire" },
@@ -1710,16 +1402,13 @@ export default function App() {
     { id: "budget", icon: Wallet, label: "Budget" },
   ] as const;
 
-  // ------------------------------------------------------------
-  // HOME “CINEMA HUB”
-  // ------------------------------------------------------------
   const focusDay = TRIP_DATA.itinerary_days[clamp(focusDayIndex, 0, TRIP_DATA.itinerary_days.length - 1)];
 
   const gotoNextDay = () => setFocusDayIndex((i) => clamp(i + 1, 0, TRIP_DATA.itinerary_days.length - 1));
   const gotoPrevDay = () => setFocusDayIndex((i) => clamp(i - 1, 0, TRIP_DATA.itinerary_days.length - 1));
 
   const setCityFromFocus = () => {
-    const base = focusDay.city.split("→").map((s) => s.trim())[0];
+    const base = getBaseCity(focusDay.city);
     setActiveCity(base);
   };
 
@@ -1730,12 +1419,10 @@ export default function App() {
         <Glass className="border-b border-slate-200">
           <div className="mx-auto w-full min-w-0 max-w-[560px] px-4 h-16 flex items-center justify-between sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-extrabold shrink-0">
-                V
-              </div>
+              <div className="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-extrabold shrink-0">V</div>
               <div className="leading-tight min-w-0">
                 <div className="text-sm font-extrabold text-slate-900 truncate">Vietnam 2026</div>
-                <div className="text-[11px] text-slate-500 truncate">Mobile Hub • Cinema V2</div>
+                <div className="text-[11px] text-slate-500 truncate">Mobile Hub • Cinema (gradients only)</div>
               </div>
             </div>
 
@@ -1758,7 +1445,7 @@ export default function App() {
         {/* HOME */}
         {view === "home" && (
           <div className="space-y-6">
-            <CinemaHero onOpenQuick={() => setQuickOpen(true)} activeCity={activeCity} coverSrc={cityCoverFromLabel(activeCity)} />
+            <CinemaHero onOpenQuick={() => setQuickOpen(true)} activeCity={activeCity} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left */}
@@ -1767,15 +1454,10 @@ export default function App() {
                   <div className="flex items-center justify-between gap-3 mb-3">
                     <div>
                       <div className="text-lg font-extrabold text-slate-900">Dashboard</div>
-                      <div className="text-xs text-slate-500">
-                        {isWithinTrip ? "On est dans la période du trip." : "Preview — le trip n’a pas commencé (ou est fini)."}
-                      </div>
+                      <div className="text-xs text-slate-500">{isWithinTrip ? "On est dans la période du trip." : "Preview — le trip n’a pas commencé (ou est fini)."}</div>
                     </div>
                     <div className="flex gap-2">
-                      <button
-                        onClick={() => setView("itinerary")}
-                        className="px-3 py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold flex items-center gap-2"
-                      >
+                      <button onClick={() => setView("itinerary")} className="px-3 py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold flex items-center gap-2">
                         Itinéraire <ChevronRight size={14} />
                       </button>
                     </div>
@@ -1794,7 +1476,7 @@ export default function App() {
                       icon={<Star size={16} className="text-amber-500" />}
                       value={cinemaMode}
                       onChange={setCinemaMode}
-                      hint="Cartes plus immersives, plus de visuel."
+                      hint="Cartes plus immersives."
                     />
                   </div>
 
@@ -1811,7 +1493,7 @@ export default function App() {
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <div className="text-lg font-extrabold text-slate-900">Focus du jour</div>
-                      <div className="text-xs text-slate-500">Swipe mental: 1 carte = 1 journée.</div>
+                      <div className="text-xs text-slate-500">1 carte = 1 journée.</div>
                     </div>
                     <div className="flex gap-2">
                       <button onClick={gotoPrevDay} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
@@ -1837,7 +1519,7 @@ export default function App() {
 
                   <DayCardMobile
                     day={focusDay}
-                    coverSrc={dayCoverFromDay(focusDay)}
+                    coverKey={dayCoverKeyFromDay(focusDay)}
                     mood={mood}
                     isFav={favorites.includes(focusDay.date)}
                     onFav={() => toggleFavorite(focusDay.date)}
@@ -1895,7 +1577,7 @@ export default function App() {
                       <div className="font-extrabold text-indigo-900 flex items-center gap-2">
                         <Hotel size={16} /> Hôtels
                       </div>
-                      <div className="text-xs text-indigo-700 mt-1">Covers + liens</div>
+                      <div className="text-xs text-indigo-700 mt-1">Liens + Maps</div>
                     </button>
                     <button onClick={() => setView("budget")} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left">
                       <div className="font-extrabold text-slate-900 flex items-center gap-2">
@@ -1933,7 +1615,7 @@ export default function App() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-2xl font-extrabold text-slate-900">Itinéraire</div>
-                <div className="text-xs text-slate-500">Mobile-first: cartes immersives.</div>
+                <div className="text-xs text-slate-500">Cartes immersives (gradients).</div>
               </div>
               <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
                 Retour Home
@@ -1949,7 +1631,7 @@ export default function App() {
                   <DayCardMobile
                     key={day.date}
                     day={day}
-                    coverSrc={dayCoverFromDay(day)}
+                    coverKey={dayCoverKeyFromDay(day)}
                     mood={mood}
                     isFav={favorites.includes(day.date)}
                     onFav={() => toggleFavorite(day.date)}
@@ -1966,7 +1648,7 @@ export default function App() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-2xl font-extrabold text-slate-900">Hôtels</div>
-                <div className="text-xs text-slate-500">Covers + Booking + Maps</div>
+                <div className="text-xs text-slate-500">Gradients + Booking + Maps</div>
               </div>
               <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
                 Retour Home
@@ -2002,9 +1684,7 @@ export default function App() {
               <div className="mt-4 grid sm:grid-cols-2 gap-4">
                 {Object.entries(TRIP_DATA.food).map(([region, dishes]) => (
                   <div key={region} className="bg-white rounded-3xl border border-orange-100 p-4">
-                    <div className="text-[11px] font-extrabold uppercase tracking-wide text-orange-800 mb-2">
-                      {region.replace("_", " & ")}
-                    </div>
+                    <div className="text-[11px] font-extrabold uppercase tracking-wide text-orange-800 mb-2">{region.replace("_", " & ")}</div>
                     <div className="flex flex-wrap gap-2">
                       {dishes.map((d) => (
                         <span key={d} className="px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-orange-900 text-sm font-semibold">
@@ -2161,9 +1841,7 @@ export default function App() {
                     <div className="text-xs text-slate-500 whitespace-nowrap">VND / 1 USD</div>
                   </div>
 
-                  <div className="mt-3 text-xs text-slate-500">
-                    Astuce: si kidsMode ON, on retire les activités tag “impact” dans les estimations.
-                  </div>
+                  <div className="mt-3 text-xs text-slate-500">Astuce: si kidsMode ON, on retire les activités tag “impact” dans les estimations.</div>
                 </div>
               </div>
 
@@ -2211,10 +1889,7 @@ export default function App() {
                                 {a.tags?.length ? (
                                   <div className="mt-2 flex flex-wrap gap-2">
                                     {a.tags.map((t) => (
-                                      <span
-                                        key={t}
-                                        className="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-white border border-slate-200 text-slate-600"
-                                      >
+                                      <span key={t} className="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-white border border-slate-200 text-slate-600">
                                         {t}
                                       </span>
                                     ))}
@@ -2222,12 +1897,7 @@ export default function App() {
                                 ) : null}
 
                                 {a.link ? (
-                                  <a
-                                    href={a.link}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-block mt-2 text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-2xl"
-                                  >
+                                  <a href={a.link} target="_blank" rel="noreferrer" className="inline-block mt-2 text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-2xl">
                                     Lien
                                   </a>
                                 ) : null}
@@ -2260,7 +1930,7 @@ export default function App() {
           </div>
         )}
 
-        {/* CULTURE (optionnel) */}
+        {/* CULTURE (optional) */}
         {view === "culture" && (
           <div className="space-y-5">
             <div className="flex items-center justify-between gap-3">
@@ -2300,9 +1970,7 @@ export default function App() {
           <button
             key={tab.id}
             onClick={() => setView(tab.id as View)}
-            className={`flex flex-col items-center p-2 rounded-2xl transition-colors ${
-              view === tab.id ? "text-emerald-600 bg-emerald-50" : "text-slate-400"
-            }`}
+            className={`flex flex-col items-center p-2 rounded-2xl transition-colors ${view === tab.id ? "text-emerald-600 bg-emerald-50" : "text-slate-400"}`}
           >
             <tab.icon size={20} />
             <span className="text-[10px] font-semibold mt-1">{tab.label}</span>
