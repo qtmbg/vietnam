@@ -28,6 +28,7 @@ import {
   Shield,
   Search,
 } from "lucide-react";
+
 // ------------------------------------------------------------
 // ASSETS (public/)
 // ------------------------------------------------------------
@@ -103,19 +104,6 @@ const ASSETS = {
       whale_island_ponton: "/covers/moments/whale-island-ponton.jpg",
       pont_dragon_da_nang: "/covers/moments/pont-dragon-da-nang.jpg",
     },
-const cityCoverFromLabel = (label: string) => {
-  const s = (label ?? "").toLowerCase();
-
-  if (s.includes("hanoi")) return ASSETS.covers.cities.hanoi;
-  if (s.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
-  if (s.includes("ha long") || s.includes("halong")) return ASSETS.covers.cities.ha_long;
-  if (s.includes("hoi an") || s.includes("hoian")) return ASSETS.covers.cities.hoi_an;
-  if (s.includes("da nang") || s.includes("danang")) return ASSETS.covers.cities.da_nang;
-  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return ASSETS.covers.cities.hcmc;
-  if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
-
-  return ASSETS.covers.sections.home;
-};
 
     // Hotels (public/covers/hotels/)
     hotels: {
@@ -130,6 +118,8 @@ const cityCoverFromLabel = (label: string) => {
     },
   },
 } as const;
+
+// Helper function moved outside of the object
 const cityCoverFromLabel = (label?: string) => {
   const s = (label ?? "").toLowerCase();
 
@@ -144,27 +134,6 @@ const cityCoverFromLabel = (label?: string) => {
 
   return ASSETS.covers.sections.home;
 };
-const cityCoverFromLabel = (label?: string) => {
-  const s = (label ?? "").toLowerCase();
-
-  if (s.includes("hanoi")) return ASSETS.covers.cities.hanoi;
-  if (s.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
-  if (s.includes("ha long") || s.includes("halong")) return ASSETS.covers.cities.ha_long;
-  if (s.includes("hoi an") || s.includes("hoian")) return ASSETS.covers.cities.hoi_an;
-  if (s.includes("da nang") || s.includes("danang")) return ASSETS.covers.cities.da_nang;
-  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon"))
-    return ASSETS.covers.cities.hcmc;
-  if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
-
-  return ASSETS.covers.sections.home;
-};
-
-// Hotels (public/covers/hotels/)
-// (tu peux laisser tes mappings dans ASSETS.covers.hotels, ici c’est juste un repère)
-
-// ------------------------------------------------------------
-// TYPES
-// ------------------------------------------------------------
 
 // ------------------------------------------------------------
 // TYPES
@@ -274,7 +243,7 @@ interface TripData {
 }
 
 // ------------------------------------------------------------
-// DATA (inchangé, on garde TOUT)
+// DATA
 // ------------------------------------------------------------
 const TRIP_DATA: TripData = {
   meta: {
@@ -902,7 +871,7 @@ const CinemaHero = ({
             <span className="block text-emerald-200 font-light mt-2">Family Trip</span>
           </div>
           <p className="mt-3 text-white/90 text-base sm:text-lg">
-            Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d&apos;amour.
+            Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d'amour.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
@@ -1476,7 +1445,6 @@ export default function App() {
             <CinemaHero
   onOpenQuick={() => setQuickOpen(true)}
   activeCity={activeCity}
-  coverSrc={cityCoverFromLabel(activeCity)}
 />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left / Mobile top stack */}
@@ -1490,8 +1458,7 @@ export default function App() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => setView("itinerary")} className="px-3 py-2 rounded-2xl bg-indigo-600 text-white text-xsoth
-                        text-xs font-extrabold flex items-center gap-2">
+                      <button onClick={() => setView("itinerary")} className="px-3 py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold flex items-center gap-2">
                         Itinéraire <ChevronRight size={14} />
                       </button>
                     </div>
@@ -1553,7 +1520,6 @@ export default function App() {
 
 <DayCardMobile
   day={focusDay}
-  coverSrc={dayCoverFromDay(focusDay)}
   mood={mood}
   isFav={favorites.includes(focusDay.date)}
   onFav={() => toggleFavorite(focusDay.date)}
@@ -1666,13 +1632,15 @@ export default function App() {
   <DayCardMobile
     key={day.date}
     day={day}
-    coverSrc={dayCoverFromDay(day)}
     mood={mood}
     isFav={favorites.includes(day.date)}
     onFav={() => toggleFavorite(day.date)}
     kidsMode={kidsMode}
   />
 ))}
+            </div>
+          </div>
+        )}
 
         {/* HOTELS */}
         {view === "hotels" && (
