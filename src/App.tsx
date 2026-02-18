@@ -6,7 +6,7 @@ import {
   Calendar,
   CheckSquare,
   Heart,
-  Hotel,
+  Hotel as HotelIcon,
   Info,
   Landmark,
   Languages,
@@ -30,8 +30,7 @@ import {
 } from "lucide-react";
 
 // ------------------------------------------------------------
-// ASSET URL (Vite) — works locally + Vercel + base path
-// Put your files in /public/covers/... and /public/family/...
+// ASSET URL (Vite / Vercel)  - fichiers dans /public/...
 // ------------------------------------------------------------
 const assetUrl = (path: string) => {
   const base = (import.meta as any)?.env?.BASE_URL ?? "/";
@@ -40,7 +39,6 @@ const assetUrl = (path: string) => {
   return `${cleanBase}${cleanPath}`;
 };
 
-// Helper to build public paths safely
 const P = (p: string) => assetUrl(p);
 
 // ------------------------------------------------------------
@@ -54,7 +52,6 @@ const ASSETS = {
     aydann: P("/family/aydann.jpg"),
     milann: P("/family/milann.jpg"),
   },
-
   covers: {
     sections: {
       home: P("/covers/sections/cover-home.jpg"),
@@ -64,7 +61,6 @@ const ASSETS = {
       tips: P("/covers/sections/cover-tips.jpg"),
       budget: P("/covers/sections/cover-budget.jpg"),
     },
-
     cities: {
       hanoi: P("/covers/cities/hanoi.jpg"),
       ninh_binh: P("/covers/cities/ninh-binh.jpg"),
@@ -74,7 +70,6 @@ const ASSETS = {
       hcmc: P("/covers/cities/hcmc.jpg"),
       whale_island: P("/covers/cities/whale-island.jpg"),
     },
-
     moments: {
       arrival: P("/covers/moments/arrival.jpg"),
       transfer: P("/covers/moments/transfer.jpg"),
@@ -115,7 +110,6 @@ const ASSETS = {
       whale_island_ponton: P("/covers/moments/whale-island-ponton.jpg"),
       pont_dragon_da_nang: P("/covers/moments/pont-dragon-da-nang.jpg"),
     },
-
     hotels: {
       hanoi_ja_cosmo: P("/covers/hotels/hanoi-ja-cosmo.jpg"),
       ninh_binh_tam_coc_golden_fields: P("/covers/hotels/ninh-binh-tam-coc-golden-fields.jpg"),
@@ -175,7 +169,7 @@ type DayBlock = {
 };
 
 type ItineraryDay = {
-  date: string; // ISO YYYY-MM-DD
+  date: string; // ISO
   city: string;
   theme: string[];
   blocks: DayBlock[];
@@ -237,7 +231,7 @@ interface TripData {
 }
 
 // ------------------------------------------------------------
-// DATA
+// DATA (résumé fidèle de ton fichier)
 // ------------------------------------------------------------
 const TRIP_DATA: TripData = {
   meta: {
@@ -252,7 +246,6 @@ const TRIP_DATA: TripData = {
       return_arrive_marrakech: { date: "2026-08-18", time: "09:20" },
     },
   },
-
   hero_images: {
     Hanoi: {
       src: "https://images.unsplash.com/photo-1528127269322-81bef729b60c?auto=format&fit=crop&w=1600&q=80",
@@ -279,7 +272,6 @@ const TRIP_DATA: TripData = {
       source: "Wikimedia",
     },
   },
-
   hotels: [
     {
       city: "Hanoi",
@@ -289,7 +281,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/ja-cosmo-and-spa.html",
       why: "Central pour ruelles, cafés, culture; simple avec kids + Claudine.",
       imageKey: "Hanoi",
-      cover: ASSETS.covers.hotels.hanoi_ja_cosmo,
+      cover: "/covers/hanoi-ja-cosmo.jpg",
     },
     {
       city: "Ninh Binh (Tam Coc)",
@@ -299,7 +291,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/tam-coc-golden-fields-homestay.html",
       why: "Base rizières + liberté; parfait pour le ‘wow’ Trang An sans galère.",
       imageKey: "NinhBinh_TrangAn",
-      cover: ASSETS.covers.hotels.ninh_binh_tam_coc_golden_fields,
+      cover: "/covers/ninh-binh-tam-coc-golden-fields.jpg",
     },
     {
       city: "Ha Long",
@@ -309,7 +301,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html",
       why: "Transition confortable avant croisière, logistique simple.",
       imageKey: "HaLong",
-      cover: ASSETS.covers.hotels.ha_long_wyndham_legend,
+      cover: "/covers/ha-long-wyndham-legend.jpg",
     },
     {
       city: "Ha Long (Cruise)",
@@ -320,7 +312,7 @@ const TRIP_DATA: TripData = {
       note: "Départ : Halong International Cruise Port",
       why: "Le cœur ‘cinéma’ du voyage: karsts, baie, expérience famille.",
       imageKey: "HaLong",
-      cover: ASSETS.covers.hotels.ha_long_renea_cruise,
+      cover: "/covers/ha-long-renea-cruise.jpg",
     },
     {
       city: "Hoi An (An Bang Beach)",
@@ -331,7 +323,7 @@ const TRIP_DATA: TripData = {
       why: "Plage + slow nights Old Town; bon équilibre famille/ambiance.",
       note: "À surveiller: selon saison, certains accès plage peuvent changer.",
       imageKey: "HoiAn",
-      cover: ASSETS.covers.hotels.hoi_an_sea_la_vie,
+      cover: "/covers/hoi-an-sea-la-vie.jpg",
     },
     {
       city: "Da Nang",
@@ -341,7 +333,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/seahorse-signature-danang-by-haviland.html",
       why: "Base urbaine efficace pour culture + musées + ponts.",
       imageKey: "DaNang",
-      cover: ASSETS.covers.hotels.da_nang_seahorse_signature,
+      cover: "/covers/da-nang-seahorse-signature.jpg",
     },
     {
       city: "Whale Island (Hon Ong)",
@@ -351,7 +343,7 @@ const TRIP_DATA: TripData = {
       official_url: "https://whaleislandresort.com/",
       why: "Déconnexion nature pure, rythme famille, mer & ciel.",
       imageKey: "DaNang",
-      cover: ASSETS.covers.hotels.whale_island_resort,
+      cover: "/covers/whale-island-resort.jpg",
     },
     {
       city: "Ho Chi Minh City",
@@ -361,37 +353,55 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/alagon-saigon.html",
       why: "Très central pour histoire, colonial, street life.",
       imageKey: "HCMC",
-      cover: ASSETS.covers.hotels.hcmc_alagon_spa,
+      cover: "/covers/hcmc-alagon-spa.jpg",
     },
   ],
-
   culture_links: {
     UNESCO: [
-      { name: "Trang An Landscape Complex (Ninh Binh)", url: "https://whc.unesco.org/en/list/1438/" },
-      { name: "Ha Long Bay - Cat Ba Archipelago", url: "https://whc.unesco.org/en/list/672/" },
+      {
+        name: "Trang An Landscape Complex (Ninh Binh)",
+        url: "https://whc.unesco.org/en/list/1438/",
+      },
+      {
+        name: "Ha Long Bay - Cat Ba Archipelago",
+        url: "https://whc.unesco.org/en/list/672/",
+      },
       { name: "Hoi An Ancient Town", url: "https://whc.unesco.org/en/list/948/" },
     ],
     Hanoi: [
       { name: "Hoa Lo Prison Relic (site)", url: "https://hoalo.vn/EN" },
-      { name: "Thang Long Water Puppet Theatre (tickets)", url: "https://nhahatmuaroithanglong.vn/en/ticket-book/" },
+      {
+        name: "Thang Long Water Puppet Theatre (tickets)",
+        url: "https://nhahatmuaroithanglong.vn/en/ticket-book/",
+      },
     ],
     DaNang: [
-      { name: "Da Nang Museum of Cham Sculpture", url: "https://chammuseum.vn/" },
-      { name: "Marble Mountains guide (Vietnam Tourism)", url: "https://vietnam.travel/things-to-do/around-marble-mountains" },
+      {
+        name: "Da Nang Museum of Cham Sculpture",
+        url: "https://chammuseum.vn/",
+      },
+      {
+        name: "Marble Mountains guide (Vietnam Tourism)",
+        url: "https://vietnam.travel/things-to-do/around-marble-mountains",
+      },
     ],
     HoChiMinh: [
-      { name: "War Remnants Museum (EN)", url: "https://baotangchungtichchientranh.vn/en" },
-      { name: "Independence Palace (visiting hours)", url: "https://dinhdoclap.gov.vn/en/visiting-hours/" },
+      {
+        name: "War Remnants Museum (EN)",
+        url: "https://baotangchungtichchientranh.vn/en",
+      },
+      {
+        name: "Independence Palace (visiting hours)",
+        url: "https://dinhdoclap.gov.vn/en/visiting-hours/",
+      },
     ],
   },
-
   internal_flights: [
     { route: "HPH → DAD", time: "19:00", group_cost_usd: 200 },
     { route: "DAD → CXR", time: "06:00", group_cost_usd: 250 },
     { route: "CXR → SGN", time: "16:00", group_cost_usd: 300 },
     { route: "SGN → HAN", time: "11:00", group_cost_usd: 250 },
   ],
-
   ground_transfers: [
     { name: "HAN airport → Ja Cosmo", cost_usd: 20 },
     { name: "Hanoi → Ninh Binh (limousine)", cost_usd: 60 },
@@ -407,13 +417,17 @@ const TRIP_DATA: TripData = {
     { name: "HAN airport → Ja Cosmo", cost_usd: 20 },
     { name: "Ja Cosmo → HAN airport", cost_usd: 15 },
   ],
-
   itinerary_days: [
     {
       date: "2026-07-25",
       city: "Hanoi",
       theme: ["arrivée", "dîner", "repos"],
-      blocks: [{ label: "Soir", plan: "Arrivée 19:30, transfert, check-in, dîner simple local, dodo." }],
+      blocks: [
+        {
+          label: "Soir",
+          plan: "Arrivée 19:30, transfert, check-in, dîner simple local, dodo.",
+        },
+      ],
     },
     {
       date: "2026-07-26",
@@ -434,8 +448,14 @@ const TRIP_DATA: TripData = {
       city: "Hanoi",
       theme: ["histoire", "colonial", "esthétique"],
       blocks: [
-        { label: "Matin", plan: "Temple of Literature (beau, symbolique)." },
-        { label: "Aprem", plan: "Quartier colonial + Opéra (extérieur / zone)." },
+        {
+          label: "Matin",
+          plan: "Temple of Literature (beau, symbolique).",
+        },
+        {
+          label: "Aprem",
+          plan: "Quartier colonial + Opéra (extérieur / zone).",
+        },
         { label: "Soir", plan: "Dîner calme, balade." },
       ],
     },
@@ -444,9 +464,16 @@ const TRIP_DATA: TripData = {
       city: "Hanoi → Ninh Binh",
       theme: ["histoire", "transfert"],
       blocks: [
-        { label: "Matin", plan: "Hoa Lo Prison (fort, bien fait).", links: ["https://hoalo.vn/EN"] },
+        {
+          label: "Matin",
+          plan: "Hoa Lo Prison (fort, bien fait).",
+          links: ["https://hoalo.vn/EN"],
+        },
         { label: "Midi", plan: "Départ limousine vers Ninh Binh + check-in." },
-        { label: "Soir", plan: "Rizières au coucher, dîner au calme." },
+        {
+          label: "Soir",
+          plan: "Rizières au coucher, dîner au calme.",
+        },
       ],
     },
     {
@@ -454,7 +481,11 @@ const TRIP_DATA: TripData = {
       city: "Ninh Binh",
       theme: ["nature", "wow", "boat"],
       blocks: [
-        { label: "Matin", plan: "Trang An boat tour (spectaculaire UNESCO).", links: ["https://whc.unesco.org/en/list/1438/"] },
+        {
+          label: "Matin",
+          plan: "Trang An boat tour (spectaculaire UNESCO).",
+          links: ["https://whc.unesco.org/en/list/1438/"],
+        },
         { label: "Aprem", plan: "Repos + vélo doux si énergie." },
         { label: "Soir", plan: "Dîner local." },
       ],
@@ -464,7 +495,10 @@ const TRIP_DATA: TripData = {
       city: "Ninh Binh → Ha Long",
       theme: ["nature", "transfert"],
       blocks: [
-        { label: "Matin", plan: "Balade courte + café, départ vers Ha Long." },
+        {
+          label: "Matin",
+          plan: "Balade courte + café, départ vers Ha Long.",
+        },
         { label: "Aprem", plan: "Check-in Wyndham, repos." },
         { label: "Soir", plan: "Seafood + promenade." },
       ],
@@ -475,7 +509,11 @@ const TRIP_DATA: TripData = {
       theme: ["unesco", "cruise"],
       blocks: [
         { label: "Matin", plan: "Transition douce + port." },
-        { label: "Midi/Soir", plan: "Embarquement Renea Cruise (Baie / karsts).", links: ["https://whc.unesco.org/en/list/672/"] },
+        {
+          label: "Midi/Soir",
+          plan: "Embarquement Renea Cruise (Baie / karsts).",
+          links: ["https://whc.unesco.org/en/list/672/"],
+        },
       ],
     },
     {
@@ -483,8 +521,14 @@ const TRIP_DATA: TripData = {
       city: "Ha Long → Da Nang → Hoi An",
       theme: ["transit", "buffer"],
       blocks: [
-        { label: "Matin", plan: "Fin croisière + transfert HPH." },
-        { label: "Soir", plan: "Vol HPH 19:00 → DAD, transfert Hoi An, dodo." },
+        {
+          label: "Matin",
+          plan: "Fin croisière + transfert HPH.",
+        },
+        {
+          label: "Soir",
+          plan: "Vol HPH 19:00 → DAD, transfert Hoi An, dodo.",
+        },
       ],
     },
     {
@@ -494,7 +538,11 @@ const TRIP_DATA: TripData = {
       blocks: [
         { label: "Matin", plan: "Installation + repos." },
         { label: "Aprem", plan: "Plage An Bang." },
-        { label: "Soir", plan: "Old Town lanterns + food + flânerie.", links: ["https://whc.unesco.org/en/list/948/"] },
+        {
+          label: "Soir",
+          plan: "Old Town lanterns + food + flânerie.",
+          links: ["https://whc.unesco.org/en/list/948/"],
+        },
       ],
     },
     {
@@ -512,7 +560,10 @@ const TRIP_DATA: TripData = {
       city: "Hoi An",
       theme: ["local", "cuisine", "kids"],
       blocks: [
-        { label: "Matin", plan: "Campagne + cuisine simple (Tra Que vibe)." },
+        {
+          label: "Matin",
+          plan: "Campagne + cuisine simple (Tra Que vibe).",
+        },
         { label: "Aprem", plan: "Plage." },
         { label: "Soir", plan: "Lanternes + slow." },
       ],
@@ -521,7 +572,12 @@ const TRIP_DATA: TripData = {
       date: "2026-08-05",
       city: "Hoi An",
       theme: ["libre", "famille"],
-      blocks: [{ label: "Journée", plan: "Journée libre: plage, massages, shopping ciblé, repos." }],
+      blocks: [
+        {
+          label: "Journée",
+          plan: "Journée libre: plage, massages, shopping ciblé, repos.",
+        },
+      ],
     },
     {
       date: "2026-08-06",
@@ -538,8 +594,15 @@ const TRIP_DATA: TripData = {
       city: "Da Nang",
       theme: ["culture", "art", "histoire"],
       blocks: [
-        { label: "Matin", plan: "Cham Museum (immanquable).", links: ["https://chammuseum.vn/"] },
-        { label: "Aprem", plan: "Option Marble Mountains ou repos selon énergie." },
+        {
+          label: "Matin",
+          plan: "Cham Museum (immanquable).",
+          links: ["https://chammuseum.vn/"],
+        },
+        {
+          label: "Aprem",
+          plan: "Option Marble Mountains ou repos selon énergie.",
+        },
         { label: "Soir", plan: "Seafood + balade." },
       ],
     },
@@ -548,42 +611,78 @@ const TRIP_DATA: TripData = {
       city: "Da Nang → Whale Island",
       theme: ["early", "nature"],
       blocks: [
-        { label: "Très tôt", plan: "Départ aéroport, vol 06:00 DAD→CXR." },
-        { label: "Jour", plan: "Transfert port + bateau vers Whale Island, installation." },
+        {
+          label: "Très tôt",
+          plan: "Départ aéroport, vol 06:00 DAD→CXR.",
+        },
+        {
+          label: "Jour",
+          plan: "Transfert port + bateau vers Whale Island, installation.",
+        },
       ],
     },
     {
       date: "2026-08-09",
       city: "Whale Island",
       theme: ["nature", "déconnexion"],
-      blocks: [{ label: "Journée", plan: "Baignade / snorkeling doux, sieste, coucher de soleil." }],
+      blocks: [
+        {
+          label: "Journée",
+          plan: "Baignade / snorkeling doux, sieste, coucher de soleil.",
+        },
+      ],
     },
     {
       date: "2026-08-10",
       city: "Whale Island",
       theme: ["nature", "slow"],
-      blocks: [{ label: "Journée", plan: "Marche, plage, lecture, ciel étoilé." }],
+      blocks: [
+        {
+          label: "Journée",
+          plan: "Marche, plage, lecture, ciel étoilé.",
+        },
+      ],
     },
     {
       date: "2026-08-11",
       city: "Whale Island",
       theme: ["slow", "famille"],
-      blocks: [{ label: "Journée", plan: "Dernier jour complet: photos, repos, mer." }],
+      blocks: [
+        {
+          label: "Journée",
+          plan: "Dernier jour complet: photos, repos, mer.",
+        },
+      ],
     },
     {
       date: "2026-08-12",
       city: "Whale Island → Ho Chi Minh City",
       theme: ["transit"],
-      blocks: [{ label: "Jour", plan: "Bateau + transfert CXR, vol 16:00 vers SGN, check-in Alagon." }],
+      blocks: [
+        {
+          label: "Jour",
+          plan: "Bateau + transfert CXR, vol 16:00 vers SGN, check-in Alagon.",
+        },
+      ],
     },
     {
       date: "2026-08-13",
       city: "Ho Chi Minh City",
       theme: ["colonial", "histoire", "fr-vibe"],
       blocks: [
-        { label: "Matin", plan: "Post Office + zone coloniale (balade)." },
-        { label: "Aprem", plan: "Independence Palace.", links: ["https://dinhdoclap.gov.vn/en/visiting-hours/"] },
-        { label: "Soir", plan: "Street food + marche." },
+        {
+          label: "Matin",
+          plan: "Post Office + zone coloniale (balade).",
+        },
+        {
+          label: "Aprem",
+          plan: "Independence Palace.",
+          links: ["https://dinhdoclap.gov.vn/en/visiting-hours/"],
+        },
+        {
+          label: "Soir",
+          plan: "Street food + marche.",
+        },
       ],
     },
     {
@@ -591,9 +690,19 @@ const TRIP_DATA: TripData = {
       city: "Ho Chi Minh City",
       theme: ["histoire", "culture"],
       blocks: [
-        { label: "Matin", plan: "War Remnants Museum (à faire si kids OK).", links: ["https://baotangchungtichchientranh.vn/en"] },
-        { label: "Aprem", plan: "Cholon / temples / ruelles (incarné)." },
-        { label: "Soir", plan: "Dîner simple + retour tôt." },
+        {
+          label: "Matin",
+          plan: "War Remnants Museum (à faire si kids OK).",
+          links: ["https://baotangchungtichchientranh.vn/en"],
+        },
+        {
+          label: "Aprem",
+          plan: "Cholon / temples / ruelles (incarné).",
+        },
+        {
+          label: "Soir",
+          plan: "Dîner simple + retour tôt.",
+        },
       ],
     },
     {
@@ -601,49 +710,83 @@ const TRIP_DATA: TripData = {
       city: "Ho Chi Minh City → Hanoi",
       theme: ["transit"],
       blocks: [
-        { label: "Matin", plan: "Vol 11:00 SGN→HAN, check-in Ja Cosmo." },
-        { label: "Soir", plan: "Balade douce, shopping ciblé, cafés." },
+        {
+          label: "Matin",
+          plan: "Vol 11:00 SGN→HAN, check-in Ja Cosmo.",
+        },
+        {
+          label: "Soir",
+          plan: "Balade douce, shopping ciblé, cafés.",
+        },
       ],
     },
     {
       date: "2026-08-16",
       city: "Hanoi",
       theme: ["best-of", "libre"],
-      blocks: [{ label: "Journée", plan: "Best-of selon mood: ruelles / cafés / marchés + lac." }],
+      blocks: [
+        {
+          label: "Journée",
+          plan: "Best-of selon mood: ruelles / cafés / marchés + lac.",
+        },
+      ],
     },
     {
       date: "2026-08-17",
       city: "Hanoi",
       theme: ["départ"],
       blocks: [
-        { label: "Matin", plan: "Derniers cadeaux + café." },
-        { label: "Aprem", plan: "Départ aéroport (tampon trafic)." },
-        { label: "Soir", plan: "Vol 19:30." },
+        {
+          label: "Matin",
+          plan: "Derniers cadeaux + café.",
+        },
+        {
+          label: "Aprem",
+          plan: "Départ aéroport (tampon trafic).",
+        },
+        {
+          label: "Soir",
+          plan: "Vol 19:30.",
+        },
       ],
     },
   ],
-
   glossary: [
-    { term: "Grab", note: "App voiture/taxi la plus simple. Paiement carte ou cash." },
-    { term: "Cash petites coupures", note: "Street food, marchés, petits achats." },
-    { term: "Temples / lieux sacrés", note: "Épaules/genoux couverts, ton calme." },
-    { term: "Rythme kids", note: "Matin actif / aprem repos / soir doux. Eau + snacks." },
+    {
+      term: "Grab",
+      note: "App voiture/taxi la plus simple. Paiement carte ou cash.",
+    },
+    {
+      term: "Cash petites coupures",
+      note: "Street food, marchés, petits achats.",
+    },
+    {
+      term: "Temples / lieux sacrés",
+      note: "Épaules/genoux couverts, ton calme.",
+    },
+    {
+      term: "Rythme kids",
+      note: "Matin actif / aprem repos / soir doux. Eau + snacks.",
+    },
   ],
-
   food: {
     Hanoi: ["Bún chả", "Phở", "Café à l’œuf"],
     NinhBinh: ["Chèvre (dê)", "Cơm cháy (riz croustillant)"],
     HoiAn_DaNang: ["Cao lầu", "Bánh mì", "White rose", "Mì Quảng"],
     HCMC: ["Cơm tấm", "Bánh xèo", "Hủ tiếu"],
   },
-
   activities: [
     {
       id: "hoa-lo",
       city: "Hanoi",
       name: "Hoa Lo Prison (ticket)",
       link: "https://hoalo.vn/EN",
-      cost: { currency: "VND", adult_vnd: 50000, notes: "Prix publié comme 50,000 VND/person (vérifier sur place). Enfants <15 parfois gratuits." },
+      cost: {
+        currency: "VND",
+        adult_vnd: 50000,
+        notes:
+          "Prix publié comme 50,000 VND/person (vérifier sur place). Enfants <15 parfois gratuits.",
+      },
       tags: ["histoire", "impact"],
     },
     {
@@ -651,7 +794,11 @@ const TRIP_DATA: TripData = {
       city: "Hanoi",
       name: "Thang Long Water Puppet Show (ticket)",
       link: "https://nhahatmuaroithanglong.vn/en/ticket-book/",
-      cost: { currency: "VND", adult_vnd: 150000, notes: "Fourchette souvent 100k–200k VND selon placement." },
+      cost: {
+        currency: "VND",
+        adult_vnd: 150000,
+        notes: "Fourchette souvent 100k–200k VND selon placement.",
+      },
       tags: ["culture", "kids-friendly"],
     },
     {
@@ -659,7 +806,12 @@ const TRIP_DATA: TripData = {
       city: "Ninh Binh",
       name: "Trang An Boat Tour (ticket)",
       link: "https://whc.unesco.org/en/list/1438/",
-      cost: { currency: "VND", adult_vnd: 250000, child_vnd: 120000, notes: "Enfant 1m–1.3m: 120k; >1.3m plein tarif; <1m gratuit." },
+      cost: {
+        currency: "VND",
+        adult_vnd: 250000,
+        child_vnd: 120000,
+        notes: "Enfant 1m–1.3m: 120k; >1.3m plein tarif; <1m gratuit.",
+      },
       tags: ["nature", "wow"],
     },
     {
@@ -667,7 +819,13 @@ const TRIP_DATA: TripData = {
       city: "Hoi An",
       name: "Hoi An Ancient Town (ticket)",
       link: "https://whc.unesco.org/en/list/948/",
-      cost: { currency: "VND", adult_vnd: 120000, child_vnd: 50000, notes: "Ticket international souvent 120k VND; enfants 1–1.4m 50k (selon barème local)." },
+      cost: {
+        currency: "VND",
+        adult_vnd: 120000,
+        child_vnd: 50000,
+        notes:
+          "Ticket international souvent 120k VND; enfants 1–1.4m 50k (selon barème local).",
+      },
       tags: ["unesco", "lanternes"],
     },
     {
@@ -675,7 +833,12 @@ const TRIP_DATA: TripData = {
       city: "Da Nang",
       name: "Da Nang Museum of Cham Sculpture (ticket)",
       link: "https://chammuseum.vn/",
-      cost: { currency: "VND", adult_vnd: 60000, child_vnd: 10000, notes: "Souvent 60k adulte, 10k enfant." },
+      cost: {
+        currency: "VND",
+        adult_vnd: 60000,
+        child_vnd: 10000,
+        notes: "Souvent 60k adulte, 10k enfant.",
+      },
       tags: ["art", "histoire"],
     },
     {
@@ -683,7 +846,11 @@ const TRIP_DATA: TripData = {
       city: "Da Nang",
       name: "Marble Mountains (ticket)",
       link: "https://vietnam.travel/things-to-do/around-marble-mountains",
-      cost: { currency: "VND", adult_vnd: 40000, notes: "Entrée ~40k; ascenseur ~15k si utilisé." },
+      cost: {
+        currency: "VND",
+        adult_vnd: 40000,
+        notes: "Entrée ~40k; ascenseur ~15k si utilisé.",
+      },
       tags: ["nature", "temples"],
     },
     {
@@ -691,7 +858,12 @@ const TRIP_DATA: TripData = {
       city: "Ho Chi Minh City",
       name: "War Remnants Museum (ticket)",
       link: "https://baotangchungtichchientranh.vn/en",
-      cost: { currency: "VND", adult_vnd: 40000, child_vnd: 20000, notes: "Adultes 40k; enfants (souvent 6–16) 20k; <6 gratuit (variable)." },
+      cost: {
+        currency: "VND",
+        adult_vnd: 40000,
+        child_vnd: 20000,
+        notes: "Adultes 40k; enfants (souvent 6–16) 20k; <6 gratuit (variable).",
+      },
       tags: ["histoire", "impact"],
     },
     {
@@ -699,55 +871,20 @@ const TRIP_DATA: TripData = {
       city: "Ho Chi Minh City",
       name: "Independence Palace (ticket)",
       link: "https://dinhdoclap.gov.vn/en/visiting-hours/",
-      cost: { currency: "VND", adult_vnd: 80000, child_vnd: 20000, notes: "Billet général publié (exhibit + palace): adultes 80k; enfants 20k." },
+      cost: {
+        currency: "VND",
+        adult_vnd: 80000,
+        child_vnd: 20000,
+        notes:
+          "Billet général publié (exhibit + palace): adultes 80k; enfants 20k.",
+      },
       tags: ["colonial", "histoire"],
     },
   ],
 };
 
 // ------------------------------------------------------------
-// FAMILY
-// ------------------------------------------------------------
-const FAMILY_MEMBERS = [
-  {
-    name: "Marilyne",
-    desc: "La Boss",
-    color: "bg-pink-100 text-pink-700",
-    src: ASSETS.family.marilyne,
-    fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
-  },
-  {
-    name: "Claudine",
-    desc: "La Sage",
-    color: "bg-indigo-100 text-indigo-700",
-    src: ASSETS.family.claudine,
-    fallback: "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
-  },
-  {
-    name: "Nizzar",
-    desc: "Le Pilote",
-    color: "bg-slate-100 text-slate-700",
-    src: ASSETS.family.nizzar,
-    fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
-  },
-  {
-    name: "Aydann",
-    desc: "L'Ado",
-    color: "bg-blue-100 text-blue-700",
-    src: ASSETS.family.aydann,
-    fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
-  },
-  {
-    name: "Milann",
-    desc: "La Mascotte",
-    color: "bg-orange-100 text-orange-700",
-    src: ASSETS.family.milann,
-    fallback: "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
-  },
-];
-
-// ------------------------------------------------------------
-// BON A SAVOIR / ESSENTIELS
+// LISTES / CHECKLISTS
 // ------------------------------------------------------------
 const ESSENTIALS_CHECKLIST = [
   "Passeports (validité 6 mois)",
@@ -776,7 +913,10 @@ const MONEY_TIPS = [
   "Marchés: je vérifie le prix avant, et je négocie (c’est attendu).",
 ];
 
-const STREET_CROSSING = ["Je marche doucement et régulièrement (sans courir).", "Je garde une trajectoire stable: les scooters m’évitent."];
+const STREET_CROSSING = [
+  "Je marche doucement et régulièrement (sans courir).",
+  "Je garde une trajectoire stable: les scooters m’évitent.",
+];
 
 const FIRST_DAY_HANOI = [
   "Lac de l’Épée Restituée (balade, + animé le week-end)",
@@ -796,12 +936,52 @@ const PRACTICAL_TIPS = [
 ];
 
 const AIRPORT_GLOSSARY: AirportGlossaryItem[] = [
-  { code: "HAN", city: "Hanoi", airport: "Noi Bai International", fromHotel: "Ja Cosmo (Old Quarter)", eta: "35–50 min", note: "Prévoir marge trafic." },
-  { code: "HPH", city: "Hai Phong", airport: "Cat Bi International", fromHotel: "Ha Long (Bai Chay)", eta: "55–75 min", note: "Selon horaire." },
-  { code: "DAD", city: "Da Nang", airport: "Da Nang International", fromHotel: "Da Nang centre", eta: "10–20 min" },
-  { code: "DAD", city: "Da Nang", airport: "Da Nang International", fromHotel: "Hoi An (An Bang)", eta: "45–60 min" },
-  { code: "CXR", city: "Cam Ranh", airport: "Cam Ranh International", fromHotel: "Port / transfert Whale Island", eta: "45–75 min", note: "Inclut route jusqu’au port selon point exact." },
-  { code: "SGN", city: "Ho Chi Minh City", airport: "Tan Son Nhat International", fromHotel: "District 1 (Alagon)", eta: "20–40 min", note: "Trafic variable (fort en fin d’aprem)." },
+  {
+    code: "HAN",
+    city: "Hanoi",
+    airport: "Noi Bai International",
+    fromHotel: "Ja Cosmo (Old Quarter)",
+    eta: "35–50 min",
+    note: "Prévoir marge trafic.",
+  },
+  {
+    code: "HPH",
+    city: "Hai Phong",
+    airport: "Cat Bi International",
+    fromHotel: "Ha Long (Bai Chay)",
+    eta: "55–75 min",
+    note: "Selon horaire.",
+  },
+  {
+    code: "DAD",
+    city: "Da Nang",
+    airport: "Da Nang International",
+    fromHotel: "Da Nang centre",
+    eta: "10–20 min",
+  },
+  {
+    code: "DAD",
+    city: "Da Nang",
+    airport: "Da Nang International",
+    fromHotel: "Hoi An (An Bang)",
+    eta: "45–60 min",
+  },
+  {
+    code: "CXR",
+    city: "Cam Ranh",
+    airport: "Cam Ranh International",
+    fromHotel: "Port / transfert Whale Island",
+    eta: "45–75 min",
+    note: "Inclut route jusqu’au port selon point exact.",
+  },
+  {
+    code: "SGN",
+    city: "Ho Chi Minh City",
+    airport: "Tan Son Nhat International",
+    fromHotel: "District 1 (Alagon)",
+    eta: "20–40 min",
+    note: "Trafic variable (fort en fin d’aprem).",
+  },
 ];
 
 const PHRASEBOOK: PhraseItem[] = [
@@ -822,19 +1002,27 @@ const PHRASEBOOK: PhraseItem[] = [
 // HELPERS
 // ------------------------------------------------------------
 const formatUSD = (n: number) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  });
 
 const formatVND = (n: number) =>
-  n.toLocaleString("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 });
+  n.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  });
 
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
 const safeDateLabel = (iso: string) =>
-  new Date(iso).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
-
-const toISO = (d: Date) => d.toISOString().slice(0, 10);
-
-const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+  new Date(iso).toLocaleDateString("fr-FR", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
 
 const cityKeyFromName = (city: string) => {
   if (city.includes("Hanoi")) return "Hanoi";
@@ -844,6 +1032,107 @@ const cityKeyFromName = (city: string) => {
   if (city.includes("Da Nang")) return "DaNang";
   if (city.includes("Ho Chi Minh")) return "HCMC";
   return "Hanoi";
+};
+
+// ------------------------------------------------------------
+// COVERS (Focus du jour / Itinéraire)
+// ------------------------------------------------------------
+const CITY_COVERS: Record<string, string> = {
+  Hanoi: "/covers/cities/hanoi.jpg",
+  "Ninh Binh": "/covers/cities/ninh-binh.jpg",
+  "Ha Long": "/covers/cities/ha-long.jpg",
+  "Hoi An": "/covers/cities/hoi-an.jpg",
+  "Da Nang": "/covers/cities/da-nang.jpg",
+  "Whale Island": "/covers/cities/whale-island.jpg",
+  "Ho Chi Minh City": "/covers/cities/ho-chi-minh.jpg",
+};
+
+const MOMENT_COVERS: Record<string, string> = {
+  arrival: "/covers/moments/arrival.jpg",
+  transfer: "/covers/moments/transfer.jpg",
+  plane: "/covers/moments/plane.jpg",
+  boat: "/covers/moments/boat.jpg",
+  beach: "/covers/moments/beach.jpg",
+  night: "/covers/moments/night.jpg",
+  market: "/covers/moments/market.jpg",
+  coffee: "/covers/moments/coffee.jpg",
+  streetfood: "/covers/moments/streetfood.jpg",
+  museum: "/covers/moments/museum.jpg",
+  temple: "/covers/moments/temple.jpg",
+  massage: "/covers/moments/massage.jpg",
+  family: "/covers/moments/family.jpg",
+  love: "/covers/moments/love.jpg",
+};
+
+const getBaseCity = (raw: string) => {
+  const first = raw.split("→")[0].trim();
+  const s = first.toLowerCase();
+  if (s.includes("ninh binh")) return "Ninh Binh";
+  if (s.includes("ha long")) return "Ha Long";
+  if (s.includes("hoi an")) return "Hoi An";
+  if (s.includes("da nang")) return "Da Nang";
+  if (s.includes("whale")) return "Whale Island";
+  if (s.includes("ho chi minh")) return "Ho Chi Minh City";
+  if (s.includes("hanoi")) return "Hanoi";
+  return first;
+};
+
+const cityCoverFromLabel = (label?: string) => {
+  const s = (label ?? "").toLowerCase();
+  if (s.includes("hanoi")) return ASSETS.covers.cities.hanoi;
+  if (s.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
+  if (s.includes("ha long") || s.includes("halong")) return ASSETS.covers.cities.ha_long;
+  if (s.includes("hoi an") || s.includes("hoian")) return ASSETS.covers.cities.hoi_an;
+  if (s.includes("da nang") || s.includes("danang")) return ASSETS.covers.cities.da_nang;
+  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon"))
+    return ASSETS.covers.cities.hcmc;
+  if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
+  return ASSETS.covers.sections.home;
+};
+
+const momentCoverFromText = (text: string) => {
+  const t = text.toLowerCase();
+  if (t.includes("vol") || t.includes("aéroport") || t.includes("airport") || t.includes("flight"))
+    return MOMENT_COVERS.plane;
+  if (t.includes("bateau") || t.includes("croisi") || t.includes("cruise") || t.includes("boat"))
+    return MOMENT_COVERS.boat;
+  if (t.includes("plage") || t.includes("beach")) return MOMENT_COVERS.beach;
+  if (t.includes("marché") || t.includes("marche") || t.includes("market")) return MOMENT_COVERS.market;
+  if (t.includes("café") || t.includes("cafe") || t.includes("coffee")) return MOMENT_COVERS.coffee;
+  if (
+    t.includes("street food") ||
+    t.includes("street-food") ||
+    t.includes("streetfood") ||
+    t.includes("food") ||
+    t.includes("dîner") ||
+    t.includes("diner")
+  )
+    return MOMENT_COVERS.streetfood;
+  if (t.includes("musée") || t.includes("musee") || t.includes("museum")) return MOMENT_COVERS.museum;
+  if (t.includes("temple")) return MOMENT_COVERS.temple;
+  if (t.includes("massage")) return MOMENT_COVERS.massage;
+  if (
+    t.includes("arrivée") ||
+    t.includes("arrivee") ||
+    t.includes("check-in") ||
+    t.includes("check in") ||
+    t.includes("arrival")
+  )
+    return MOMENT_COVERS.arrival;
+  if (t.includes("transfert") || t.includes("transfer") || t.includes("limousine") || t.includes("drive"))
+    return MOMENT_COVERS.transfer;
+  if (t.includes("soir") || t.includes("night") || t.includes("lantern")) return MOMENT_COVERS.night;
+  return null;
+};
+
+const dayCoverFromDay = (day: ItineraryDay) => {
+  const text =
+    (day.theme?.join(" ") ?? "") +
+    " " +
+    (day.blocks?.map((b) => b.plan).join(" ") ?? "");
+  const moment = momentCoverFromText(text);
+  if (moment) return moment;
+  return cityCoverFromLabel(getBaseCity(day.city));
 };
 
 const googleMapsSearchUrl = (q: string) =>
@@ -859,78 +1148,12 @@ const uniqCitiesByOrder = (days: ItineraryDay[]) => {
 };
 
 // ------------------------------------------------------------
-// COVERS — SINGLE SOURCE = ASSETS (fixes ALL previous bugs)
-// ------------------------------------------------------------
-const getBaseCity = (raw: string) => {
-  const first = raw.split("→")[0].trim();
-  const s = first.toLowerCase();
-
-  if (s.includes("ninh binh")) return "Ninh Binh";
-  if (s.includes("ha long") || s.includes("halong")) return "Ha Long";
-  if (s.includes("hoi an") || s.includes("hoian")) return "Hoi An";
-  if (s.includes("da nang") || s.includes("danang")) return "Da Nang";
-  if (s.includes("whale")) return "Whale Island";
-  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return "Ho Chi Minh City";
-  if (s.includes("hanoi")) return "Hanoi";
-
-  return first;
-};
-
-const cityCoverFromLabel = (label?: string) => {
-  const base = getBaseCity(label ?? "").toLowerCase();
-
-  if (base.includes("hanoi")) return ASSETS.covers.cities.hanoi;
-  if (base.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
-  if (base.includes("ha long") || base.includes("halong")) return ASSETS.covers.cities.ha_long;
-  if (base.includes("hoi an") || base.includes("hoian")) return ASSETS.covers.cities.hoi_an;
-  if (base.includes("da nang") || base.includes("danang")) return ASSETS.covers.cities.da_nang;
-  if (base.includes("ho chi minh") || base.includes("hcmc") || base.includes("saigon")) return ASSETS.covers.cities.hcmc;
-  if (base.includes("whale")) return ASSETS.covers.cities.whale_island;
-
-  return ASSETS.covers.sections.home;
-};
-
-const momentCoverFromText = (text: string) => {
-  const t = text.toLowerCase();
-
-  if (t.includes("vol") || t.includes("aéroport") || t.includes("airport") || t.includes("flight")) return ASSETS.covers.moments.plane;
-  if (t.includes("bateau") || t.includes("croisi") || t.includes("cruise") || t.includes("boat")) return ASSETS.covers.moments.boat;
-  if (t.includes("plage") || t.includes("beach")) return ASSETS.covers.moments.beach;
-  if (t.includes("marché") || t.includes("marche") || t.includes("market")) return ASSETS.covers.moments.market;
-  if (t.includes("café") || t.includes("cafe") || t.includes("coffee")) return ASSETS.covers.moments.coffee;
-  if (t.includes("street food") || t.includes("street-food") || t.includes("streetfood") || t.includes("food") || t.includes("dîner") || t.includes("diner"))
-    return ASSETS.covers.moments.streetfood;
-  if (t.includes("musée") || t.includes("musee") || t.includes("museum")) return ASSETS.covers.moments.museum;
-  if (t.includes("temple")) return ASSETS.covers.moments.temple;
-  if (t.includes("massage")) return ASSETS.covers.moments.massage;
-  if (t.includes("arrivée") || t.includes("arrivee") || t.includes("check-in") || t.includes("check in") || t.includes("arrival")) return ASSETS.covers.moments.arrival;
-  if (t.includes("transfert") || t.includes("transfer") || t.includes("limousine") || t.includes("drive")) return ASSETS.covers.moments.transfer;
-
-  // IMPORTANT: do NOT trigger night on "soir" (too frequent)
-  if (t.includes("lantern") || t.includes("lanternes") || t.includes("night market") || t.includes("old town night")) return ASSETS.covers.moments.night;
-
-  return null;
-};
-
-const dayCoverFromDay = (day: ItineraryDay) => {
-  const baseCity = getBaseCity(day.city);
-
-  const text =
-    (day.theme?.join(" ") ?? "") +
-    " " +
-    (day.blocks?.map((b) => b.plan).join(" ") ?? "");
-
-  const moment = momentCoverFromText(text);
-  if (moment) return moment;
-
-  return cityCoverFromLabel(baseCity);
-};
-
-// ------------------------------------------------------------
 // UI ATOMS
 // ------------------------------------------------------------
 const Glass = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={`bg-white/80 backdrop-blur-md border border-white/60 shadow-sm ${className}`}>{children}</div>
+  <div className={`bg-white/80 backdrop-blur-md border border-white/60 shadow-sm ${className}`}>
+    {children}
+  </div>
 );
 
 const Pill = ({
@@ -977,7 +1200,9 @@ const Toggle = ({
     </div>
     <button
       onClick={() => onChange(!value)}
-      className={`w-12 h-7 rounded-full p-1 transition-colors ${value ? "bg-emerald-500" : "bg-slate-200"}`}
+      className={`w-12 h-7 rounded-full p-1 transition-colors ${
+        value ? "bg-emerald-500" : "bg-slate-200"
+      }`}
       aria-label={label}
     >
       <div
@@ -989,36 +1214,82 @@ const Toggle = ({
   </div>
 );
 
-const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m: Mood) => void }) => {
-  return (
-    <div className="flex bg-white/70 backdrop-blur-md rounded-full p-1 border border-white shadow-sm">
-      <button
-        onClick={() => setMood("fatigue")}
-        className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "fatigue" ? "bg-indigo-100 text-indigo-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
-        }`}
-      >
-        <Moon className="w-4 h-4" /> <span className="hidden sm:inline">Repos</span>
-      </button>
-      <button
-        onClick={() => setMood("normal")}
-        className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "normal" ? "bg-emerald-100 text-emerald-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
-        }`}
-      >
-        <BatteryCharging className="w-4 h-4" /> <span className="hidden sm:inline">Normal</span>
-      </button>
-      <button
-        onClick={() => setMood("energy")}
-        className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "energy" ? "bg-amber-100 text-amber-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
-        }`}
-      >
-        <Flame className="w-4 h-4" /> <span className="hidden sm:inline">Énergie</span>
-      </button>
-    </div>
-  );
-};
+const MoodSelector = ({
+  currentMood,
+  setMood,
+}: {
+  currentMood: Mood;
+  setMood: (m: Mood) => void;
+}) => (
+  <div className="flex bg-white/70 backdrop-blur-md rounded-full p-1 border border-white shadow-sm">
+    <button
+      onClick={() => setMood("fatigue")}
+      className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
+        currentMood === "fatigue"
+          ? "bg-indigo-100 text-indigo-700 shadow-sm"
+          : "text-slate-500 hover:text-slate-700"
+      }`}
+    >
+      <Moon className="w-4 h-4" /> <span className="hidden sm:inline">Repos</span>
+    </button>
+    <button
+      onClick={() => setMood("normal")}
+      className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
+        currentMood === "normal"
+          ? "bg-emerald-100 text-emerald-700 shadow-sm"
+          : "text-slate-500 hover:text-slate-700"
+      }`}
+    >
+      <BatteryCharging className="w-4 h-4" /> <span className="hidden sm:inline">Normal</span>
+    </button>
+    <button
+      onClick={() => setMood("energy")}
+      className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
+        currentMood === "energy"
+          ? "bg-amber-100 text-amber-700 shadow-sm"
+          : "text-slate-500 hover:text-slate-700"
+      }`}
+    >
+      <Flame className="w-4 h-4" /> <span className="hidden sm:inline">Énergie</span>
+    </button>
+  </div>
+);
+
+// ------------------------------------------------------------
+// FAMILY STRIP
+// ------------------------------------------------------------
+const FAMILY_MEMBERS = [
+  {
+    name: "Marilyne",
+    desc: "La Boss",
+    color: "bg-pink-100 text-pink-700",
+    src: ASSETS.family.marilyne,
+  },
+  {
+    name: "Claudine",
+    desc: "La Sage",
+    color: "bg-indigo-100 text-indigo-700",
+    src: ASSETS.family.claudine,
+  },
+  {
+    name: "Nizzar",
+    desc: "Le Pilote",
+    color: "bg-slate-100 text-slate-700",
+    src: ASSETS.family.nizzar,
+  },
+  {
+    name: "Aydann",
+    desc: "L'Ado",
+    color: "bg-blue-100 text-blue-700",
+    src: ASSETS.family.aydann,
+  },
+  {
+    name: "Milann",
+    desc: "La Mascotte",
+    color: "bg-orange-100 text-orange-700",
+    src: ASSETS.family.milann,
+  },
+];
 
 const FamilyStrip = () => (
   <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
@@ -1028,22 +1299,22 @@ const FamilyStrip = () => (
         className="shrink-0 flex items-center gap-3 bg-white rounded-2xl border border-slate-100 px-3 py-2 shadow-sm"
       >
         <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 ring-2 ring-white">
-          <img
-            src={m.src}
-            alt={m.name}
-            className="w-full h-full object-cover"
-            onError={(e) => (e.currentTarget.src = m.fallback)}
-          />
+          <img src={m.src} alt={m.name} className="w-full h-full object-cover" />
         </div>
         <div className="leading-tight">
           <div className="text-sm font-bold text-slate-800">{m.name}</div>
-          <div className={`text-[11px] font-semibold inline-block px-2 py-0.5 rounded-full ${m.color}`}>{m.desc}</div>
+          <div className={`text-[11px] font-semibold inline-block px-2 py-0.5 rounded-full ${m.color}`}>
+            {m.desc}
+          </div>
         </div>
       </div>
     ))}
   </div>
 );
 
+// ------------------------------------------------------------
+// HERO + SHEET
+// ------------------------------------------------------------
 const CinemaHero = ({
   onOpenQuick,
   activeCity,
@@ -1055,16 +1326,15 @@ const CinemaHero = ({
 }) => {
   const key = cityKeyFromName(activeCity);
   const hero = TRIP_DATA.hero_images[key];
-  const src = coverSrc || hero?.src || ASSETS.covers.sections.home;
+  const src = coverSrc ?? hero?.src ?? ASSETS.covers.sections.home;
 
   return (
     <div className="relative rounded-3xl overflow-hidden shadow-xl">
       <div className="absolute inset-0">
         <img src={src} alt="Hero" className="w-full h-full object-cover scale-[1.02]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent" />
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#818cf8_0%,transparent_40%),radial-gradient(circle_at_55%_85%,#fbbf24_0%,transparent_35%)]" />
       </div>
-
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent" />
+      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,#34d399_0,transparent_45%),radial-gradient(circle_at_80%_30%,#818cf8_0,transparent_40%),radial-gradient(circle_at_55%_85%,#fbbf24_0,transparent_35%)]" />
       <div className="relative z-10 p-6 sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <div className="flex gap-2 flex-wrap">
@@ -1075,7 +1345,6 @@ const CinemaHero = ({
               Vietnam 2026
             </span>
           </div>
-
           <button
             onClick={onOpenQuick}
             className="px-3 py-2 rounded-2xl bg-white/15 border border-white/25 text-white text-xs font-bold flex items-center gap-2 hover:bg-white/20"
@@ -1090,19 +1359,20 @@ const CinemaHero = ({
             <span className="block text-emerald-200 font-light mt-2">Family Trip</span>
           </div>
           <p className="mt-3 text-white/90 text-base sm:text-lg">
-            Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d&apos;amour.
+            Culture, histoire, art, nature, bonne bouffe et moments d’amour.
           </p>
-
           <div className="mt-4 flex flex-wrap gap-2">
             {TRIP_DATA.meta.vibe.map((v) => (
-              <span key={v} className="text-[11px] px-2 py-1 rounded bg-black/20 border border-white/15 text-white/90">
+              <span
+                key={v}
+                className="text-[11px] px-2 py-1 rounded bg-black/20 border border-white/15 text-white/90"
+              >
                 {v}
               </span>
             ))}
           </div>
-
           <div className="mt-4 text-xs text-white/60">
-            Focus du moment : <span className="font-semibold text-white/85">{activeCity}</span>
+            Focus du moment: <span className="font-semibold text-white/85">{activeCity}</span>
           </div>
         </div>
       </div>
@@ -1120,9 +1390,8 @@ const QuickSheet = ({
   onGoto: (v: View) => void;
 }) => {
   if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-[80]">
+    <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl p-5 pb-7">
         <div className="flex items-center justify-between mb-3">
@@ -1134,28 +1403,33 @@ const QuickSheet = ({
             <X size={18} />
           </button>
         </div>
-
         <div className="grid grid-cols-2 gap-3">
           <button
-            onClick={() => (onGoto("tips"), onClose())}
+            onClick={() => {
+              onGoto("tips");
+              onClose();
+            }}
             className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
           >
             <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Lightbulb size={16} className="text-emerald-600" /> Bon à savoir
+              <Lightbulb size={16} className="text-emerald-600" />
+              Bon à savoir
             </div>
-            <div className="text-xs text-slate-500 mt-1">Checklist + argent + règles street</div>
+            <div className="text-xs text-slate-500 mt-1">Checklist, argent, règles street.</div>
           </button>
-
           <button
-            onClick={() => (onGoto("guide"), onClose())}
+            onClick={() => {
+              onGoto("guide");
+              onClose();
+            }}
             className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
           >
             <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Utensils size={16} className="text-orange-600" /> Food + logistique
+              <Utensils size={16} className="text-orange-600" />
+              Food & logistique
             </div>
-            <div className="text-xs text-slate-500 mt-1">Plats cultes + transferts</div>
+            <div className="text-xs text-slate-500 mt-1">Plats cultes, transferts.</div>
           </button>
-
           <a
             href={googleMapsSearchUrl("Grab Vietnam")}
             target="_blank"
@@ -1163,67 +1437,45 @@ const QuickSheet = ({
             className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
           >
             <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Smartphone size={16} className="text-indigo-600" /> Grab (rappel)
+              <Smartphone size={16} className="text-indigo-600" />
+              Grab rappel
             </div>
-            <div className="text-xs text-slate-500 mt-1">Au besoin: recherche rapide</div>
+            <div className="text-xs text-slate-500 mt-1">Au besoin, recherche rapide.</div>
           </a>
-
           <button
-            onClick={() => (onGoto("budget"), onClose())}
+            onClick={() => {
+              onGoto("budget");
+              onClose();
+            }}
             className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
           >
             <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Wallet size={16} className="text-slate-800" /> Budget
+              <Wallet size={16} className="text-slate-800" />
+              Budget
             </div>
-            <div className="text-xs text-slate-500 mt-1">Totaux + activités</div>
+            <div className="text-xs text-slate-500 mt-1">Totaux activités.</div>
           </button>
         </div>
-
-        <div className="mt-4 text-xs text-slate-500">Astuce: sur mobile, l’écran “Home” sert de hub.</div>
+        <div className="mt-4 text-xs text-slate-500">
+          Astuce: sur mobile, l’écran Home sert de hub. Le reste = navigation.
+        </div>
       </div>
     </div>
   );
 };
 
-const CityTimeline = ({
-  cities,
-  activeCity,
-  onSelect,
-}: {
-  cities: string[];
-  activeCity: string;
-  onSelect: (c: string) => void;
-}) => {
-  return (
-    <div className="mt-5">
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-sm font-extrabold text-slate-900">Timeline</div>
-        <div className="text-xs text-slate-500">Swipe →</div>
-      </div>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-        {cities.map((c) => (
-          <Pill key={c} active={c === activeCity} onClick={() => onSelect(c)}>
-            {c}
-          </Pill>
-        ))}
-      </div>
-    </div>
-  );
-};
-
+// ------------------------------------------------------------
+// ITINÉRAIRE & HÔTELS
+// ------------------------------------------------------------
 const DayCardMobile = ({
   day,
   coverSrc,
   mood,
-  isFav,
-  onFav,
   kidsMode,
 }: {
   day: ItineraryDay;
   coverSrc: string;
   mood: Mood;
-  isFav: boolean;
-  onFav: () => void;
   kidsMode: boolean;
 }) => {
   const isFatigue = mood === "fatigue";
@@ -1242,49 +1494,57 @@ const DayCardMobile = ({
           className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
           onError={(e) => {
-            e.currentTarget.src = ASSETS.covers.sections.itinerary;
+            (e.currentTarget as HTMLImageElement).src = ASSETS.covers.sections.itinerary;
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-black/20" />
         <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-3">
           <div>
-            <div className="text-xs text-slate-600 font-semibold">{safeDateLabel(day.date)}</div>
-            <div className="text-lg font-extrabold text-slate-900 leading-tight">{day.city}</div>
+            <div className="text-xs text-slate-600 font-semibold">
+              {safeDateLabel(day.date)}
+            </div>
+            <div className="text-lg font-extrabold text-slate-900 leading-tight">
+              {day.city}
+            </div>
           </div>
-          <button onClick={onFav} className="p-2 rounded-2xl bg-white/80 border border-white shadow">
-            <Heart size={18} className={isFav ? "text-amber-500" : "text-slate-400"} fill={isFav ? "currentColor" : "none"} />
-          </button>
         </div>
       </div>
 
       <div className="p-4">
         <div className="flex flex-wrap gap-2 mb-3">
           {day.theme.map((t) => (
-            <span key={t} className="text-[10px] uppercase tracking-wide text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
+            <span
+              key={t}
+              className="text-[10px] uppercase tracking-wide text-slate-500 bg-slate-100 px-2 py-1 rounded-full"
+            >
               {t}
             </span>
           ))}
         </div>
-
         <div className="space-y-3">
           {day.blocks.map((b, idx) => {
             if (isFatigue && b.label === "Soir" && !b.plan.toLowerCase().includes("repos")) {
               return (
                 <div key={idx} className="text-sm text-slate-400 italic">
-                  Soir: repos suggéré (activité masquée)
+                  Soir repos suggéré (activité masquée).
                 </div>
               );
             }
             if (kidsMode && shouldHideImpact(b.plan)) {
               return (
                 <div key={idx} className="text-sm text-slate-400 italic">
-                  {b.label}: (Masqué en mode kids)
+                  {b.label}: masqué en mode kids.
                 </div>
               );
             }
             return (
-              <div key={idx} className="rounded-2xl bg-slate-50 border border-slate-100 p-3">
-                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">{b.label}</div>
+              <div
+                key={idx}
+                className="rounded-2xl bg-slate-50 border border-slate-100 p-3"
+              >
+                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">
+                  {b.label}
+                </div>
                 <div className="text-sm text-slate-800 leading-relaxed">{b.plan}</div>
                 {b.links?.length ? (
                   <div className="mt-2 flex flex-wrap gap-2">
@@ -1303,3 +1563,533 @@ const DayCardMobile = ({
                 ) : null}
               </div>
             );
+          })}
+        </div>
+        {mood === "energy" && (
+          <div className="mt-3 text-xs text-amber-700 font-semibold flex items-center gap-2">
+            <Flame size={14} />
+            Bonus énergie: marche 30 min & café trouvé à l’instinct.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
+  const link = hotel.booking_url ?? hotel.official_url;
+  return (
+    <div className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg transition-shadow">
+      <div className="relative h-40">
+        {hotel.cover ? (
+          <img
+            src={hotel.cover}
+            alt={hotel.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-slate-100" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/25 to-black/10" />
+        <div className="absolute bottom-3 left-4 right-4">
+          <div className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+            <MapPin size={12} />
+            {hotel.city}
+          </div>
+          <div className="text-lg font-extrabold text-slate-900 leading-tight">
+            {hotel.name}
+          </div>
+          <div className="text-xs text-slate-500">{hotel.dates}</div>
+        </div>
+      </div>
+      <div className="p-4">
+        {hotel.note && (
+          <div className="text-xs text-slate-600 bg-slate-50 border border-slate-100 rounded-2xl p-3 mb-3 flex gap-2">
+            <Info size={14} className="mt-0.5 text-slate-400" />
+            <div>{hotel.note}</div>
+          </div>
+        )}
+        <div className="text-sm text-slate-700 italic mb-3">{hotel.why}</div>
+        <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3 mb-3">
+          <div className="flex justify-between text-xs">
+            <span className="text-slate-500">Famille</span>
+            <span className="font-extrabold text-slate-900">{formatUSD(hotel.budget.us)}</span>
+          </div>
+          <div className="flex justify-between text-xs mt-1">
+            <span className="text-slate-500">Claudine</span>
+            <span className="font-extrabold text-slate-900">
+              {formatUSD(hotel.budget.claudine)}
+            </span>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {link ? (
+            <a
+              href={link}
+              target="_blank"
+              rel="noreferrer"
+              className="py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold text-center"
+            >
+              Voir
+            </a>
+          ) : (
+            <div className="py-2 rounded-2xl bg-slate-200 text-slate-500 text-xs font-extrabold text-center">
+              Sans lien
+            </div>
+          )}
+          <a
+            href={googleMapsSearchUrl(`${hotel.name} ${hotel.city}`)}
+            target="_blank"
+            rel="noreferrer"
+            className="py-2 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-extrabold text-center"
+          >
+            Maps
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ------------------------------------------------------------
+// CARDS DIVERS
+// ------------------------------------------------------------
+const TipsChecklist = () => {
+  const [checked, setChecked] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = window.localStorage.getItem("trip_tips_checklist");
+    if (saved) setChecked(JSON.parse(saved));
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("trip_tips_checklist", JSON.stringify(checked));
+  }, [checked]);
+
+  const toggle = (item: string) => {
+    const next = checked.includes(item)
+      ? checked.filter((i) => i !== item)
+      : [...checked, item];
+    setChecked(next);
+  };
+
+  const progress = Math.round((checked.length / ESSENTIALS_CHECKLIST.length) * 100);
+
+  return (
+    <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
+      <div className="flex justify-between items-end mb-3">
+        <div className="text-lg font-extrabold text-slate-900">Essentiels</div>
+        <div className="text-xs font-extrabold text-emerald-600">{progress} % prêt</div>
+      </div>
+      <div className="h-2 w-full bg-slate-100 rounded-full mb-4 overflow-hidden">
+        <div
+          className="h-full bg-emerald-500 transition-all duration-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <div className="space-y-2">
+        {ESSENTIALS_CHECKLIST.map((item) => (
+          <button
+            key={item}
+            onClick={() => toggle(item)}
+            className="w-full flex items-center gap-3 text-left p-3 rounded-2xl border border-slate-100 bg-slate-50"
+          >
+            <div className="w-5 h-5 rounded-md border flex items-center justify-center">
+              {checked.includes(item) ? (
+                <div className="bg-emerald-500 border-emerald-500 text-white w-full h-full flex items-center justify-center rounded-md">
+                  <CheckSquare size={14} />
+                </div>
+              ) : null}
+            </div>
+            <div
+              className={`text-sm ${
+                checked.includes(item) ? "text-slate-400 line-through" : "text-slate-800"
+              }`}
+            >
+              {item}
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const SimpleListCard = ({
+  title,
+  icon,
+  items,
+}: {
+  title: string;
+  icon: ReactNode;
+  items: string[];
+}) => (
+  <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
+    <div className="flex items-center gap-2 mb-3">
+      <div className="text-emerald-700">{icon}</div>
+      <div className="text-lg font-extrabold text-slate-900">{title}</div>
+    </div>
+    <div className="space-y-2 text-sm text-slate-800">
+      {items.map((t, i) => (
+        <div key={i} className="flex gap-2">
+          <div className="mt-2 w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0" />
+          <div>{t}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const PhrasebookCard = () => (
+  <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
+    <div className="flex items-center gap-2 mb-3">
+      <Languages className="text-emerald-600" size={18} />
+      <div className="text-lg font-extrabold text-slate-900">Phrases utiles</div>
+    </div>
+    <div className="space-y-2 text-sm text-slate-800">
+      {PHRASEBOOK.map((p) => (
+        <div
+          key={p.fr}
+          className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1"
+        >
+          <div className="font-semibold">{p.fr}</div>
+          <div className="text-emerald-700">{p.vi}</div>
+          <div className="text-xs text-slate-500">{p.phon}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// ------------------------------------------------------------
+// BUDGET
+// ------------------------------------------------------------
+const BudgetCard = () => {
+  const activitiesSum = sum(
+    TRIP_DATA.activities.map((a) => a.cost?.adult_vnd ?? 0)
+  );
+  const transfersSum = sum(TRIP_DATA.ground_transfers.map((t) => t.cost_usd));
+  const internalFlightsSum = sum(
+    TRIP_DATA.internal_flights.map((f) => f.group_cost_usd)
+  );
+  const hotelsSum = sum(TRIP_DATA.hotels.map((h) => h.budget.us));
+
+  return (
+    <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
+      <div className="flex items-center gap-2 mb-1">
+        <Wallet className="text-slate-800" size={18} />
+        <div className="text-lg font-extrabold text-slate-900">Budget express</div>
+      </div>
+      <div className="text-xs text-slate-500">
+        Totaux approximatifs pour le groupe (en USD + VND).
+      </div>
+      <div className="space-y-2 text-sm">
+        <div className="flex justify-between">
+          <span className="text-slate-500">Hôtels (groupe)</span>
+          <span className="font-semibold">{formatUSD(hotelsSum)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-500">Vols internes</span>
+          <span className="font-semibold">{formatUSD(internalFlightsSum)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-500">Transferts sol</span>
+          <span className="font-semibold">{formatUSD(transfersSum)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-500">Activités (adultes)</span>
+          <span className="font-semibold">{formatVND(activitiesSum)}</span>
+        </div>
+      </div>
+      <div className="text-xs text-slate-500 pt-2 border-t border-slate-100">
+        Juste un ordre de grandeur pour piloter sans s’enfermer.
+      </div>
+    </div>
+  );
+};
+
+// ------------------------------------------------------------
+// TIMELINE
+// ------------------------------------------------------------
+const CityTimeline = ({
+  cities,
+  activeCity,
+  onSelect,
+}: {
+  cities: string[];
+  activeCity: string;
+  onSelect: (c: string) => void;
+}) => (
+  <div className="mt-5">
+    <div className="flex items-center justify-between mb-2">
+      <div className="text-sm font-extrabold text-slate-900">Timeline</div>
+      <div className="text-xs text-slate-500">Swipe</div>
+    </div>
+    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+      {cities.map((c) => (
+        <Pill key={c} active={c === activeCity} onClick={() => onSelect(c)}>
+          {c}
+        </Pill>
+      ))}
+    </div>
+  </div>
+);
+
+// ------------------------------------------------------------
+// ROOT APP
+// ------------------------------------------------------------
+const App = () => {
+  const [view, setView] = useState<View>("home");
+  const [mood, setMood] = useState<Mood>("normal");
+  const [kidsMode, setKidsMode] = useState<boolean>(true);
+  const [quickOpen, setQuickOpen] = useState(false);
+
+  const orderedCities = useMemo(
+    () => uniqCitiesByOrder(TRIP_DATA.itinerary_days),
+    []
+  );
+  const [activeCity, setActiveCity] = useState<string>(orderedCities[0] ?? "Hanoi");
+
+  const currentCityCover =
+    CITY_COVERS[getBaseCity(activeCity)] ?? ASSETS.covers.sections.itinerary;
+
+  const filteredDays = useMemo(
+    () => TRIP_DATA.itinerary_days.filter((d) => d.city.includes(activeCity.split("→")[0].trim()) || d.city === activeCity),
+    [activeCity]
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 text-slate-900">
+      <div className="max-w-5xl mx-auto px-4 py-5 sm:py-8 space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-xs uppercase tracking-[0.2em] text-emerald-300">
+              Family Trip Planner
+            </div>
+            <div className="text-xl font-extrabold text-white mt-1">
+              {TRIP_DATA.meta.title}
+            </div>
+            <div className="text-xs text-slate-300 mt-1">
+              {TRIP_DATA.meta.travelers}
+            </div>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <MoodSelector currentMood={mood} setMood={setMood} />
+            <Toggle
+              label="Mode kids"
+              value={kidsMode}
+              onChange={setKidsMode}
+              hint="Masque certains contenus trop intenses."
+              icon={<Shield size={14} className="text-emerald-600" />}
+            />
+          </div>
+        </div>
+
+        <FamilyStrip />
+
+        {/* Navigation vues */}
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+          {[
+            { id: "home", label: "Home", icon: <HomeIcon /> },
+            { id: "itinerary", label: "Itinéraire", icon: <Calendar size={14} /> },
+            { id: "hotels", label: "Hôtels", icon: <HotelIcon size={14} /> },
+            { id: "guide", label: "Guide", icon: <BookOpen size={14} /> },
+            { id: "tips", label: "Tips", icon: <Lightbulb size={14} /> },
+            { id: "budget", label: "Budget", icon: <Banknote size={14} /> },
+          ].map((tab) => (
+            <Pill
+              key={tab.id}
+              active={view === tab.id}
+              onClick={() => setView(tab.id as View)}
+            >
+              <div className="flex items-center gap-1">
+                {tab.icon}
+                <span>{tab.label}</span>
+              </div>
+            </Pill>
+          ))}
+        </div>
+
+        {/* HERO */}
+        <CinemaHero
+          onOpenQuick={() => setQuickOpen(true)}
+          activeCity={activeCity}
+          coverSrc={view === "itinerary" ? currentCityCover : undefined}
+        />
+
+        {/* CONTENU */}
+        {view === "home" && (
+          <div className="grid md:grid-cols-[2fr,1.5fr] gap-4">
+            <Glass className="rounded-3xl p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Navigation size={18} className="text-emerald-600" />
+                  <div className="text-lg font-extrabold text-slate-900">
+                    Vue d’ensemble
+                  </div>
+                </div>
+                <span className="text-xs text-slate-500">
+                  {TRIP_DATA.itinerary_days.length} jours
+                </span>
+              </div>
+              <CityTimeline
+                cities={orderedCities}
+                activeCity={activeCity}
+                onSelect={setActiveCity}
+              />
+              <div className="mt-4 space-y-2 text-sm text-slate-800">
+                <div className="flex items-center gap-2">
+                  <Plane size={14} className="text-slate-500" />
+                  <span>
+                    Départ {TRIP_DATA.meta.flights.outbound.from} le{" "}
+                    {TRIP_DATA.meta.flights.outbound.date} à{" "}
+                    {TRIP_DATA.meta.flights.outbound.time}.
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar size={14} className="text-slate-500" />
+                  <span>
+                    Retour le {TRIP_DATA.meta.flights.return_arrive_marrakech.date} à{" "}
+                    {TRIP_DATA.meta.flights.return_arrive_marrakech.time}.
+                  </span>
+                </div>
+              </div>
+            </Glass>
+            <div className="space-y-4">
+              <TipsChecklist />
+              <SimpleListCard
+                title="Premier jour à Hanoi"
+                icon={<Star size={16} />}
+                items={FIRST_DAY_HANOI}
+              />
+            </div>
+          </div>
+        )}
+
+        {view === "itinerary" && (
+          <div className="space-y-4">
+            <CityTimeline
+              cities={orderedCities}
+              activeCity={activeCity}
+              onSelect={setActiveCity}
+            />
+            <div className="space-y-4">
+              {filteredDays.map((d) => (
+                <DayCardMobile
+                  key={d.date}
+                  day={d}
+                  coverSrc={dayCoverFromDay(d)}
+                  mood={mood}
+                  kidsMode={kidsMode}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {view === "hotels" && (
+          <div className="grid md:grid-cols-2 gap-4">
+            {TRIP_DATA.hotels.map((h) => (
+              <HotelCard key={`${h.city}-${h.name}`} hotel={h} />
+            ))}
+          </div>
+        )}
+
+        {view === "guide" && (
+          <div className="grid md:grid-cols-2 gap-4">
+            <SimpleListCard
+              title="Money & change"
+              icon={<Banknote size={16} />}
+              items={MONEY_TIPS}
+            />
+            <SimpleListCard
+              title="Traverser la rue"
+              icon={<Shield size={16} />}
+              items={STREET_CROSSING}
+            />
+            <SimpleListCard
+              title="Tips pratiques"
+              icon={<Smartphone size={16} />}
+              items={PRACTICAL_TIPS}
+            />
+            <PhrasebookCard />
+          </div>
+        )}
+
+        {view === "tips" && (
+          <div className="grid md:grid-cols-[1.8fr,1.2fr] gap-4">
+            <TipsChecklist />
+            <div className="space-y-4">
+              <SimpleListCard
+                title="Repères prix"
+                icon={<Search size={16} />}
+                items={QUICK_PRICES.map((q) => `${q.label}: ${q.value}`)}
+              />
+              <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <Plane size={16} className="text-indigo-600" />
+                  <div className="text-lg font-extrabold text-slate-900">
+                    Aéroports & transferts
+                  </div>
+                </div>
+                <div className="space-y-2 text-sm text-slate-800">
+                  {AIRPORT_GLOSSARY.map((a) => (
+                    <div key={`${a.code}-${a.fromHotel}`} className="border-b border-slate-100 pb-2 last:border-none last:pb-0">
+                      <div className="flex justify-between text-xs">
+                        <span className="font-semibold">
+                          {a.code} — {a.city}
+                        </span>
+                        <span className="text-slate-500">{a.eta}</span>
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        Depuis: {a.fromHotel}
+                      </div>
+                      {a.note && (
+                        <div className="text-[11px] text-slate-500 mt-1">{a.note}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {view === "budget" && (
+          <div className="grid md:grid-cols-2 gap-4">
+            <BudgetCard />
+            <SimpleListCard
+              title="Culture UNESCO"
+              icon={<Landmark size={16} />}
+              items={TRIP_DATA.culture_links.UNESCO.map((u) => u.name)}
+            />
+          </div>
+        )}
+      </div>
+
+      <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={setView} />
+    </div>
+  );
+};
+
+// Petit composant maison pour l’icône Home (évite un import de plus)
+const HomeIcon = () => (
+  <svg
+    className="w-3.5 h-3.5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M3 11L12 3l9 8" />
+    <path d="M5 11v10h5v-6h4v6h5V11" />
+  </svg>
+);
+
+export default App;
