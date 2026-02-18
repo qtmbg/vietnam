@@ -1231,26 +1231,26 @@ export default function App() {
     setActiveCity(base);
   };
 
-  // ------------------------------------------------------------
+    // ------------------------------------------------------------
   // RENDER
   // ------------------------------------------------------------
   return (
-  <div className="min-h-screen w-full overflow-x-hidden bg-slate-50 text-slate-900 pb-24 print:bg-white print:pb-0">
+    <div className="min-h-screen w-full bg-slate-50 text-slate-900 pb-24 print:bg-white print:pb-0">
       {/* TOP BAR */}
       <header className="sticky top-0 z-50 print:hidden">
         <Glass className="border-b border-slate-200">
-          <div className="max-w-[1120px] mx-auto px-4 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-extrabold">
+          <div className="mx-auto w-full min-w-0 max-w-[560px] px-4 h-16 flex items-center justify-between sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-extrabold shrink-0">
                 V
               </div>
-              <div className="leading-tight">
-                <div className="text-sm font-extrabold text-slate-900">Vietnam 2026</div>
-                <div className="text-[11px] text-slate-500">Mobile Hub • Cinema V2</div>
+              <div className="leading-tight min-w-0">
+                <div className="text-sm font-extrabold text-slate-900 truncate">Vietnam 2026</div>
+                <div className="text-[11px] text-slate-500 truncate">Mobile Hub • Cinema V2</div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <MoodSelector currentMood={mood} setMood={setMood} />
               <button onClick={() => setQuickOpen(true)} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
                 <Sparkles size={18} />
