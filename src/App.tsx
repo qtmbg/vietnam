@@ -1,10 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowRight,
   Banknote,
-  Battery,
   BatteryCharging,
-  BatteryFull,
   BookOpen,
   Calendar,
   CheckSquare,
@@ -22,7 +19,6 @@ import {
   Smartphone,
   Star,
   Utensils,
-  Users,
   Wallet,
   X,
   ChevronRight,
