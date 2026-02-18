@@ -104,16 +104,19 @@ const ASSETS = {
       pont_dragon_da_nang: "/covers/moments/pont-dragon-da-nang.jpg",
     },
 const cityCoverFromLabel = (label: string) => {
-  const s = label.toLowerCase();
+  const s = (label ?? "").toLowerCase();
+
   if (s.includes("hanoi")) return ASSETS.covers.cities.hanoi;
   if (s.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
-  if (s.includes("ha long")) return ASSETS.covers.cities.ha_long;
-  if (s.includes("hoi an")) return ASSETS.covers.cities.hoi_an;
-  if (s.includes("da nang")) return ASSETS.covers.cities.da_nang;
+  if (s.includes("ha long") || s.includes("halong")) return ASSETS.covers.cities.ha_long;
+  if (s.includes("hoi an") || s.includes("hoian")) return ASSETS.covers.cities.hoi_an;
+  if (s.includes("da nang") || s.includes("danang")) return ASSETS.covers.cities.da_nang;
   if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return ASSETS.covers.cities.hcmc;
   if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
+
   return ASSETS.covers.sections.home;
 };
+
     // Hotels (public/covers/hotels/)
     hotels: {
       hanoi_ja_cosmo: "/covers/hotels/hanoi-ja-cosmo.jpg",
