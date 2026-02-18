@@ -28,6 +28,105 @@ import {
   Shield,
   Search,
 } from "lucide-react";
+// ------------------------------------------------------------
+// ASSETS (public/)
+// ------------------------------------------------------------
+const ASSETS = {
+  // Family (public/family/)
+  family: {
+    marilyne: "/family/marilyne.jpg",
+    claudine: "/family/claudine.jpg",
+    nizzar: "/family/nizzar.jpg",
+    aydann: "/family/aydann.jpg",
+    milann: "/family/milann.jpg",
+  },
+
+  // Covers (public/covers/)
+  covers: {
+    sections: {
+      home: "/covers/sections/cover-home.jpg",
+      itinerary: "/covers/sections/cover-itinerary.jpg",
+      hotels: "/covers/sections/cover-hotels.jpg",
+      guide: "/covers/sections/cover-guide.jpg",
+      tips: "/covers/sections/cover-tips.jpg",
+      budget: "/covers/sections/cover-budget.jpg",
+    },
+
+    cities: {
+      hanoi: "/covers/cities/hanoi.jpg",
+      ninh_binh: "/covers/cities/ninh-binh.jpg",
+      ha_long: "/covers/cities/ha-long.jpg",
+      hoi_an: "/covers/cities/hoi-an.jpg",
+      da_nang: "/covers/cities/da-nang.jpg",
+      hcmc: "/covers/cities/hcmc.jpg",
+      whale_island: "/covers/cities/whale-island.jpg",
+    },
+
+    moments: {
+      arrival: "/covers/moments/arrival.jpg",
+      transfer: "/covers/moments/transfer.jpg",
+      airport: "/covers/moments/airport.jpg",
+      plane: "/covers/moments/plane.jpg",
+      train: "/covers/moments/train.jpg",
+      night: "/covers/moments/night.jpg",
+      beach: "/covers/moments/beach.jpg",
+      boat: "/covers/moments/boat.jpg",
+      market: "/covers/moments/market.jpg",
+      coffee: "/covers/moments/coffee.jpg",
+      streetfood: "/covers/moments/streetfood.jpg",
+      museum: "/covers/moments/museum.jpg",
+      temple: "/covers/moments/temple.jpg",
+      massage: "/covers/moments/massage.jpg",
+      love: "/covers/moments/love.jpg",
+      family: "/covers/moments/family.jpg",
+
+      // exemples spécifiques (si tu les gardes)
+      hanoi_train_street: "/covers/moments/hanoi-train-street.jpg",
+      hanoi_lan_ong: "/covers/moments/hanoi-lan-ong.jpg",
+      hanoi_hoan_kiem: "/covers/moments/hanoi-hoan-kiem.jpg",
+      hanoi_temple_of_literature: "/covers/moments/hanoi-temple-of-literature.jpg",
+
+      ninhbinh_hang_mua: "/covers/moments/ninhbinh-hang-mua.jpg",
+      ninh_binh_trang_an: "/covers/moments/ninh-binh-trang-an.jpg",
+      ninh_binh_tam_coc: "/covers/moments/ninh-binh-tam-coc.jpg",
+
+      ha_long_sunset: "/covers/moments/ha-long-sunset.jpg",
+      ha_long_cruise: "/covers/moments/ha-long-cruise.jpg",
+
+      hoi_an_an_bang: "/covers/moments/hoi-an-an-bang.jpg",
+      hoi_an_old_town_night: "/covers/moments/hoi-an-old-town-night.jpg",
+
+      hcmc_war_museum: "/covers/moments/hcmc-war-museum.jpg",
+      hcmc_ben_thanh: "/covers/moments/hcmc-ben-thanh.jpg",
+      hcmc_central_post_office: "/covers/moments/hcmc-central-post-office.jpg",
+
+      whale_island_ponton: "/covers/moments/whale-island-ponton.jpg",
+      pont_dragon_da_nang: "/covers/moments/pont-dragon-da-nang.jpg",
+    },
+const cityCoverFromLabel = (label: string) => {
+  const s = label.toLowerCase();
+  if (s.includes("hanoi")) return ASSETS.covers.cities.hanoi;
+  if (s.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
+  if (s.includes("ha long")) return ASSETS.covers.cities.ha_long;
+  if (s.includes("hoi an")) return ASSETS.covers.cities.hoi_an;
+  if (s.includes("da nang")) return ASSETS.covers.cities.da_nang;
+  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return ASSETS.covers.cities.hcmc;
+  if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
+  return ASSETS.covers.sections.home;
+};
+    // Hotels (public/covers/hotels/)
+    hotels: {
+      hanoi_ja_cosmo: "/covers/hotels/hanoi-ja-cosmo.jpg",
+      ninh_binh_tam_coc_golden_fields: "/covers/hotels/ninh-binh-tam-coc-golden-fields.jpg",
+      ha_long_wyndham_legend: "/covers/hotels/ha-long-wyndham-legend.jpg",
+      ha_long_renea_cruise: "/covers/hotels/ha-long-renea-cruise.jpg",
+      hoi_an_sea_la_vie: "/covers/hotels/hoi-an-sea-la-vie.jpg",
+      da_nang_seahorse_signature: "/covers/hotels/da-nang-seahorse-signature.jpg",
+      whale_island_resort: "/covers/hotels/whale-island-resort.jpg",
+      hcmc_alagon_spa: "/covers/hotels/hcmc-alagon-spa.jpg",
+    },
+  },
+} as const;
 
 // ------------------------------------------------------------
 // TYPES
