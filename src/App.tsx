@@ -911,10 +911,6 @@ const getBaseCity = (raw: string) => {
   if (s.includes("hanoi")) return "Hanoi";
   return first;
 };
-const cityCoverFromLabel = (label: string) => {
-  const city = getBaseCity(label);
-  return CITY_COVERS[city] ?? "/covers/cities/default.jpg";
-};
 
 const momentCoverFromText = (text: string) => {
   const t = text.toLowerCase();
@@ -936,7 +932,6 @@ const momentCoverFromText = (text: string) => {
 };
 
 const dayCoverFromDay = (day: ItineraryDay) => {
-  const city = getBaseCity(day.city);
 
   const text =
     (day.theme?.join(" ") ?? "") +
