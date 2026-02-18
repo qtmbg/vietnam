@@ -702,35 +702,38 @@ type CoverKey =
   | "love";
 
 const GRADIENTS: Record<CoverKey, string> = {
-  home: "bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900",
-  itinerary: "bg-gradient-to-br from-indigo-950 via-slate-900 to-emerald-800",
-  hotels: "bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900",
-  guide: "bg-gradient-to-br from-orange-950 via-slate-900 to-rose-900",
-  tips: "bg-gradient-to-br from-emerald-950 via-slate-900 to-indigo-900",
-  budget: "bg-gradient-to-br from-slate-950 via-slate-900 to-amber-900",
+  // App
+  home: "bg-gradient-to-br from-rose-950 via-red-950 to-amber-900",
+  itinerary: "bg-gradient-to-br from-red-950 via-rose-950 to-amber-900",
+  hotels: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
+  guide: "bg-gradient-to-br from-amber-950 via-rose-950 to-red-950",
+  tips: "bg-gradient-to-br from-red-950 via-amber-950 to-rose-950",
+  budget: "bg-gradient-to-br from-amber-950 via-red-950 to-slate-900",
 
-  hanoi: "bg-gradient-to-br from-slate-950 via-indigo-950 to-emerald-900",
-  ninh_binh: "bg-gradient-to-br from-emerald-950 via-slate-900 to-lime-900",
-  ha_long: "bg-gradient-to-br from-slate-950 via-cyan-950 to-indigo-900",
-  hoi_an: "bg-gradient-to-br from-amber-950 via-slate-900 to-rose-900",
-  da_nang: "bg-gradient-to-br from-indigo-950 via-slate-900 to-cyan-900",
-  whale_island: "bg-gradient-to-br from-emerald-950 via-slate-900 to-sky-900",
-  hcmc: "bg-gradient-to-br from-slate-950 via-rose-950 to-amber-900",
+  // Cities
+  hanoi: "bg-gradient-to-br from-rose-950 via-red-950 to-amber-900",
+  ninh_binh: "bg-gradient-to-br from-amber-950 via-emerald-950 to-slate-900", // nature, mais warm
+  ha_long: "bg-gradient-to-br from-red-950 via-slate-900 to-amber-900",
+  hoi_an: "bg-gradient-to-br from-amber-950 via-orange-900 to-rose-950",
+  da_nang: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
+  whale_island: "bg-gradient-to-br from-amber-950 via-slate-900 to-emerald-950", // nature mais pas “bleu”
+  hcmc: "bg-gradient-to-br from-rose-950 via-red-950 to-amber-900",
 
-  arrival: "bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-800",
-  transfer: "bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900",
-  plane: "bg-gradient-to-br from-indigo-950 via-slate-900 to-sky-900",
-  boat: "bg-gradient-to-br from-slate-950 via-cyan-950 to-emerald-900",
-  beach: "bg-gradient-to-br from-amber-950 via-orange-900 to-rose-900",
-  night: "bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900",
-  market: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
-  coffee: "bg-gradient-to-br from-amber-950 via-slate-900 to-slate-800",
-  streetfood: "bg-gradient-to-br from-orange-950 via-slate-900 to-amber-900",
-  museum: "bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-900",
-  temple: "bg-gradient-to-br from-indigo-950 via-slate-900 to-emerald-900",
-  massage: "bg-gradient-to-br from-emerald-950 via-slate-900 to-indigo-900",
-  family: "bg-gradient-to-br from-emerald-950 via-slate-900 to-rose-900",
-  love: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
+  // Moments
+  arrival: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
+  transfer: "bg-gradient-to-br from-red-950 via-slate-900 to-amber-900",
+  plane: "bg-gradient-to-br from-red-950 via-slate-900 to-amber-900",
+  boat: "bg-gradient-to-br from-amber-950 via-slate-900 to-rose-950",
+  beach: "bg-gradient-to-br from-amber-950 via-orange-900 to-rose-950",
+  night: "bg-gradient-to-br from-rose-950 via-slate-950 to-amber-900",
+  market: "bg-gradient-to-br from-amber-950 via-rose-950 to-red-950",
+  coffee: "bg-gradient-to-br from-amber-950 via-slate-900 to-rose-950",
+  streetfood: "bg-gradient-to-br from-orange-950 via-amber-950 to-rose-950",
+  museum: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
+  temple: "bg-gradient-to-br from-amber-950 via-slate-900 to-rose-950",
+  massage: "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-900",
+  family: "bg-gradient-to-br from-rose-950 via-red-950 to-amber-900",
+  love: "bg-gradient-to-br from-rose-950 via-amber-950 to-red-950",
 };
 
 const GradientCover = ({
@@ -746,8 +749,10 @@ const GradientCover = ({
     <div className={`relative overflow-hidden ${GRADIENTS[coverKey]} ${className}`}>
       {glow && (
         <>
-          <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#818cf8_0%,transparent_40%),radial-gradient(circle_at_55%_85%,#fbbf24_0%,transparent_35%)]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+          {/* Glow Vietnam (rouge/jaune) */}
+          <div className="absolute inset-0 opacity-35 bg-[radial-gradient(circle_at_20%_20%,#f97316_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#fb7185_0%,transparent_42%),radial-gradient(circle_at_55%_85%,#fbbf24_0%,transparent_38%)]" />
+          {/* Overlay lisibilité (clé) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/10" />
         </>
       )}
     </div>
