@@ -1271,9 +1271,9 @@ export default function App() {
           <div className="space-y-6">
             <CinemaHero onOpenQuick={() => setQuickOpen(true)} activeCity={activeCity} />
 
-            <div className="grid lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left / Mobile top stack */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-6 min-w-0">
                 <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
                   <div className="flex items-center justify-between gap-3 mb-3">
                     <div>
