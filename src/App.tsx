@@ -778,15 +778,32 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
           <img src={imgSrc} alt={hotel.city} className="absolute inset-0 w-full h-full object-cover opacity-90" />
         ) : (
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 to-transparent"></div>
+             <div className="relative h-44 overflow-hidden rounded-2xl">
+        {hotel.cover ? (
+          <img
+            src={hotel.cover}
+            alt={hotel.name}
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-slate-100" />
         )}
+
         <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/35 to-transparent" />
+
         <div className="absolute bottom-3 left-4 right-4">
           <h3 className="text-lg font-bold text-slate-800 leading-tight bg-white/90 backdrop-blur-sm px-2 py-1 rounded inline-block shadow-sm">
             {hotel.name}
           </h3>
         </div>
       </div>
+
       <div className="p-5 flex flex-col flex-1">
+        <div className="flex items-center gap-2 text-xs font-medium text-emerald-600 mb-2">
+          <MapPin size={12} /> {hotel.city}
+        </div>
+        <div className="text-xs text-slate-400 mb-3">{hotel.dates}</div>
         <div className="flex items-center gap-2 text-xs font-medium text-emerald-600 mb-2">
           <MapPin size={12} /> {hotel.city}
         </div>
