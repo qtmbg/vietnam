@@ -632,6 +632,73 @@ const cityKeyFromName = (city: string): keyof typeof TRIP_DATA.hero_images => {
   if (city.includes("Ho Chi Minh")) return "HCMC";
   return "Hanoi";
 };
+// ------------------------------------------------------------
+// COVERS (Focus du jour / Itinéraire)
+// ------------------------------------------------------------
+const CITY_COVERS: Record<string, string> = {
+  "Hanoi": "/covers/cities/hanoi.jpg",
+  "Ninh Binh": "/covers/cities/ninh-binh.jpg",
+  "Ha Long": "/covers/cities/ha-long.jpg",
+  "Hoi An": "/covers/cities/hoi-an.jpg",
+  "Da Nang": "/covers/cities/da-nang.jpg",
+  "Whale Island": "/covers/cities/whale-island.jpg",
+  "Ho Chi Minh City": "/covers/cities/ho-chi-minh.jpg",
+};
+
+const MOMENT_COVERS: Record<string, string> = {
+  arrival: "/covers/moments/arrival.jpg",
+  transfer: "/covers/moments/transfer.jpg",
+  plane: "/covers/moments/plane.jpg",
+  boat: "/covers/moments/boat.jpg",
+  beach: "/covers/moments/beach.jpg",
+  night: "/covers/moments/night.jpg",
+  market: "/covers/moments/market.jpg",
+  coffee: "/covers/moments/coffee.jpg",
+  streetfood: "/covers/moments/streetfood.jpg",
+  museum: "/covers/moments/museum.jpg",
+  temple: "/covers/moments/temple.jpg",
+  massage: "/covers/moments/massage.jpg",
+  family: "/covers/moments/family.jpg",
+  love: "/covers/moments/love.jpg",
+};
+
+const getBaseCity = (raw: string) => {
+  const first = raw.split("→")[0].trim();
+  // normalise
+  if (first.toLowerCase().includes("ninh binh")) return "Ninh Binh";
+  if (first.toLowerCase().includes("ha long")) return "Ha Long";
+  if (first.toLowerCase().includes("hoi an")) return "Hoi An";
+  if (first.toLowerCase().includes("da nang")) return "Da Nang";
+  if (first.toLowerCase().includes("whale")) return "Whale Island";
+  if (first.toLowerCase().includes("ho chi minh")) return "Ho Chi Minh City";
+  if (first.toLowerCase().includes("hanoi")) return "Hanoi";
+  return first;
+};
+
+// 👉 la fonction que tu veux
+const dayCoverFromDay = (day: { city: string; theme: string[]; blocks: { plan: string }[] }) => {
+  const city = getBaseCity(day.city);
+  const cityCover = CITY_COVERS[city];
+
+  const text = (day.theme.join(" ") + " " + day.blocks.map(b => b.plan).join(" ")).toLowerCase();
+
+  // priorité aux “moments”
+  if (text.includes("vol") || text.includes("aéroport") || text.includes("flight")) return MOMENT_COVERS.plane;
+  if (text.includes("bateau") || text.includes("cruise") || text.includes("boat")) return MOMENT_COVERS.boat;
+  if (text.includes("plage") || text.includes("beach")) return MOMENT_COVERS.beach;
+  if (text.includes("marché") || text.includes("market")) return MOMENT_COVERS.market;
+  if (text.includes("café") || text.includes("coffee")) return MOMENT_COVERS.coffee;
+  if (text.includes("street food") || text.includes("food") || text.includes("dîner")) return MOMENT_COVERS.streetfood;
+  if (text.includes("musée") || text.includes("museum")) return MOMENT_COVERS.museum;
+  if (text.includes("temple")) return MOMENT_COVERS.temple;
+  if (text.includes("massage")) return MOMENT_COVERS.massage;
+  if (text.includes("arrivée") || text.includes("check-in")) return MOMENT_COVERS.arrival;
+  if (text.includes("transfert") || text.includes("limousine") || text.includes("drive")) return MOMENT_COVERS.transfer;
+  if (text.includes("soir") || text.includes("lantern") || text.includes("night")) return MOMENT_COVERS.night;
+
+  // fallback ville
+  return cityCover || MOMENT_COVERS.family;
+};
 
 const googleMapsSearchUrl = (q: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 
@@ -1368,8 +1435,11 @@ export default function App() {
         {/* HOME */}
         {view === "home" && (
           <div className="space-y-6">
-            <CinemaHero onOpenQuick={() => setQuickOpen(true)} activeCity={activeCity} />
-
+            <CinemaHero
+  onOpenQuick={() => setQuickOpen(true)}
+  activeCity={activeCity}
+  coverSrc={cityCoverFromLabel(activeCity)}
+/>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left / Mobile top stack */}
               <div className="lg:col-span-2 space-y-6 min-w-0">
@@ -1443,13 +1513,14 @@ export default function App() {
                     </button>
                   </div>
 
-                  <DayCardMobile
-                    day={focusDay}
-                    mood={mood}
-                    isFav={favorites.includes(focusDay.date)}
-                    onFav={() => toggleFavorite(focusDay.date)}
-                    kidsMode={kidsMode}
-                  />
+<DayCardMobile
+  day={focusDay}
+  coverSrc={dayCoverFromDay(focusDay)}
+  mood={mood}
+  isFav={favorites.includes(focusDay.date)}
+  onFav={() => toggleFavorite(focusDay.date)}
+  kidsMode={kidsMode}
+/>
                 </div>
 
                 {/* SEARCH */}
@@ -1553,19 +1624,17 @@ export default function App() {
             <div className="grid lg:grid-cols-2 gap-5">
               {(search.trim() ? filteredDays : TRIP_DATA.itinerary_days)
                 .filter((d) => (search.trim() ? true : d.city.toLowerCase().includes(activeCity.toLowerCase())))
-                .map((day) => (
-                  <DayCardMobile
-                    key={day.date}
-                    day={day}
-                    mood={mood}
-                    isFav={favorites.includes(day.date)}
-                    onFav={() => toggleFavorite(day.date)}
-                    kidsMode={kidsMode}
-                  />
-                ))}
-            </div>
-          </div>
-        )}
+         .map((day) => (
+  <DayCardMobile
+    key={day.date}
+    day={day}
+    coverSrc={dayCoverFromDay(day)}
+    mood={mood}
+    isFav={favorites.includes(day.date)}
+    onFav={() => toggleFavorite(day.date)}
+    kidsMode={kidsMode}
+  />
+))}
 
         {/* HOTELS */}
         {view === "hotels" && (
