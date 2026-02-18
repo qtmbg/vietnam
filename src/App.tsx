@@ -41,6 +41,7 @@ type HotelItem = {
   why: string;
   note?: string;
   imageKey?: keyof typeof TRIP_DATA.hero_images;
+  cover?: string;
 };
 
 type LinkItem = { name: string; url: string };
@@ -168,7 +169,7 @@ const TRIP_DATA: TripData = {
     },
   },
 
-  hotels: [
+ hotels: [
   {
     city: "Hanoi",
     name: "Ja Cosmo Hotel and Spa",
@@ -765,23 +766,19 @@ const DayCard = ({ day, mood, toggleFav, isFav }: { day: ItineraryDay, mood: Moo
   );
 };
 
-const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
-  const imgKey = hotel.imageKey;
-  const imgSrc = imgKey ? TRIP_DATA.hero_images[imgKey].src : undefined;
-  
+const HotelCard = ({ hotel }: { hotel: any }) => {
+  const heroFallback =
+    hotel.imageKey ? TRIP_DATA.hero_images[hotel.imageKey]?.src : undefined;
+
+  const imgSrc = hotel.cover || heroFallback;
   const link = hotel.booking_url || hotel.official_url;
 
   return (
     <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm flex flex-col h-full hover:shadow-lg transition-shadow">
-      <div className="h-36 bg-slate-100 relative">
+      <div className="relative h-44 overflow-hidden">
         {imgSrc ? (
-          <img src={imgSrc} alt={hotel.city} className="absolute inset-0 w-full h-full object-cover opacity-90" />
-        ) : (
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 to-transparent"></div>
-             <div className="relative h-44 overflow-hidden rounded-2xl">
-        {hotel.cover ? (
           <img
-            src={hotel.cover}
+            src={imgSrc}
             alt={hotel.name}
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
@@ -804,11 +801,7 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
           <MapPin size={12} /> {hotel.city}
         </div>
         <div className="text-xs text-slate-400 mb-3">{hotel.dates}</div>
-        <div className="flex items-center gap-2 text-xs font-medium text-emerald-600 mb-2">
-          <MapPin size={12} /> {hotel.city}
-        </div>
-        <div className="text-xs text-slate-400 mb-3">{hotel.dates}</div>
-        
+
         {hotel.note && (
           <div className="text-xs text-slate-500 bg-slate-50 border border-slate-100 rounded-xl p-3 mb-4">
             <div className="flex items-start gap-2">
@@ -817,7 +810,7 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
             </div>
           </div>
         )}
-        
+
         <p className="text-sm text-slate-600 italic mb-4 flex-1">
           "{hotel.why}"
         </p>
@@ -834,9 +827,9 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
         </div>
 
         {link && (
-          <a 
-            href={link} 
-            target="_blank" 
+          <a
+            href={link}
+            target="_blank"
             rel="noreferrer"
             className="w-full py-2 bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider rounded-lg text-center hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
           >
