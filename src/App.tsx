@@ -766,19 +766,21 @@ const DayCard = ({ day, mood, toggleFav, isFav }: { day: ItineraryDay, mood: Moo
   );
 };
 
-const HotelCard = ({ hotel }: { hotel: any }) => {
-  const heroFallback =
-    hotel.imageKey ? TRIP_DATA.hero_images[hotel.imageKey]?.src : undefined;
+const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
+  const imgKey = hotel.imageKey;
+  const heroFallback = imgKey ? TRIP_DATA.hero_images[imgKey]?.src : undefined;
 
-  const imgSrc = hotel.cover || heroFallback;
+  // ✅ PRIORITÉ AU COVER
+  const finalImg = hotel.cover ?? heroFallback;
+
   const link = hotel.booking_url || hotel.official_url;
 
   return (
     <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm flex flex-col h-full hover:shadow-lg transition-shadow">
       <div className="relative h-44 overflow-hidden">
-        {imgSrc ? (
+        {finalImg ? (
           <img
-            src={imgSrc}
+            src={finalImg}
             alt={hotel.name}
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
