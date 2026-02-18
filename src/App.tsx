@@ -1265,7 +1265,7 @@ export default function App() {
 
       <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
-<main className="mx-auto w-full max-w-[1120px] px-4 py-5 space-y-6 min-w-0">
+<main className="mx-auto w-full min-w-0 max-w-[560px] px-4 py-5 space-y-6 sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
         {/* HOME */}
         {view === "home" && (
           <div className="space-y-6">
