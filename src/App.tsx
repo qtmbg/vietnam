@@ -1236,7 +1236,6 @@ export default function App() {
   // ------------------------------------------------------------
   return (
   <div className="min-h-screen w-full overflow-x-hidden bg-slate-50 text-slate-900 pb-24 print:bg-white print:pb-0">
-  >
       {/* TOP BAR */}
       <header className="sticky top-0 z-50 print:hidden">
         <Glass className="border-b border-slate-200">
