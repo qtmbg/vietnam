@@ -1155,11 +1155,6 @@ export default function App() {
     });
   }, [search]);
 
-  const cityDays = useMemo(() => {
-    const base = activeCity;
-    return TRIP_DATA.itinerary_days.filter((d) => d.city.toLowerCase().includes(base.toLowerCase()));
-  }, [activeCity]);
-
   // ------------------------------------------------------------
   // BUDGET
   // ------------------------------------------------------------
