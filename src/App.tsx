@@ -731,7 +731,7 @@ const FAMILY_MEMBERS = [
     name: "Marilyne",
     desc: "La Boss",
     color: "bg-pink-100 text-pink-700",
-    src: "/family/public:family:marilyne.jpg",
+    src: "/family/marilyne.jpg",
     fallback:
       "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
   },
@@ -739,7 +739,7 @@ const FAMILY_MEMBERS = [
     name: "Claudine",
     desc: "La Sage",
     color: "bg-indigo-100 text-indigo-700",
-    src: "/family/public:family:claudine.jpg",
+    src: "/family/claudine.jpg",
     fallback:
       "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
   },
@@ -747,7 +747,7 @@ const FAMILY_MEMBERS = [
     name: "Nizzar",
     desc: "Le Pilote",
     color: "bg-slate-100 text-slate-700",
-    src: "/family/public:family:nizzar.jpg",
+    src: "/family/nizzar.jpg",
     fallback:
       "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
   },
@@ -755,7 +755,7 @@ const FAMILY_MEMBERS = [
     name: "Aydann",
     desc: "L'Ado",
     color: "bg-blue-100 text-blue-700",
-    src: "/family/public:family:aydann.jpg",
+    src: "/family/aydann.jpg",
     fallback:
       "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
   },
@@ -763,7 +763,7 @@ const FAMILY_MEMBERS = [
     name: "Milann",
     desc: "La Mascotte",
     color: "bg-orange-100 text-orange-700",
-    src: "/family/public:family:milann.jpg",
+    src: "/family/milann.jpg",
     fallback:
       "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
   },
@@ -943,7 +943,7 @@ const dayCoverFromDay = (day: ItineraryDay) => {
   if (moment) return moment;
 
   // sinon cover de ville
-  return cityCoverFromLabel(city);
+  return cityCoverFromLabel(day.city);
 };
 
 
