@@ -196,7 +196,7 @@ type PlannedActivity = {
   city: string;
   window?: string; // date window text
   name: string;
-  category: "culture" | "nature" | "mer" | "show" | "tour" | "histoire" | "ville";
+  category: string;
   duration?: string; // text
   bestTime?: string; // text
   pricing: {
@@ -208,7 +208,10 @@ type PlannedActivity = {
     usd_range?: [number, number];
     // computed/rounded display:
     estimatedUSD_adult?: number;
-    estimatedUSD_range?: [number, number];
+        estimatedUSD_range?: [number, number];
+        estimatedUSD_total?: number;
+        quantity?: number;
+        basis?: string;
   };
   kidsRule?: string;
   payMode?: "sur place" | "réservation";
