@@ -2104,26 +2104,47 @@ export default function App() {
   ] as const;
 
   // Activities filtered by city & kids mode
-  const activitiesByCity = useMemo(() => {
-    const list = TRIP_DATA.planned_activities.filter((a) => !(kidsMode && a.impact));
-    const map = new Map<string, PlannedActivity[]>();
-    for (const a of list) {
-      const k = a.city;
-      if (!map.has(k)) map.set(k, []);
-      map.get(k)!.push(a);
-    }
-    // Keep a consistent order
-    const order = ["Hanoi", "Ninh Binh", "Ha Long", "Hoi An", "Da Nang", "Ho Chi Minh City", "Whale Island"];
-    const out: { city: string; items: PlannedActivity[] }[] = [];
-    for (const c of order) {
-      if (map.has(c)) out.push({ city: c, items: map.get(c)! });
-    }
-    // add any leftover
-    for (const [c, items] of map.entries()) {
-      if (!order.includes(c)) out.push({ city: c, items });
-    }
-    return out;
-  }, [kidsMode]);
+ const activitiesByCity = useMemo(() => {
+  // ✅ Exclure du budget "Activités" ce qui est en réalité de l’hébergement
+  // (Renea Cruise + Whale Island Resort)
+  const EXCLUS_IDS = new Set<string>(["A-HL-001", "A-WI-001"]);
+  const EXCLUS_NOMS = ["renea", "whale island"];
+
+  const list = TRIP_DATA.planned_activities.filter((a) => {
+    // 1) ton filtre "Mode kids" (inchangé)
+    if (kidsMode && a.impact) return false;
+
+    // 2) exclusions robustes (par id + par nom)
+    const id = String(a.id ?? "");
+    const name = String(a.name ?? "").toLowerCase();
+
+    if (EXCLUS_IDS.has(id)) return false;
+    if (EXCLUS_NOMS.some((k) => name.includes(k))) return false;
+
+    return true;
+  });
+
+  const map = new Map<string, PlannedActivity[]>();
+  for (const a of list) {
+    const k = a.city;
+    if (!map.has(k)) map.set(k, []);
+    map.get(k)!.push(a);
+  }
+
+  // Keep a consistent order
+  const order = ["Hanoi", "Ninh Binh", "Ha Long", "Hoi An", "Da Nang", "Ho Chi Minh City", "Whale Island"];
+  const out: { city: string; items: PlannedActivity[] }[] = [];
+  for (const c of order) {
+    if (map.has(c)) out.push({ city: c, items: map.get(c)! });
+  }
+
+  // add any leftover
+  for (const [c, items] of map.entries()) {
+    if (!order.includes(c)) out.push({ city: c, items });
+  }
+
+  return out;
+}, [kidsMode]);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans pb-32 overflow-x-hidden select-none">
