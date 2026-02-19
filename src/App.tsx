@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Banknote,
   BatteryCharging,
@@ -28,21 +28,124 @@ import {
   Shield,
   Search,
 } from "lucide-react";
-
-/**
- * ✅ IMPORTANT
- * - You said ONLY family photos should be used from /public/family
- * - Your filenames include ":" (example: public:family:aydan.jpg)
- *   => we MUST encode the URL
- */
+// ------------------------------------------------------------
+// ASSET URL (Vite) — works locally + Vercel + base path
+// Put your files in /public/covers/... and /public/family/...
+// ------------------------------------------------------------
 const assetUrl = (path: string) => {
   const base = (import.meta as any)?.env?.BASE_URL ?? "/";
   const cleanBase = base.endsWith("/") ? base.slice(0, -1) : base;
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
-  // Encode because ":" in filenames needs URL encoding in some setups
-  return encodeURI(`${cleanBase}${cleanPath}`);
+  return `${cleanBase}${cleanPath}`;
 };
+
+// Helper to build public paths safely
 const P = (p: string) => assetUrl(p);
+
+// ------------------------------------------------------------
+// ASSETS (public/)
+// ------------------------------------------------------------
+const ASSETS = {
+  // Family (public/family/)
+  family: {
+    marilyne: P("/family/marilyne.jpg"),
+    claudine: P("/family/claudine.jpg"),
+    nizzar: P("/family/nizzar.jpg"),
+    aydann: P("/family/aydann.jpg"),
+    milann: P("/family/milann.jpg"),
+  },
+
+  // Covers (public/covers/)
+  covers: {
+    sections: {
+      home: P("/covers/sections/cover-home.jpg"),
+      itinerary: P("/covers/sections/cover-itinerary.jpg"),
+      hotels: P("/covers/sections/cover-hotels.jpg"),
+      guide: P("/covers/sections/cover-guide.jpg"),
+      tips: P("/covers/sections/cover-tips.jpg"),
+      budget: P("/covers/sections/cover-budget.jpg"),
+    },
+
+    cities: {
+      hanoi: P("/covers/cities/hanoi.jpg"),
+      ninh_binh: P("/covers/cities/ninh-binh.jpg"),
+      ha_long: P("/covers/cities/ha-long.jpg"),
+      hoi_an: P("/covers/cities/hoi-an.jpg"),
+      da_nang: P("/covers/cities/da-nang.jpg"),
+      hcmc: P("/covers/cities/hcmc.jpg"),
+      whale_island: P("/covers/cities/whale-island.jpg"),
+    },
+
+    moments: {
+      arrival: P("/covers/moments/arrival.jpg"),
+      transfer: P("/covers/moments/transfer.jpg"),
+      airport: P("/covers/moments/airport.jpg"),
+      plane: P("/covers/moments/plane.jpg"),
+      train: P("/covers/moments/train.jpg"),
+      night: P("/covers/moments/night.jpg"),
+      beach: P("/covers/moments/beach.jpg"),
+      boat: P("/covers/moments/boat.jpg"),
+      market: P("/covers/moments/market.jpg"),
+      coffee: P("/covers/moments/coffee.jpg"),
+      streetfood: P("/covers/moments/streetfood.jpg"),
+      museum: P("/covers/moments/museum.jpg"),
+      temple: P("/covers/moments/temple.jpg"),
+      massage: P("/covers/moments/massage.jpg"),
+      love: P("/covers/moments/love.jpg"),
+      family: P("/covers/moments/family.jpg"),
+
+      // spécifiques (si présents)
+      hanoi_train_street: P("/covers/moments/hanoi-train-street.jpg"),
+      hanoi_lan_ong: P("/covers/moments/hanoi-lan-ong.jpg"),
+      hanoi_hoan_kiem: P("/covers/moments/hanoi-hoan-kiem.jpg"),
+      hanoi_temple_of_literature: P("/covers/moments/hanoi-temple-of-literature.jpg"),
+
+      ninhbinh_hang_mua: P("/covers/moments/ninhbinh-hang-mua.jpg"),
+      ninh_binh_trang_an: P("/covers/moments/ninh-binh-trang-an.jpg"),
+      ninh_binh_tam_coc: P("/covers/moments/ninh-binh-tam-coc.jpg"),
+
+      ha_long_sunset: P("/covers/moments/ha-long-sunset.jpg"),
+      ha_long_cruise: P("/covers/moments/ha-long-cruise.jpg"),
+
+      hoi_an_an_bang: P("/covers/moments/hoi-an-an-bang.jpg"),
+      hoi_an_old_town_night: P("/covers/moments/hoi-an-old-town-night.jpg"),
+
+      hcmc_war_museum: P("/covers/moments/hcmc-war-museum.jpg"),
+      hcmc_ben_thanh: P("/covers/moments/hcmc-ben-thanh.jpg"),
+      hcmc_central_post_office: P("/covers/moments/hcmc-central-post-office.jpg"),
+
+      whale_island_ponton: P("/covers/moments/whale-island-ponton.jpg"),
+      pont_dragon_da_nang: P("/covers/moments/pont-dragon-da-nang.jpg"),
+    },
+
+    // Hotels (public/covers/hotels/)
+    hotels: {
+      hanoi_ja_cosmo: P("/covers/hotels/hanoi-ja-cosmo.jpg"),
+      ninh_binh_tam_coc_golden_fields: P("/covers/hotels/ninh-binh-tam-coc-golden-fields.jpg"),
+      ha_long_wyndham_legend: P("/covers/hotels/ha-long-wyndham-legend.jpg"),
+      ha_long_renea_cruise: P("/covers/hotels/ha-long-renea-cruise.jpg"),
+      hoi_an_sea_la_vie: P("/covers/hotels/hoi-an-sea-la-vie.jpg"),
+      da_nang_seahorse_signature: P("/covers/hotels/da-nang-seahorse-signature.jpg"),
+      whale_island_resort: P("/covers/hotels/whale-island-resort.jpg"),
+      hcmc_alagon_spa: P("/covers/hotels/hcmc-alagon-spa.jpg"),
+    },
+  },
+} as const;
+
+
+const cityCoverFromLabel = (label?: string) => {
+  const s = (label ?? "").toLowerCase();
+
+  if (s.includes("hanoi")) return ASSETS.covers.cities.hanoi;
+  if (s.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
+  if (s.includes("ha long") || s.includes("halong")) return ASSETS.covers.cities.ha_long;
+  if (s.includes("hoi an") || s.includes("hoian")) return ASSETS.covers.cities.hoi_an;
+  if (s.includes("da nang") || s.includes("danang")) return ASSETS.covers.cities.da_nang;
+  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return ASSETS.covers.cities.hcmc;
+  if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
+
+  return ASSETS.covers.sections.home;
+};
 
 // ------------------------------------------------------------
 // TYPES
@@ -65,6 +168,8 @@ type HotelItem = {
   official_url?: string;
   why: string;
   note?: string;
+  imageKey?: string; // (on garde simple; éviter typeof TRIP_DATA dans les types)
+  cover?: string;
 };
 
 type LinkItem = { name: string; url: string };
@@ -150,7 +255,7 @@ interface TripData {
 }
 
 // ------------------------------------------------------------
-// DATA (same as your working version, but covers are NOT used)
+// DATA
 // ------------------------------------------------------------
 const TRIP_DATA: TripData = {
   meta: {
@@ -201,6 +306,8 @@ const TRIP_DATA: TripData = {
       budget: { us: 180, claudine: 110, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/ja-cosmo-and-spa.html",
       why: "Central pour ruelles, cafés, culture; simple avec kids + Claudine.",
+      imageKey: "Hanoi",
+      cover: "/covers/hanoi-ja-cosmo.jpg",
     },
     {
       city: "Ninh Binh (Tam Coc)",
@@ -209,6 +316,8 @@ const TRIP_DATA: TripData = {
       budget: { us: 140, claudine: 110, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/tam-coc-golden-fields-homestay.html",
       why: "Base rizières + liberté; parfait pour le ‘wow’ Trang An sans galère.",
+      imageKey: "NinhBinh_TrangAn",
+      cover: "/covers/ninh-binh-tam-coc-golden-fields.jpg",
     },
     {
       city: "Ha Long",
@@ -217,6 +326,8 @@ const TRIP_DATA: TripData = {
       budget: { us: 130, claudine: 80, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html",
       why: "Transition confortable avant croisière, logistique simple.",
+      imageKey: "HaLong",
+      cover: "/covers/ha-long-wyndham-legend.jpg",
     },
     {
       city: "Ha Long (Cruise)",
@@ -226,6 +337,8 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/renea-cruises-halong-ha-long.html",
       note: "Départ : Halong International Cruise Port",
       why: "Le cœur ‘cinéma’ du voyage: karsts, baie, expérience famille.",
+      imageKey: "HaLong",
+      cover: "/covers/ha-long-renea-cruise.jpg",
     },
     {
       city: "Hoi An (An Bang Beach)",
@@ -235,6 +348,8 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/sea-39-lavie-boutique-resort.html",
       why: "Plage + slow nights Old Town; bon équilibre famille/ambiance.",
       note: "À surveiller: selon saison, certains accès plage peuvent changer.",
+      imageKey: "HoiAn",
+      cover: "/covers/hoi-an-sea-la-vie.jpg",
     },
     {
       city: "Da Nang",
@@ -243,6 +358,8 @@ const TRIP_DATA: TripData = {
       budget: { us: 129, claudine: 92, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/seahorse-signature-danang-by-haviland.html",
       why: "Base urbaine efficace pour culture + musées + ponts.",
+      imageKey: "DaNang",
+      cover: "/covers/da-nang-seahorse-signature.jpg",
     },
     {
       city: "Whale Island (Hon Ong)",
@@ -251,6 +368,8 @@ const TRIP_DATA: TripData = {
       budget: { us: 415, claudine: 415, currency: "USD" },
       official_url: "https://whaleislandresort.com/",
       why: "Déconnexion nature pure, rythme famille, mer & ciel.",
+      imageKey: "DaNang",
+      cover: "/covers/whale-island-resort.jpg",
     },
     {
       city: "Ho Chi Minh City",
@@ -259,6 +378,8 @@ const TRIP_DATA: TripData = {
       budget: { us: 275, claudine: 211, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/alagon-saigon.html",
       why: "Très central pour histoire, colonial, street life.",
+      imageKey: "HCMC",
+      cover: "/covers/hcmc-alagon-spa.jpg",
     },
   ],
 
@@ -603,49 +724,53 @@ const TRIP_DATA: TripData = {
 };
 
 // ------------------------------------------------------------
-// FAMILY (✅ uses your real folder + filenames)
-// public/family/public:family:marilyne.jpg etc.
+// FAMILY
 // ------------------------------------------------------------
 const FAMILY_MEMBERS = [
   {
     name: "Marilyne",
     desc: "La Boss",
-    color: "bg-rose-50 text-rose-800 border-rose-100",
-    src: P("/family/public:family:marilyne.jpg"),
-    fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=9f1239&size=200",
+    color: "bg-pink-100 text-pink-700",
+    src: "/family/public:family:marilyne.jpg",
+    fallback:
+      "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
   },
   {
     name: "Claudine",
     desc: "La Sage",
-    color: "bg-amber-50 text-amber-900 border-amber-100",
-    src: P("/family/public:family:claudine.jpg"),
-    fallback: "https://ui-avatars.com/api/?name=Claudine&background=fffbeb&color=92400e&size=200",
+    color: "bg-indigo-100 text-indigo-700",
+    src: "/family/public:family:claudine.jpg",
+    fallback:
+      "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
   },
   {
     name: "Nizzar",
     desc: "Le Pilote",
-    color: "bg-slate-50 text-slate-800 border-slate-200",
-    src: P("/family/public:family:nizzar.jpg"),
-    fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=0f172a&size=200",
+    color: "bg-slate-100 text-slate-700",
+    src: "/family/public:family:nizzar.jpg",
+    fallback:
+      "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
   },
   {
     name: "Aydann",
     desc: "L'Ado",
-    color: "bg-rose-50 text-rose-800 border-rose-100",
-    src: P("/family/public:family:aydann.jpg"),
-    fallback: "https://ui-avatars.com/api/?name=Aydann&background=ffe4e6&color=9f1239&size=200",
+    color: "bg-blue-100 text-blue-700",
+    src: "/family/public:family:aydann.jpg",
+    fallback:
+      "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
   },
   {
     name: "Milann",
     desc: "La Mascotte",
-    color: "bg-amber-50 text-amber-900 border-amber-100",
-    src: P("/family/public:family:milann.jpg"),
-    fallback: "https://ui-avatars.com/api/?name=Milann&background=fffbeb&color=92400e&size=200",
+    color: "bg-orange-100 text-orange-700",
+    src: "/family/public:family:milann.jpg",
+    fallback:
+      "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
   },
-] as const;
+];
 
 // ------------------------------------------------------------
-// BON A SAVOIR / ESSENTIELS
+// BON A SAVOIR / ESSENTIELS (1ère personne)
 // ------------------------------------------------------------
 const ESSENTIALS_CHECKLIST = [
   "Passeports (validité 6 mois)",
@@ -734,6 +859,97 @@ const toISO = (d: Date) => d.toISOString().slice(0, 10);
 
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 
+const cityKeyFromName = (city: string) => {
+  if (city.includes("Hanoi")) return "Hanoi";
+  if (city.includes("Ninh Binh")) return "NinhBinh_TrangAn";
+  if (city.includes("Ha Long")) return "HaLong";
+  if (city.includes("Hoi An")) return "HoiAn";
+  if (city.includes("Da Nang")) return "DaNang";
+  if (city.includes("Ho Chi Minh")) return "HCMC";
+  return "Hanoi";
+};
+
+// ------------------------------------------------------------
+// COVERS (Focus du jour / Itinéraire)
+// ------------------------------------------------------------
+const CITY_COVERS: Record<string, string> = {
+  Hanoi: "/covers/cities/hanoi.jpg",
+  "Ninh Binh": "/covers/cities/ninh-binh.jpg",
+  "Ha Long": "/covers/cities/ha-long.jpg",
+  "Hoi An": "/covers/cities/hoi-an.jpg",
+  "Da Nang": "/covers/cities/da-nang.jpg",
+  "Whale Island": "/covers/cities/whale-island.jpg",
+  "Ho Chi Minh City": "/covers/cities/ho-chi-minh.jpg",
+};
+
+const MOMENT_COVERS: Record<string, string> = {
+  arrival: "/covers/moments/arrival.jpg",
+  transfer: "/covers/moments/transfer.jpg",
+  plane: "/covers/moments/plane.jpg",
+  boat: "/covers/moments/boat.jpg",
+  beach: "/covers/moments/beach.jpg",
+  night: "/covers/moments/night.jpg",
+  market: "/covers/moments/market.jpg",
+  coffee: "/covers/moments/coffee.jpg",
+  streetfood: "/covers/moments/streetfood.jpg",
+  museum: "/covers/moments/museum.jpg",
+  temple: "/covers/moments/temple.jpg",
+  massage: "/covers/moments/massage.jpg",
+  family: "/covers/moments/family.jpg",
+  love: "/covers/moments/love.jpg",
+};
+
+const getBaseCity = (raw: string) => {
+  const first = raw.split("→")[0].trim();
+  const s = first.toLowerCase();
+  if (s.includes("ninh binh")) return "Ninh Binh";
+  if (s.includes("ha long")) return "Ha Long";
+  if (s.includes("hoi an")) return "Hoi An";
+  if (s.includes("da nang")) return "Da Nang";
+  if (s.includes("whale")) return "Whale Island";
+  if (s.includes("ho chi minh")) return "Ho Chi Minh City";
+  if (s.includes("hanoi")) return "Hanoi";
+  return first;
+};
+
+const momentCoverFromText = (text: string) => {
+  const t = text.toLowerCase();
+
+  if (t.includes("vol") || t.includes("aéroport") || t.includes("airport") || t.includes("flight")) return MOMENT_COVERS.plane;
+  if (t.includes("bateau") || t.includes("croisi") || t.includes("cruise") || t.includes("boat")) return MOMENT_COVERS.boat;
+  if (t.includes("plage") || t.includes("beach")) return MOMENT_COVERS.beach;
+  if (t.includes("marché") || t.includes("marche") || t.includes("market")) return MOMENT_COVERS.market;
+  if (t.includes("café") || t.includes("cafe") || t.includes("coffee")) return MOMENT_COVERS.coffee;
+  if (t.includes("street food") || t.includes("street-food") || t.includes("streetfood") || t.includes("food") || t.includes("dîner") || t.includes("diner")) return MOMENT_COVERS.streetfood;
+  if (t.includes("musée") || t.includes("musee") || t.includes("museum")) return MOMENT_COVERS.museum;
+  if (t.includes("temple")) return MOMENT_COVERS.temple;
+  if (t.includes("massage")) return MOMENT_COVERS.massage;
+  if (t.includes("arrivée") || t.includes("arrivee") || t.includes("check-in") || t.includes("check in") || t.includes("arrival")) return MOMENT_COVERS.arrival;
+  if (t.includes("transfert") || t.includes("transfer") || t.includes("limousine") || t.includes("drive")) return MOMENT_COVERS.transfer;
+  if (t.includes("soir") || t.includes("night") || t.includes("lantern")) return MOMENT_COVERS.night;
+
+  return null;
+};
+
+const dayCoverFromDay = (day: ItineraryDay) => {
+
+  const text =
+    (day.theme?.join(" ") ?? "") +
+    " " +
+    (day.blocks?.map((b) => b.plan).join(" ") ?? "");
+
+  // moments d’abord
+  const moment = momentCoverFromText(text);
+  if (moment) return moment;
+
+  // sinon cover de ville
+  return cityCoverFromLabel(city);
+};
+
+
+const googleMapsSearchUrl = (q: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+
 const uniqCitiesByOrder = (days: ItineraryDay[]) => {
   const out: string[] = [];
   for (const d of days) {
@@ -743,56 +959,11 @@ const uniqCitiesByOrder = (days: ItineraryDay[]) => {
   return out;
 };
 
-const cityKeyFromName = (city: string) => {
-  const s = city.toLowerCase();
-  if (s.includes("hanoi")) return "Hanoi";
-  if (s.includes("ninh")) return "NinhBinh_TrangAn";
-  if (s.includes("ha long") || s.includes("halong")) return "HaLong";
-  if (s.includes("hoi an") || s.includes("hoian")) return "HoiAn";
-  if (s.includes("da nang") || s.includes("danang")) return "DaNang";
-  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return "HCMC";
-  return "Hanoi";
-};
-
-const googleMapsSearchUrl = (q: string) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-
 // ------------------------------------------------------------
-// “NO COVERS” SYSTEM
-// We use gradients instead of local /public/covers (your request)
-// ------------------------------------------------------------
-const gradientByCity = (city: string) => {
-  const s = city.toLowerCase();
-  if (s.includes("hanoi")) return "from-rose-700 via-rose-600 to-amber-500";
-  if (s.includes("ninh")) return "from-amber-700 via-amber-500 to-rose-500";
-  if (s.includes("ha long") || s.includes("halong")) return "from-rose-800 via-rose-600 to-amber-400";
-  if (s.includes("hoi an") || s.includes("hoian")) return "from-amber-700 via-rose-600 to-amber-400";
-  if (s.includes("da nang") || s.includes("danang")) return "from-rose-700 via-amber-500 to-rose-500";
-  if (s.includes("whale")) return "from-amber-700 via-amber-500 to-rose-600";
-  if (s.includes("ho chi minh") || s.includes("saigon") || s.includes("hcmc")) return "from-rose-800 via-rose-600 to-amber-500";
-  return "from-rose-700 via-rose-600 to-amber-500";
-};
-
-const dayCoverStyle = (day: ItineraryDay) => {
-  // Extra hint from themes
-  const blob = (day.theme.join(" ") + " " + day.blocks.map((b) => b.plan).join(" ")).toLowerCase();
-  if (blob.includes("vol") || blob.includes("aéroport") || blob.includes("flight") || blob.includes("airport")) {
-    return "from-slate-900 via-rose-700 to-amber-500";
-  }
-  if (blob.includes("bateau") || blob.includes("croisi") || blob.includes("cruise") || blob.includes("boat")) {
-    return "from-rose-900 via-rose-700 to-amber-500";
-  }
-  if (blob.includes("plage") || blob.includes("beach")) {
-    return "from-amber-700 via-amber-500 to-rose-500";
-  }
-  return gradientByCity(day.city);
-};
-
-// ------------------------------------------------------------
-// UI ATOMS
+// UI ATOMS V2
 // ------------------------------------------------------------
 const Glass = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={`bg-white/85 backdrop-blur-md border border-white/70 shadow-sm ${className}`}>{children}</div>
+  <div className={`bg-white/80 backdrop-blur-md border border-white/60 shadow-sm ${className}`}>{children}</div>
 );
 
 const Pill = ({
@@ -808,8 +979,8 @@ const Pill = ({
     onClick={onClick}
     className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
       active
-        ? "bg-rose-700 text-white border-rose-700 shadow"
-        : "bg-white/70 text-slate-700 border-slate-200 hover:bg-white"
+        ? "bg-emerald-600 text-white border-emerald-600 shadow"
+        : "bg-white/70 text-slate-600 border-slate-200 hover:bg-white"
     }`}
   >
     {children}
@@ -833,16 +1004,20 @@ const Toggle = ({
     <div className="min-w-0">
       <div className="flex items-center gap-2">
         {icon}
-        <div className="font-bold text-slate-900">{label}</div>
+        <div className="font-bold text-slate-800">{label}</div>
       </div>
       {hint && <div className="text-xs text-slate-500 mt-1">{hint}</div>}
     </div>
     <button
       onClick={() => onChange(!value)}
-      className={`w-12 h-7 rounded-full p-1 transition-colors ${value ? "bg-rose-600" : "bg-slate-200"}`}
+      className={`w-12 h-7 rounded-full p-1 transition-colors ${value ? "bg-emerald-500" : "bg-slate-200"}`}
       aria-label={label}
     >
-      <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${value ? "translate-x-5" : "translate-x-0"}`} />
+      <div
+        className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${
+          value ? "translate-x-5" : "translate-x-0"
+        }`}
+      />
     </button>
   </div>
 );
@@ -853,7 +1028,7 @@ const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m
       <button
         onClick={() => setMood("fatigue")}
         className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "fatigue" ? "bg-slate-100 text-slate-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          currentMood === "fatigue" ? "bg-indigo-100 text-indigo-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
         }`}
       >
         <Moon className="w-4 h-4" /> <span className="hidden sm:inline">Repos</span>
@@ -861,7 +1036,7 @@ const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m
       <button
         onClick={() => setMood("normal")}
         className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "normal" ? "bg-amber-100 text-amber-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          currentMood === "normal" ? "bg-emerald-100 text-emerald-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
         }`}
       >
         <BatteryCharging className="w-4 h-4" /> <span className="hidden sm:inline">Normal</span>
@@ -869,7 +1044,7 @@ const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m
       <button
         onClick={() => setMood("energy")}
         className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "energy" ? "bg-rose-100 text-rose-800 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          currentMood === "energy" ? "bg-amber-100 text-amber-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
         }`}
       >
         <Flame className="w-4 h-4" /> <span className="hidden sm:inline">Énergie</span>
@@ -881,20 +1056,21 @@ const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m
 const FamilyStrip = () => (
   <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
     {FAMILY_MEMBERS.map((m) => (
-      <div key={m.name} className={`shrink-0 flex items-center gap-3 bg-white rounded-2xl border px-3 py-2 shadow-sm ${m.color}`}>
+      <div
+        key={m.name}
+        className="shrink-0 flex items-center gap-3 bg-white rounded-2xl border border-slate-100 px-3 py-2 shadow-sm"
+      >
         <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 ring-2 ring-white">
           <img
             src={m.src}
             alt={m.name}
             className="w-full h-full object-cover"
-            onError={(e) => {
-              e.currentTarget.src = m.fallback;
-            }}
+            onError={(e) => (e.currentTarget.src = m.fallback)}
           />
         </div>
         <div className="leading-tight">
-          <div className="text-sm font-extrabold">{m.name}</div>
-          <div className="text-[11px] font-semibold opacity-90">{m.desc}</div>
+          <div className="text-sm font-bold text-slate-800">{m.name}</div>
+          <div className={`text-[11px] font-semibold inline-block px-2 py-0.5 rounded-full ${m.color}`}>{m.desc}</div>
         </div>
       </div>
     ))}
@@ -904,38 +1080,38 @@ const FamilyStrip = () => (
 const CinemaHero = ({
   onOpenQuick,
   activeCity,
+  coverSrc,
 }: {
   onOpenQuick: () => void;
   activeCity: string;
+  coverSrc?: string;
 }) => {
   const key = cityKeyFromName(activeCity);
   const hero = TRIP_DATA.hero_images[key];
-  const src = hero?.src;
+  const src = coverSrc || hero?.src;
 
   return (
     <div className="relative rounded-3xl overflow-hidden shadow-xl">
       <div className="absolute inset-0">
-        {src ? <img src={src} alt="Hero" className="w-full h-full object-cover scale-[1.02]" /> : null}
-        {/* ✅ always readable */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
-        {/* Vietnam palette glow */}
-        <div className="absolute inset-0 opacity-35 bg-[radial-gradient(circle_at_20%_20%,#fb7185_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#f59e0b_0%,transparent_40%),radial-gradient(circle_at_55%_85%,#ef4444_0%,transparent_35%)]" />
+        <img src={src} alt="Hero" className="w-full h-full object-cover scale-[1.02]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent" />
+        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#818cf8_0%,transparent_40%),radial-gradient(circle_at_55%_85%,#fbbf24_0%,transparent_35%)]" />
       </div>
 
       <div className="relative z-10 p-6 sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <div className="flex gap-2 flex-wrap">
-            <span className="px-3 py-1 rounded-full bg-black/35 border border-white/25 text-xs font-semibold text-white">
+            <span className="px-3 py-1 rounded-full bg-white/15 border border-white/25 text-xs font-semibold text-white">
               24 Juil → 18 Août
             </span>
-            <span className="px-3 py-1 rounded-full bg-rose-600/80 border border-rose-300/30 text-xs font-semibold text-white">
+            <span className="px-3 py-1 rounded-full bg-emerald-500/80 border border-emerald-300/30 text-xs font-semibold text-white">
               Vietnam 2026
             </span>
           </div>
 
           <button
             onClick={onOpenQuick}
-            className="px-3 py-2 rounded-2xl bg-black/30 border border-white/25 text-white text-xs font-extrabold flex items-center gap-2 hover:bg-black/40"
+            className="px-3 py-2 rounded-2xl bg-white/15 border border-white/25 text-white text-xs font-bold flex items-center gap-2 hover:bg-white/20"
           >
             <Sparkles size={14} /> Quick
           </button>
@@ -944,7 +1120,7 @@ const CinemaHero = ({
         <div className="mt-6">
           <div className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-[0.95]">
             VIETNAM
-            <span className="block text-amber-200 font-light mt-2">Family Trip</span>
+            <span className="block text-emerald-200 font-light mt-2">Family Trip</span>
           </div>
           <p className="mt-3 text-white/90 text-base sm:text-lg">
             Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d&apos;amour.
@@ -952,14 +1128,14 @@ const CinemaHero = ({
 
           <div className="mt-4 flex flex-wrap gap-2">
             {TRIP_DATA.meta.vibe.map((v) => (
-              <span key={v} className="text-[11px] px-2 py-1 rounded bg-black/25 border border-white/15 text-white/90">
+              <span key={v} className="text-[11px] px-2 py-1 rounded bg-black/20 border border-white/15 text-white/90">
                 {v}
               </span>
             ))}
           </div>
 
-          <div className="mt-4 text-xs text-white/70">
-            Focus du moment : <span className="font-semibold text-white/90">{activeCity}</span>
+          <div className="mt-4 text-xs text-white/60">
+            Focus du moment : <span className="font-semibold text-white/85">{activeCity}</span>
           </div>
         </div>
       </div>
@@ -984,7 +1160,7 @@ const QuickSheet = ({
       <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl p-5 pb-7">
         <div className="flex items-center justify-between mb-3">
           <div className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-            <Sparkles size={18} className="text-rose-700" />
+            <Sparkles size={18} className="text-emerald-600" />
             Quick Actions
           </div>
           <button onClick={onClose} className="p-2 rounded-xl bg-slate-100 text-slate-700">
@@ -997,8 +1173,8 @@ const QuickSheet = ({
             onClick={() => (onGoto("tips"), onClose())}
             className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
           >
-            <div className="flex items-center gap-2 text-slate-900 font-extrabold">
-              <Lightbulb size={16} className="text-amber-600" /> Bon à savoir
+            <div className="flex items-center gap-2 text-slate-900 font-bold">
+              <Lightbulb size={16} className="text-emerald-600" /> Bon à savoir
             </div>
             <div className="text-xs text-slate-500 mt-1">Checklist + argent + règles street</div>
           </button>
@@ -1007,8 +1183,8 @@ const QuickSheet = ({
             onClick={() => (onGoto("guide"), onClose())}
             className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
           >
-            <div className="flex items-center gap-2 text-slate-900 font-extrabold">
-              <Utensils size={16} className="text-rose-700" /> Food + logistique
+            <div className="flex items-center gap-2 text-slate-900 font-bold">
+              <Utensils size={16} className="text-orange-600" /> Food + logistique
             </div>
             <div className="text-xs text-slate-500 mt-1">Plats cultes + transferts</div>
           </button>
@@ -1019,24 +1195,24 @@ const QuickSheet = ({
             rel="noreferrer"
             className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
           >
-            <div className="flex items-center gap-2 text-slate-900 font-extrabold">
-              <Smartphone size={16} className="text-slate-800" /> Grab (rappel)
+            <div className="flex items-center gap-2 text-slate-900 font-bold">
+              <Smartphone size={16} className="text-indigo-600" /> Grab (rappel)
             </div>
-            <div className="text-xs text-slate-500 mt-1">Recherche rapide</div>
+            <div className="text-xs text-slate-500 mt-1">Au besoin: recherche rapide</div>
           </a>
 
           <button
             onClick={() => (onGoto("budget"), onClose())}
             className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
           >
-            <div className="flex items-center gap-2 text-slate-900 font-extrabold">
+            <div className="flex items-center gap-2 text-slate-900 font-bold">
               <Wallet size={16} className="text-slate-800" /> Budget
             </div>
             <div className="text-xs text-slate-500 mt-1">Totaux + activités</div>
           </button>
         </div>
 
-        <div className="mt-4 text-xs text-slate-500">Astuce: sur mobile, l’écran “Home” sert de hub.</div>
+        <div className="mt-4 text-xs text-slate-500">Astuce: sur mobile, l’écran “Home” sert de hub. Tout le reste = navigation.</div>
       </div>
     </div>
   );
@@ -1070,12 +1246,14 @@ const CityTimeline = ({
 
 const DayCardMobile = ({
   day,
+  coverSrc,
   mood,
   isFav,
   onFav,
   kidsMode,
 }: {
   day: ItineraryDay;
+  coverSrc: string;
   mood: Mood;
   isFav: boolean;
   onFav: () => void;
@@ -1085,22 +1263,47 @@ const DayCardMobile = ({
 
   const shouldHideImpact = (text: string) => {
     const t = text.toLowerCase();
-    return t.includes("prison") || t.includes("war") || t.includes("remnants") || t.includes("impact") || t.includes("fort");
+    return (
+      t.includes("prison") ||
+      t.includes("war") ||
+      t.includes("remnants") ||
+      t.includes("impact") ||
+      t.includes("fort")
+    );
   };
 
   return (
     <div className="relative bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-      {/* ✅ NO IMAGE COVER: gradient only */}
       <div className="relative h-28">
-        <div className={`absolute inset-0 bg-gradient-to-r ${dayCoverStyle(day)}`} />
-        <div className="absolute inset-0 bg-black/30" />
+        <img
+          src={coverSrc}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+          onError={(e) => {
+            // fallback "safe" si un path est faux
+            e.currentTarget.src = ASSETS.covers.sections.itinerary;
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-black/20" />
         <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-3">
-          <div className="min-w-0">
-            <div className="text-xs text-white/80 font-semibold">{safeDateLabel(day.date)}</div>
-            <div className="text-lg font-extrabold text-white leading-tight truncate">{day.city}</div>
+          <div>
+            <div className="text-xs text-slate-600 font-semibold">
+              {safeDateLabel(day.date)}
+            </div>
+            <div className="text-lg font-extrabold text-slate-900 leading-tight">
+              {day.city}
+            </div>
           </div>
-          <button onClick={onFav} className="p-2 rounded-2xl bg-black/25 border border-white/15">
-            <Heart size={18} className={isFav ? "text-amber-300" : "text-white/70"} fill={isFav ? "currentColor" : "none"} />
+          <button
+            onClick={onFav}
+            className="p-2 rounded-2xl bg-white/80 border border-white shadow"
+          >
+            <Heart
+              size={18}
+              className={isFav ? "text-amber-500" : "text-slate-400"}
+              fill={isFav ? "currentColor" : "none"}
+            />
           </button>
         </div>
       </div>
@@ -1108,7 +1311,10 @@ const DayCardMobile = ({
       <div className="p-4">
         <div className="flex flex-wrap gap-2 mb-3">
           {day.theme.map((t) => (
-            <span key={t} className="text-[10px] uppercase tracking-wide text-slate-600 bg-slate-100 px-2 py-1 rounded-full">
+            <span
+              key={t}
+              className="text-[10px] uppercase tracking-wide text-slate-500 bg-slate-100 px-2 py-1 rounded-full"
+            >
               {t}
             </span>
           ))}
@@ -1132,7 +1338,9 @@ const DayCardMobile = ({
             }
             return (
               <div key={idx} className="rounded-2xl bg-slate-50 border border-slate-100 p-3">
-                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">{b.label}</div>
+                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">
+                  {b.label}
+                </div>
                 <div className="text-sm text-slate-800 leading-relaxed">{b.plan}</div>
                 {b.links?.length ? (
                   <div className="mt-2 flex flex-wrap gap-2">
@@ -1142,7 +1350,7 @@ const DayCardMobile = ({
                         href={l}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[11px] font-extrabold text-rose-700 bg-rose-50 border border-rose-100 px-2 py-1 rounded-xl"
+                        className="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-xl"
                       >
                         Lien
                       </a>
@@ -1164,26 +1372,30 @@ const DayCardMobile = ({
   );
 };
 
+
 const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
   const link = hotel.booking_url || hotel.official_url;
   return (
     <div className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg transition-shadow">
-      {/* ✅ NO HOTEL COVER IMAGE: gradient only */}
-      <div className="relative h-36">
-        <div className={`absolute inset-0 bg-gradient-to-r ${gradientByCity(hotel.city)}`} />
-        <div className="absolute inset-0 bg-black/30" />
+      <div className="relative h-40">
+        {hotel.cover ? (
+          <img src={hotel.cover} alt={hotel.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+        ) : (
+          <div className="absolute inset-0 bg-slate-100" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/25 to-black/10" />
         <div className="absolute bottom-3 left-4 right-4">
-          <div className="text-[11px] font-extrabold text-white/85 flex items-center gap-1">
+          <div className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
             <MapPin size={12} /> {hotel.city}
           </div>
-          <div className="text-lg font-extrabold text-white leading-tight">{hotel.name}</div>
-          <div className="text-xs text-white/75">{hotel.dates}</div>
+          <div className="text-lg font-extrabold text-slate-900 leading-tight">{hotel.name}</div>
+          <div className="text-xs text-slate-500">{hotel.dates}</div>
         </div>
       </div>
 
       <div className="p-4">
         {hotel.note && (
-          <div className="text-xs text-slate-700 bg-slate-50 border border-slate-100 rounded-2xl p-3 mb-3 flex gap-2">
+          <div className="text-xs text-slate-600 bg-slate-50 border border-slate-100 rounded-2xl p-3 mb-3 flex gap-2">
             <Info size={14} className="mt-0.5 text-slate-400" />
             <div>{hotel.note}</div>
           </div>
@@ -1204,7 +1416,7 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
 
         <div className="grid grid-cols-2 gap-2">
           {link ? (
-            <a href={link} target="_blank" rel="noreferrer" className="py-2 rounded-2xl bg-rose-700 text-white text-xs font-extrabold text-center">
+            <a href={link} target="_blank" rel="noreferrer" className="py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold text-center">
               Voir
             </a>
           ) : (
@@ -1215,13 +1427,10 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
             href={googleMapsSearchUrl(hotel.name + " " + hotel.city)}
             target="_blank"
             rel="noreferrer"
-            className="py-2 rounded-2xl bg-white border border-slate-200 text-slate-900 text-xs font-extrabold text-center"
+            className="py-2 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-extrabold text-center"
           >
             Maps
           </a>
-        </div>
-      </
-                </a>
         </div>
       </div>
     </div>
@@ -1230,16 +1439,13 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
 
 const TipsChecklist = () => {
   const [checked, setChecked] = useState<string[]>([]);
-
   useEffect(() => {
     const saved = localStorage.getItem("trip_tips_checklist");
     if (saved) setChecked(JSON.parse(saved));
   }, []);
 
   const toggle = (item: string) => {
-    const next = checked.includes(item)
-      ? checked.filter((i) => i !== item)
-      : [...checked, item];
+    const next = checked.includes(item) ? checked.filter((i) => i !== item) : [...checked, item];
     setChecked(next);
     localStorage.setItem("trip_tips_checklist", JSON.stringify(next));
   };
@@ -1250,14 +1456,11 @@ const TipsChecklist = () => {
     <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
       <div className="flex justify-between items-end mb-3">
         <div className="text-lg font-extrabold text-slate-900">Essentiels</div>
-        <div className="text-xs font-extrabold text-amber-600">{progress}% prêt</div>
+        <div className="text-xs font-extrabold text-emerald-600">{progress}% prêt</div>
       </div>
 
       <div className="h-2 w-full bg-slate-100 rounded-full mb-4 overflow-hidden">
-        <div
-          className="h-full bg-amber-500 transition-all duration-500"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${progress}%` }} />
       </div>
 
       <div className="space-y-2">
@@ -1269,22 +1472,12 @@ const TipsChecklist = () => {
           >
             <div
               className={`w-5 h-5 rounded-md border flex items-center justify-center ${
-                checked.includes(item)
-                  ? "bg-amber-500 border-amber-500 text-white"
-                  : "border-slate-300 text-transparent"
+                checked.includes(item) ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"
               }`}
             >
               <CheckSquare size={14} />
             </div>
-            <div
-              className={`text-sm ${
-                checked.includes(item)
-                  ? "text-slate-400 line-through"
-                  : "text-slate-800"
-              }`}
-            >
-              {item}
-            </div>
+            <div className={`text-sm ${checked.includes(item) ? "text-slate-400 line-through" : "text-slate-800"}`}>{item}</div>
           </button>
         ))}
       </div>
@@ -1292,18 +1485,10 @@ const TipsChecklist = () => {
   );
 };
 
-const SimpleListCard = ({
-  title,
-  icon,
-  items,
-}: {
-  title: string;
-  icon: ReactNode;
-  items: string[];
-}) => (
+const SimpleListCard = ({ title, icon, items }: { title: string; icon: ReactNode; items: string[] }) => (
   <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
     <div className="flex items-center gap-2 mb-3">
-      <div className="text-amber-700">{icon}</div>
+      <div className="text-emerald-700">{icon}</div>
       <div className="text-lg font-extrabold text-slate-900">{title}</div>
     </div>
     <div className="space-y-2 text-sm text-slate-800">
@@ -1320,18 +1505,15 @@ const SimpleListCard = ({
 const PhrasebookCard = () => (
   <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
     <div className="flex items-center gap-2 mb-3">
-      <Languages className="text-amber-700" size={18} />
-      <div className="text-lg font-extrabold text-slate-900">
-        Mots utiles (phonétique)
-      </div>
+      <Languages className="text-emerald-700" size={18} />
+      <div className="text-lg font-extrabold text-slate-900">Mots utiles (phonétique)</div>
     </div>
     <div className="grid sm:grid-cols-2 gap-3">
       {PHRASEBOOK.map((p) => (
         <div key={p.fr} className="rounded-2xl border border-slate-100 bg-slate-50 p-3">
           <div className="text-sm font-extrabold text-slate-900">{p.fr}</div>
           <div className="text-xs text-slate-700 mt-1">
-            <span className="font-semibold">{p.vi}</span> •{" "}
-            <span className="font-mono">{p.phon}</span>
+            <span className="font-semibold">{p.vi}</span> • <span className="font-mono">{p.phon}</span>
           </div>
         </div>
       ))}
@@ -1342,39 +1524,27 @@ const PhrasebookCard = () => (
 const AirportGlossary = () => (
   <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
     <div className="flex items-center gap-2 mb-3">
-      <Plane className="text-amber-700" size={18} />
-      <div className="text-lg font-extrabold text-slate-900">
-        Aéroports (codes + trajets)
-      </div>
+      <Plane className="text-indigo-700" size={18} />
+      <div className="text-lg font-extrabold text-slate-900">Aéroports (codes + trajets)</div>
     </div>
-    <div className="text-xs text-slate-500 mb-3">
-      Estimations simples. On part “large” les jours de vol.
-    </div>
+    <div className="text-xs text-slate-500 mb-3">Estimations simples. On part “large” les jours de vol.</div>
     <div className="space-y-3">
       {AIRPORT_GLOSSARY.map((a, i) => (
-        <div
-          key={`${a.code}-${a.fromHotel}-${i}`}
-          className="rounded-2xl border border-slate-100 bg-slate-50 p-4"
-        >
+        <div key={`${a.code}-${a.fromHotel}-${i}`} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <div className="text-sm font-extrabold text-slate-900">
-                <span className="font-mono text-amber-700">{a.code}</span> •{" "}
-                {a.city}
+                <span className="font-mono text-indigo-700">{a.code}</span> • {a.city}
               </div>
               <div className="text-xs text-slate-600 mt-1">{a.airport}</div>
               <div className="text-xs text-slate-600 mt-1">
                 Depuis <span className="font-semibold">{a.fromHotel}</span>
               </div>
-              {a.note ? (
-                <div className="text-xs text-slate-500 mt-1">{a.note}</div>
-              ) : null}
+              {a.note ? <div className="text-xs text-slate-500 mt-1">{a.note}</div> : null}
             </div>
             <div className="text-right shrink-0">
               <div className="text-sm font-extrabold text-slate-900">{a.eta}</div>
-              <div className="text-[10px] uppercase tracking-wide text-slate-500">
-                hotel → airport
-              </div>
+              <div className="text-[10px] uppercase tracking-wide text-slate-500">hotel → airport</div>
             </div>
           </div>
         </div>
@@ -1391,7 +1561,7 @@ export default function App() {
   const [mood, setMood] = useState<Mood>("normal");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [kidsMode, setKidsMode] = useState<boolean>(false);
-  const [cinemaMode, setCinemaMode] = useState<boolean>(true);
+  const [cinemaMode, setCinemaMode] = useState<boolean>(true); // gardé (UI)
   const [quickOpen, setQuickOpen] = useState(false);
 
   const [vndPerUsd, setVndPerUsd] = useState<number>(26000);
@@ -1405,8 +1575,7 @@ export default function App() {
   const tripStart = TRIP_DATA.itinerary_days[0]?.date;
   const tripEnd = TRIP_DATA.itinerary_days[TRIP_DATA.itinerary_days.length - 1]?.date;
 
-  const isWithinTrip =
-    tripStart && tripEnd ? todayISO >= tripStart && todayISO <= tripEnd : false;
+  const isWithinTrip = tripStart && tripEnd ? todayISO >= tripStart && todayISO <= tripEnd : false;
 
   const todayIndex = useMemo(() => {
     const idx = TRIP_DATA.itinerary_days.findIndex((d) => d.date === todayISO);
@@ -1439,10 +1608,7 @@ export default function App() {
   }, []);
 
   useEffect(() => localStorage.setItem("trip_vnd_per_usd", String(vndPerUsd)), [vndPerUsd]);
-  useEffect(
-    () => localStorage.setItem("trip_activities_toggle", JSON.stringify(includeActivities)),
-    [includeActivities]
-  );
+  useEffect(() => localStorage.setItem("trip_activities_toggle", JSON.stringify(includeActivities)), [includeActivities]);
   useEffect(() => localStorage.setItem("trip_kids_mode", kidsMode ? "1" : "0"), [kidsMode]);
   useEffect(() => localStorage.setItem("trip_cinema_mode", cinemaMode ? "1" : "0"), [cinemaMode]);
   useEffect(() => localStorage.setItem("trip_active_city", activeCity), [activeCity]);
@@ -1456,7 +1622,9 @@ export default function App() {
 
   const handlePrint = () => window.print();
 
+  // ------------------------------------------------------------
   // FILTERS
+  // ------------------------------------------------------------
   const filteredDays = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return TRIP_DATA.itinerary_days;
@@ -1466,11 +1634,14 @@ export default function App() {
     });
   }, [search]);
 
+  // ------------------------------------------------------------
   // BUDGET
+  // ------------------------------------------------------------
   const budgetSplit = useMemo(() => {
     const adults = TRIP_DATA.meta.travelers_count.adults;
     const kids = TRIP_DATA.meta.travelers_count.kids;
 
+    // split simple
     const RATIO_FAM = 0.8;
     const RATIO_CLAU = 0.2;
 
@@ -1527,7 +1698,9 @@ export default function App() {
     };
   }, [includeActivities, vndPerUsd, kidsMode]);
 
+  // ------------------------------------------------------------
   // NAV
+  // ------------------------------------------------------------
   const Tabs = [
     { id: "home", icon: Star, label: "Home" },
     { id: "itinerary", icon: Calendar, label: "Itinéraire" },
@@ -1537,13 +1710,13 @@ export default function App() {
     { id: "budget", icon: Wallet, label: "Budget" },
   ] as const;
 
-  // HOME HUB
+  // ------------------------------------------------------------
+  // HOME “CINEMA HUB”
+  // ------------------------------------------------------------
   const focusDay = TRIP_DATA.itinerary_days[clamp(focusDayIndex, 0, TRIP_DATA.itinerary_days.length - 1)];
 
-  const gotoNextDay = () =>
-    setFocusDayIndex((i) => clamp(i + 1, 0, TRIP_DATA.itinerary_days.length - 1));
-  const gotoPrevDay = () =>
-    setFocusDayIndex((i) => clamp(i - 1, 0, TRIP_DATA.itinerary_days.length - 1));
+  const gotoNextDay = () => setFocusDayIndex((i) => clamp(i + 1, 0, TRIP_DATA.itinerary_days.length - 1));
+  const gotoPrevDay = () => setFocusDayIndex((i) => clamp(i - 1, 0, TRIP_DATA.itinerary_days.length - 1));
 
   const setCityFromFocus = () => {
     const base = focusDay.city.split("→").map((s) => s.trim())[0];
@@ -1557,31 +1730,21 @@ export default function App() {
         <Glass className="border-b border-slate-200">
           <div className="mx-auto w-full min-w-0 max-w-[560px] px-4 h-16 flex items-center justify-between sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-9 h-9 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-extrabold shrink-0">
+              <div className="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-extrabold shrink-0">
                 V
               </div>
               <div className="leading-tight min-w-0">
-                <div className="text-sm font-extrabold text-slate-900 truncate">
-                  Vietnam 2026
-                </div>
-                <div className="text-[11px] text-slate-500 truncate">
-                  Mobile Hub • Cinema V2
-                </div>
+                <div className="text-sm font-extrabold text-slate-900 truncate">Vietnam 2026</div>
+                <div className="text-[11px] text-slate-500 truncate">Mobile Hub • Cinema V2</div>
               </div>
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
               <MoodSelector currentMood={mood} setMood={setMood} />
-              <button
-                onClick={() => setQuickOpen(true)}
-                className="p-2 rounded-2xl bg-slate-100 text-slate-700"
-              >
+              <button onClick={() => setQuickOpen(true)} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
                 <Sparkles size={18} />
               </button>
-              <button
-                onClick={handlePrint}
-                className="p-2 rounded-2xl bg-slate-100 text-slate-700"
-              >
+              <button onClick={handlePrint} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
                 <Printer size={18} />
               </button>
             </div>
@@ -1589,21 +1752,13 @@ export default function App() {
         </Glass>
       </header>
 
-      <QuickSheet
-        open={quickOpen}
-        onClose={() => setQuickOpen(false)}
-        onGoto={(v) => setView(v)}
-      />
+      <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
       <main className="mx-auto w-full min-w-0 max-w-[560px] px-4 py-5 space-y-6 sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
         {/* HOME */}
         {view === "home" && (
           <div className="space-y-6">
-            <CinemaHero
-              onOpenQuick={() => setQuickOpen(true)}
-              activeCity={activeCity}
-              coverSrc={cityCoverFromLabel(activeCity)}
-            />
+            <CinemaHero onOpenQuick={() => setQuickOpen(true)} activeCity={activeCity} coverSrc={cityCoverFromLabel(activeCity)} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left */}
@@ -1613,15 +1768,13 @@ export default function App() {
                     <div>
                       <div className="text-lg font-extrabold text-slate-900">Dashboard</div>
                       <div className="text-xs text-slate-500">
-                        {isWithinTrip
-                          ? "On est dans la période du trip."
-                          : "Preview — le trip n’a pas commencé (ou est fini)."}
+                        {isWithinTrip ? "On est dans la période du trip." : "Preview — le trip n’a pas commencé (ou est fini)."}
                       </div>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => setView("itinerary")}
-                        className="px-3 py-2 rounded-2xl bg-amber-600 text-white text-xs font-extrabold flex items-center gap-2"
+                        className="px-3 py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold flex items-center gap-2"
                       >
                         Itinéraire <ChevronRight size={14} />
                       </button>
@@ -1631,7 +1784,7 @@ export default function App() {
                   <div className="grid sm:grid-cols-2 gap-3">
                     <Toggle
                       label="Mode Kids"
-                      icon={<Shield size={16} className="text-amber-600" />}
+                      icon={<Shield size={16} className="text-emerald-600" />}
                       value={kidsMode}
                       onChange={setKidsMode}
                       hint="Masque les contenus ‘impact’ et simplifie."
@@ -1661,16 +1814,10 @@ export default function App() {
                       <div className="text-xs text-slate-500">Swipe mental: 1 carte = 1 journée.</div>
                     </div>
                     <div className="flex gap-2">
-                      <button
-                        onClick={gotoPrevDay}
-                        className="p-2 rounded-2xl bg-slate-100 text-slate-700"
-                      >
+                      <button onClick={gotoPrevDay} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
                         <ChevronLeft size={18} />
                       </button>
-                      <button
-                        onClick={gotoNextDay}
-                        className="p-2 rounded-2xl bg-slate-100 text-slate-700"
-                      >
+                      <button onClick={gotoNextDay} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
                         <ChevronRight size={18} />
                       </button>
                     </div>
@@ -1678,12 +1825,11 @@ export default function App() {
 
                   <div className="flex items-center justify-between gap-3 mb-3">
                     <div className="text-xs font-bold text-slate-600">
-                      {safeDateLabel(focusDay.date)} •{" "}
-                      <span className="text-slate-900">{focusDay.city}</span>
+                      {safeDateLabel(focusDay.date)} • <span className="text-slate-900">{focusDay.city}</span>
                     </div>
                     <button
                       onClick={() => (setCityFromFocus(), setView("itinerary"))}
-                      className="text-xs font-extrabold text-amber-700 bg-amber-50 px-3 py-2 rounded-2xl"
+                      className="text-xs font-extrabold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-2xl"
                     >
                       Voir en itinéraire
                     </button>
@@ -1703,10 +1849,7 @@ export default function App() {
                 <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
                   <div className="flex items-center justify-between gap-3 mb-3">
                     <div className="text-lg font-extrabold text-slate-900">Recherche</div>
-                    <button
-                      onClick={() => setSearch("")}
-                      className="text-xs font-bold text-slate-500"
-                    >
+                    <button onClick={() => setSearch("")} className="text-xs font-bold text-slate-500">
                       Reset
                     </button>
                   </div>
@@ -1726,9 +1869,7 @@ export default function App() {
                       Résultats: <span className="font-bold">{filteredDays.length}</span> jour(s)
                     </div>
                   ) : (
-                    <div className="mt-3 text-xs text-slate-500">
-                      Astuce: utile quand on doit “retrouver” un truc vite.
-                    </div>
+                    <div className="mt-3 text-xs text-slate-500">Astuce: utile quand on doit “retrouver” un truc vite.</div>
                   )}
                 </div>
               </div>
@@ -1738,37 +1879,25 @@ export default function App() {
                 <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
                   <div className="text-lg font-extrabold text-slate-900 mb-3">Shortcuts</div>
                   <div className="grid grid-cols-2 gap-3">
-                    <button
-                      onClick={() => setView("tips")}
-                      className="p-4 rounded-2xl bg-amber-50 border border-amber-100 text-left"
-                    >
-                      <div className="font-extrabold text-amber-900 flex items-center gap-2">
+                    <button onClick={() => setView("tips")} className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-left">
+                      <div className="font-extrabold text-emerald-900 flex items-center gap-2">
                         <Lightbulb size={16} /> Tips
                       </div>
-                      <div className="text-xs text-amber-700 mt-1">Checklist + argent</div>
+                      <div className="text-xs text-emerald-700 mt-1">Checklist + argent</div>
                     </button>
-                    <button
-                      onClick={() => setView("guide")}
-                      className="p-4 rounded-2xl bg-orange-50 border border-orange-100 text-left"
-                    >
+                    <button onClick={() => setView("guide")} className="p-4 rounded-2xl bg-orange-50 border border-orange-100 text-left">
                       <div className="font-extrabold text-orange-900 flex items-center gap-2">
                         <Utensils size={16} /> Food
                       </div>
                       <div className="text-xs text-orange-700 mt-1">Plats cultes</div>
                     </button>
-                    <button
-                      onClick={() => setView("hotels")}
-                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left"
-                    >
-                      <div className="font-extrabold text-slate-900 flex items-center gap-2">
+                    <button onClick={() => setView("hotels")} className="p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-left">
+                      <div className="font-extrabold text-indigo-900 flex items-center gap-2">
                         <Hotel size={16} /> Hôtels
                       </div>
-                      <div className="text-xs text-slate-600 mt-1">Covers + liens</div>
+                      <div className="text-xs text-indigo-700 mt-1">Covers + liens</div>
                     </button>
-                    <button
-                      onClick={() => setView("budget")}
-                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left"
-                    >
+                    <button onClick={() => setView("budget")} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left">
                       <div className="font-extrabold text-slate-900 flex items-center gap-2">
                         <Wallet size={16} /> Budget
                       </div>
@@ -1788,9 +1917,7 @@ export default function App() {
                       <span className="text-slate-600 font-semibold">Claudine</span>
                       <span className="font-extrabold">{formatUSD(budgetSplit.claudine.total)}</span>
                     </div>
-                    <div className="mt-3 text-xs text-slate-500">
-                      Activités: dépend du taux VND/USD et des toggles.
-                    </div>
+                    <div className="mt-3 text-xs text-slate-500">Activités: dépend du taux VND/USD et des toggles.</div>
                   </div>
                 </div>
 
@@ -1808,10 +1935,7 @@ export default function App() {
                 <div className="text-2xl font-extrabold text-slate-900">Itinéraire</div>
                 <div className="text-xs text-slate-500">Mobile-first: cartes immersives.</div>
               </div>
-              <button
-                onClick={() => setView("home")}
-                className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold"
-              >
+              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
                 Retour Home
               </button>
             </div>
@@ -1820,9 +1944,7 @@ export default function App() {
 
             <div className="grid lg:grid-cols-2 gap-5">
               {(search.trim() ? filteredDays : TRIP_DATA.itinerary_days)
-                .filter((d) =>
-                  search.trim() ? true : d.city.toLowerCase().includes(activeCity.toLowerCase())
-                )
+                .filter((d) => (search.trim() ? true : d.city.toLowerCase().includes(activeCity.toLowerCase())))
                 .map((day) => (
                   <DayCardMobile
                     key={day.date}
@@ -1846,10 +1968,7 @@ export default function App() {
                 <div className="text-2xl font-extrabold text-slate-900">Hôtels</div>
                 <div className="text-xs text-slate-500">Covers + Booking + Maps</div>
               </div>
-              <button
-                onClick={() => setView("home")}
-                className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold"
-              >
+              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
                 Retour Home
               </button>
             </div>
@@ -1868,14 +1987,9 @@ export default function App() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-2xl font-extrabold text-slate-900">Guide & Food</div>
-                <div className="text-xs text-slate-500">
-                  Plats cultes + logistique + aéroports
-                </div>
+                <div className="text-xs text-slate-500">Plats cultes + logistique + aéroports</div>
               </div>
-              <button
-                onClick={() => setView("home")}
-                className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold"
-              >
+              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
                 Retour Home
               </button>
             </div>
@@ -1893,10 +2007,7 @@ export default function App() {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {dishes.map((d) => (
-                        <span
-                          key={d}
-                          className="px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-orange-900 text-sm font-semibold"
-                        >
+                        <span key={d} className="px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-orange-900 text-sm font-semibold">
                           {d}
                         </span>
                       ))}
@@ -1906,35 +2017,29 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-amber-50 rounded-3xl border border-amber-100 p-5">
-              <div className="text-xl font-extrabold text-amber-900 flex items-center gap-2">
-                <Plane size={18} className="text-amber-600" /> Logistique (rappel)
+            <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-5">
+              <div className="text-xl font-extrabold text-indigo-900 flex items-center gap-2">
+                <Plane size={18} className="text-indigo-600" /> Logistique (rappel)
               </div>
 
               <div className="mt-4 grid lg:grid-cols-2 gap-4">
-                <div className="bg-white rounded-3xl border border-amber-100 p-4">
-                  <div className="text-sm font-extrabold text-amber-900 mb-2">Vols internes</div>
+                <div className="bg-white rounded-3xl border border-indigo-100 p-4">
+                  <div className="text-sm font-extrabold text-indigo-900 mb-2">Vols internes</div>
                   <div className="space-y-2">
                     {TRIP_DATA.internal_flights.map((f, i) => (
-                      <div
-                        key={i}
-                        className="flex justify-between text-sm bg-amber-50 border border-amber-100 p-2 rounded-2xl"
-                      >
-                        <span className="font-mono font-extrabold text-amber-700">{f.route}</span>
+                      <div key={i} className="flex justify-between text-sm bg-indigo-50 border border-indigo-100 p-2 rounded-2xl">
+                        <span className="font-mono font-extrabold text-indigo-700">{f.route}</span>
                         <span className="text-slate-600">{f.time}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="bg-white rounded-3xl border border-amber-100 p-4">
-                  <div className="text-sm font-extrabold text-amber-900 mb-2">Transferts</div>
+                <div className="bg-white rounded-3xl border border-indigo-100 p-4">
+                  <div className="text-sm font-extrabold text-indigo-900 mb-2">Transferts</div>
                   <div className="space-y-2">
                     {TRIP_DATA.ground_transfers.map((t, i) => (
-                      <div
-                        key={i}
-                        className="flex justify-between text-sm bg-amber-50 border border-amber-100 p-2 rounded-2xl"
-                      >
+                      <div key={i} className="flex justify-between text-sm bg-indigo-50 border border-indigo-100 p-2 rounded-2xl">
                         <span className="text-slate-800">{t.name}</span>
                         <span className="font-extrabold">{formatUSD(t.cost_usd)}</span>
                       </div>
@@ -1950,12 +2055,12 @@ export default function App() {
 
             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
               <div className="text-lg font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                <Landmark size={18} className="text-amber-600" /> Petit glossaire
+                <Landmark size={18} className="text-emerald-600" /> Petit glossaire
               </div>
               <div className="grid gap-3">
                 {TRIP_DATA.glossary.map((g, i) => (
                   <div key={i} className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
-                    <div className="font-extrabold text-amber-700">{g.term}</div>
+                    <div className="font-extrabold text-emerald-700">{g.term}</div>
                     <div className="text-sm text-slate-700 mt-1">{g.note}</div>
                   </div>
                 ))}
@@ -1972,10 +2077,7 @@ export default function App() {
                 <div className="text-2xl font-extrabold text-slate-900">Bon à savoir</div>
                 <div className="text-xs text-slate-500">Simple, clair, utile.</div>
               </div>
-              <button
-                onClick={() => setView("home")}
-                className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold"
-              >
+              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
                 Retour Home
               </button>
             </div>
@@ -1983,35 +2085,18 @@ export default function App() {
             <div className="grid lg:grid-cols-3 gap-5">
               <div className="lg:col-span-1 space-y-5">
                 <TipsChecklist />
-                <SimpleListCard
-                  title="Traverser la rue"
-                  icon={<Navigation size={18} />}
-                  items={STREET_CROSSING}
-                />
-                <SimpleListCard
-                  title="Premier jour Hanoi"
-                  icon={<MapPin size={18} />}
-                  items={FIRST_DAY_HANOI}
-                />
+                <SimpleListCard title="Traverser la rue" icon={<Navigation size={18} />} items={STREET_CROSSING} />
+                <SimpleListCard title="Premier jour Hanoi" icon={<MapPin size={18} />} items={FIRST_DAY_HANOI} />
               </div>
 
               <div className="lg:col-span-2 space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
-                  <SimpleListCard
-                    title="Argent & paiements"
-                    icon={<Banknote size={18} />}
-                    items={MONEY_TIPS}
-                  />
+                  <SimpleListCard title="Argent & paiements" icon={<Banknote size={18} />} items={MONEY_TIPS} />
                   <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
-                    <div className="text-lg font-extrabold text-slate-900 mb-3">
-                      Repères prix
-                    </div>
+                    <div className="text-lg font-extrabold text-slate-900 mb-3">Repères prix</div>
                     <div className="space-y-3">
                       {QUICK_PRICES.map((p) => (
-                        <div
-                          key={p.label}
-                          className="flex justify-between gap-4 border-b border-slate-100 pb-2 last:border-b-0 last:pb-0"
-                        >
+                        <div key={p.label} className="flex justify-between gap-4 border-b border-slate-100 pb-2 last:border-b-0 last:pb-0">
                           <div className="text-sm font-semibold text-slate-800">{p.label}</div>
                           <div className="text-sm font-extrabold text-slate-900 text-right">{p.value}</div>
                         </div>
@@ -2020,11 +2105,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <SimpleListCard
-                  title="Pratique (zéro galère)"
-                  icon={<Smartphone size={18} />}
-                  items={PRACTICAL_TIPS}
-                />
+                <SimpleListCard title="Pratique (zéro galère)" icon={<Smartphone size={18} />} items={PRACTICAL_TIPS} />
                 <PhrasebookCard />
               </div>
             </div>
@@ -2039,10 +2120,7 @@ export default function App() {
                 <div className="text-2xl font-extrabold text-slate-900">Budget</div>
                 <div className="text-xs text-slate-500">Famille vs Claudine</div>
               </div>
-              <button
-                onClick={() => setView("home")}
-                className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold"
-              >
+              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
                 Retour Home
               </button>
             </div>
@@ -2052,25 +2130,19 @@ export default function App() {
                 <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
                   <div className="text-lg font-extrabold text-slate-900 mb-3">Totaux</div>
 
-                  <div className="rounded-2xl bg-amber-50 border border-amber-100 p-4">
-                    <div className="text-xs font-bold text-amber-700 uppercase">Famille</div>
-                    <div className="text-2xl font-extrabold text-amber-800 mt-1">
-                      {formatUSD(budgetSplit.fam.total)}
-                    </div>
-                    <div className="text-xs text-amber-700 mt-2">
-                      Hôtels {formatUSD(budgetSplit.fam.hotels)} • Vols {formatUSD(budgetSplit.fam.flights)} •
-                      Transferts {formatUSD(budgetSplit.fam.transfers)}
+                  <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
+                    <div className="text-xs font-bold text-emerald-700 uppercase">Famille</div>
+                    <div className="text-2xl font-extrabold text-emerald-800 mt-1">{formatUSD(budgetSplit.fam.total)}</div>
+                    <div className="text-xs text-emerald-700 mt-2">
+                      Hôtels {formatUSD(budgetSplit.fam.hotels)} • Vols {formatUSD(budgetSplit.fam.flights)} • Transferts {formatUSD(budgetSplit.fam.transfers)}
                     </div>
                   </div>
 
-                  <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 mt-4">
-                    <div className="text-xs font-bold text-slate-700 uppercase">Claudine</div>
-                    <div className="text-2xl font-extrabold text-slate-900 mt-1">
-                      {formatUSD(budgetSplit.claudine.total)}
-                    </div>
-                    <div className="text-xs text-slate-600 mt-2">
-                      Hôtels {formatUSD(budgetSplit.claudine.hotels)} • Vols {formatUSD(budgetSplit.claudine.flights)} •
-                      Transferts {formatUSD(budgetSplit.claudine.transfers)}
+                  <div className="rounded-2xl bg-indigo-50 border border-indigo-100 p-4 mt-4">
+                    <div className="text-xs font-bold text-indigo-700 uppercase">Claudine</div>
+                    <div className="text-2xl font-extrabold text-indigo-800 mt-1">{formatUSD(budgetSplit.claudine.total)}</div>
+                    <div className="text-xs text-indigo-700 mt-2">
+                      Hôtels {formatUSD(budgetSplit.claudine.hotels)} • Vols {formatUSD(budgetSplit.claudine.flights)} • Transferts {formatUSD(budgetSplit.claudine.transfers)}
                     </div>
                   </div>
                 </div>
@@ -2095,208 +2167,148 @@ export default function App() {
                 </div>
               </div>
 
-             <div className="lg:col-span-2 space-y-5">
-  {/* ACTIVITIES */}
-  <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-    <div className="flex items-start justify-between gap-3 mb-3">
-      <div>
-        <div className="text-lg font-extrabold text-slate-900">Activités (toggle)</div>
-        <div className="text-xs text-slate-500">
-          Coupe / active chaque activité. Les totaux se mettent à jour.
-        </div>
-      </div>
-      <button
-        onClick={() => setIncludeActivities({})}
-        className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold"
-      >
-        Reset
-      </button>
-    </div>
+              <div className="lg:col-span-2 space-y-5">
+                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+                  <div className="text-lg font-extrabold text-slate-900 mb-2">Activités (toggle)</div>
+                  <div className="text-xs text-slate-500 mb-4">Active/désactive selon envie. Calcul basé sur 4 adultes + 2 enfants.</div>
 
-    <div className="grid sm:grid-cols-2 gap-3">
-      {TRIP_DATA.activities.map((a) => {
-        const enabled = includeActivities[a.id] ?? true;
-        const hasCost = !!a.cost;
-        const adultUsd = hasCost ? a.cost!.adult_vnd / vndPerUsd : 0;
-        const childUsd = hasCost
-          ? (a.cost!.child_vnd ?? a.cost!.adult_vnd) / vndPerUsd
-          : 0;
+                  <div className="space-y-3">
+                    {TRIP_DATA.activities
+                      .filter((a) => !(kidsMode && a.tags?.includes("impact")))
+                      .map((a) => {
+                        const enabled = includeActivities[a.id] ?? true;
+                        const c = a.cost;
+                        let usd = 0;
+                        let vnd = 0;
 
-        return (
-          <button
-            key={a.id}
-            onClick={() =>
-              setIncludeActivities((prev) => ({ ...prev, [a.id]: !enabled }))
-            }
-            className={`text-left p-4 rounded-3xl border transition ${
-              enabled
-                ? "bg-amber-50 border-amber-100"
-                : "bg-slate-50 border-slate-200 opacity-75"
-            }`}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-sm font-extrabold text-slate-900 truncate">
-                  {a.name}
+                        if (c) {
+                          const child = c.child_vnd ?? c.adult_vnd;
+                          vnd = c.adult_vnd * TRIP_DATA.meta.travelers_count.adults + child * TRIP_DATA.meta.travelers_count.kids;
+                          usd = vnd / vndPerUsd;
+                        }
+
+                        return (
+                          <div key={a.id} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <button
+                                  onClick={() => setIncludeActivities({ ...includeActivities, [a.id]: !(includeActivities[a.id] ?? true) })}
+                                  className="flex items-center gap-2 text-left"
+                                >
+                                  <div
+                                    className={`w-5 h-5 rounded-md border flex items-center justify-center ${
+                                      enabled ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"
+                                    }`}
+                                  >
+                                    <CheckSquare size={14} />
+                                  </div>
+                                  <div>
+                                    <div className="text-sm font-extrabold text-slate-900">{a.name}</div>
+                                    <div className="text-xs text-slate-500">{a.city}</div>
+                                  </div>
+                                </button>
+
+                                {a.tags?.length ? (
+                                  <div className="mt-2 flex flex-wrap gap-2">
+                                    {a.tags.map((t) => (
+                                      <span
+                                        key={t}
+                                        className="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-white border border-slate-200 text-slate-600"
+                                      >
+                                        {t}
+                                      </span>
+                                    ))}
+                                  </div>
+                                ) : null}
+
+                                {a.link ? (
+                                  <a
+                                    href={a.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-block mt-2 text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-2xl"
+                                  >
+                                    Lien
+                                  </a>
+                                ) : null}
+                              </div>
+
+                              <div className="text-right shrink-0">
+                                {c ? (
+                                  <>
+                                    <div className={`text-sm font-extrabold ${enabled ? "text-slate-900" : "text-slate-400"}`}>{formatUSD(usd)}</div>
+                                    <div className="text-xs text-slate-500">{formatVND(vnd)}</div>
+                                  </>
+                                ) : (
+                                  <div className="text-xs text-slate-400">—</div>
+                                )}
+                              </div>
+                            </div>
+
+                            {c?.notes ? <div className="mt-2 text-xs text-slate-500">{c.notes}</div> : null}
+                          </div>
+                        );
+                      })}
+                  </div>
+
+                  {kidsMode && <div className="mt-4 text-xs text-emerald-700 font-semibold">Mode kids ON: activités “impact” masquées ici.</div>}
                 </div>
-                <div className="text-xs text-slate-600 mt-1">
-                  {a.city} • {a.duration}
-                </div>
-                {a.tags?.length ? (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {a.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-1 rounded-full text-[11px] font-bold border bg-white border-slate-100 text-slate-700"
-                      >
-                        {t}
-                      </span>
+
+                <AirportGlossary />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CULTURE (optionnel) */}
+        {view === "culture" && (
+          <div className="space-y-5">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <div className="text-2xl font-extrabold text-slate-900">Culture</div>
+                <div className="text-xs text-slate-500">Liens essentiels</div>
+              </div>
+              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
+                Retour Home
+              </button>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-5">
+              {Object.entries(TRIP_DATA.culture_links).map(([cat, links]) => (
+                <div key={cat} className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+                  <div className="text-lg font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+                    <BookOpen size={18} className="text-emerald-600" /> {cat}
+                  </div>
+                  <div className="space-y-3">
+                    {links.map((l, i) => (
+                      <a key={i} href={l.url} target="_blank" rel="noreferrer" className="block p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                        <div className="text-sm font-extrabold text-slate-900">{l.name}</div>
+                        <div className="text-xs text-slate-500 mt-1">Ouvrir</div>
+                      </a>
                     ))}
                   </div>
-                ) : null}
-              </div>
-
-              <div className="shrink-0 flex flex-col items-end gap-2">
-                <div
-                  className={`px-3 py-2 rounded-2xl text-xs font-extrabold ${
-                    enabled
-                      ? "bg-amber-600 text-white"
-                      : "bg-slate-200 text-slate-700"
-                  }`}
-                >
-                  {enabled ? "ON" : "OFF"}
                 </div>
-
-                {hasCost ? (
-                  <div className="text-[11px] text-slate-600 text-right">
-                    <div>
-                      Adulte: <span className="font-extrabold">{formatUSD(adultUsd)}</span>
-                    </div>
-                    <div>
-                      Enfant: <span className="font-extrabold">{formatUSD(childUsd)}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-[11px] text-slate-500 text-right">
-                    Prix: TBD
-                  </div>
-                )}
-              </div>
+              ))}
             </div>
+          </div>
+        )}
+      </main>
 
-            {kidsMode && a.tags?.includes("impact") ? (
-              <div className="mt-3 text-[11px] font-bold text-slate-500">
-                KidsMode: activité “impact” ignorée dans les totaux.
-              </div>
-            ) : null}
+      {/* MOBILE NAV */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 md:hidden flex justify-around p-2 z-50 print:hidden">
+        {Tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setView(tab.id as View)}
+            className={`flex flex-col items-center p-2 rounded-2xl transition-colors ${
+              view === tab.id ? "text-emerald-600 bg-emerald-50" : "text-slate-400"
+            }`}
+          >
+            <tab.icon size={20} />
+            <span className="text-[10px] font-semibold mt-1">{tab.label}</span>
           </button>
-        );
-      })}
-    </div>
-  </div>
-
-  {/* BREAKDOWN */}
-  <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-    <div className="text-lg font-extrabold text-slate-900 mb-3">Détail des postes</div>
-
-    <div className="grid sm:grid-cols-2 gap-4">
-      <div className="rounded-3xl border border-amber-100 bg-amber-50 p-4">
-        <div className="text-xs font-extrabold uppercase tracking-wide text-amber-700">
-          Famille
-        </div>
-        <div className="mt-2 space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-slate-700 font-semibold">Hôtels</span>
-            <span className="font-extrabold">{formatUSD(budgetSplit.fam.hotels)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-700 font-semibold">Vols</span>
-            <span className="font-extrabold">{formatUSD(budgetSplit.fam.flights)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-700 font-semibold">Transferts</span>
-            <span className="font-extrabold">{formatUSD(budgetSplit.fam.transfers)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-700 font-semibold">Activités</span>
-            <span className="font-extrabold">{formatUSD(budgetSplit.fam.activities)}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-        <div className="text-xs font-extrabold uppercase tracking-wide text-slate-700">
-          Claudine
-        </div>
-        <div className="mt-2 space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-slate-700 font-semibold">Hôtels</span>
-            <span className="font-extrabold">{formatUSD(budgetSplit.claudine.hotels)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-700 font-semibold">Vols</span>
-            <span className="font-extrabold">{formatUSD(budgetSplit.claudine.flights)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-700 font-semibold">Transferts</span>
-            <span className="font-extrabold">{formatUSD(budgetSplit.claudine.transfers)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-700 font-semibold">Activités</span>
-            <span className="font-extrabold">{formatUSD(budgetSplit.claudine.activities)}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div className="mt-4 text-xs text-slate-500">
-      Note: la répartition vols/transferts est basée sur un ratio simple (famille vs Claudine).
-    </div>
-  </div>
-
-  {/* RAW LISTS */}
-  <div className="grid lg:grid-cols-2 gap-5">
-    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-      <div className="text-sm font-extrabold text-slate-900 mb-3">
-        Vols internes (rappel)
-      </div>
-      <div className="space-y-2">
-        {TRIP_DATA.internal_flights.map((f, i) => (
-          <div
-            key={i}
-            className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100"
-          >
-            <div className="min-w-0">
-              <div className="text-sm font-extrabold text-slate-900">
-                <span className="font-mono text-amber-700">{f.route}</span>
-              </div>
-              <div className="text-xs text-slate-600">{f.time}</div>
-            </div>
-            <div className="text-sm font-extrabold text-slate-900 shrink-0">
-              {formatUSD(f.group_cost_usd)}
-            </div>
-          </div>
         ))}
-      </div>
+      </nav>
     </div>
-
-    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-      <div className="text-sm font-extrabold text-slate-900 mb-3">
-        Transferts (rappel)
-      </div>
-      <div className="space-y-2">
-        {TRIP_DATA.ground_transfers.map((t, i) => (
-          <div
-            key={i}
-            className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100"
-          >
-            <div className="text-sm font-semibold text-slate-800">{t.name}</div>
-            <div className="text-sm font-extrabold text-slate-900">
-              {formatUSD(t.cost_usd)}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</div>
+  );
+}
