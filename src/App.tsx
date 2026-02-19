@@ -21,12 +21,13 @@ import {
   ChevronLeft,
   Moon,
   Shield,
-  Copy,
-  Filter,
   BadgeCheck,
   BadgeHelp,
   Car,
   Tag,
+  Ticket,
+  Clock,
+  Users,
 } from "lucide-react";
 
 // ============================================================
@@ -40,6 +41,14 @@ const assetUrl = (path: string) => {
   return `${cleanBase}${cleanPath}`;
 };
 const P = (p: string) => assetUrl(p);
+
+// ============================================================
+// VND → USD (fixed hypothesis for the app)
+// 1 USD ≈ 25 970 VND
+// ============================================================
+const VND_PER_USD = 25970;
+const vndToUsdRounded = (vnd: number) => Math.round(vnd / VND_PER_USD);
+const usdRounded = (usd: number) => Math.round(usd);
 
 // ============================================================
 // ASSETS (public/)
@@ -147,22 +156,6 @@ type GlossaryItem = { term: string; note: string };
 type FoodByRegion = Record<string, string[]>;
 type PhraseItem = { fr: string; vi: string; phon: string };
 
-type TicketCostVND = {
-  currency: "VND";
-  adult_vnd: number;
-  child_vnd?: number;
-  notes?: string;
-};
-
-type TicketActivity = {
-  id: string;
-  city: string;
-  name: string;
-  link?: string;
-  cost?: TicketCostVND;
-  tags?: string[];
-};
-
 type AirportGlossaryItem = {
   code: string;
   city: string;
@@ -185,17 +178,46 @@ type ExpenseItemUSD = {
   operator: Operator;
   operated_by_ja_cosmo: boolean;
   status: StatusTag;
-  date?: string | null; // ISO or null
+  date?: string | null;
   from?: string;
   to?: string;
   title: string;
   price_total_usd: number;
   payer_rule: PayerRule;
-  // when payer_rule = split_given we set explicit split:
   claudine_usd?: number;
   nous_usd?: number;
   notes?: string;
   tags?: string[];
+};
+
+// Planned activities (richer than “tickets”)
+type PlannedActivity = {
+  id: string;
+  city: string;
+  window?: string; // date window text
+  name: string;
+  category: "culture" | "nature" | "mer" | "show" | "tour" | "histoire" | "ville";
+  duration?: string; // text
+  bestTime?: string; // text
+  pricing: {
+    currency: "VND" | "USD";
+    vnd_adult?: number;
+    vnd_child?: number;
+    vnd_range?: [number, number];
+    usd_adult?: number;
+    usd_range?: [number, number];
+    // computed/rounded display:
+    estimatedUSD_adult?: number;
+    estimatedUSD_range?: [number, number];
+  };
+  kidsRule?: string;
+  payMode?: "sur place" | "réservation";
+  cashOnly?: boolean;
+  provider: string; // Officiel / GetYourGuide / Viator / Klook / etc.
+  sourceUrl?: string;
+  notes?: string;
+  tags?: string[];
+  impact?: boolean; // for mode kids
 };
 
 interface TripData {
@@ -218,15 +240,13 @@ interface TripData {
   food: FoodByRegion;
   phrasebook: PhraseItem[];
   airport_glossary: AirportGlossaryItem[];
-  ticket_activities: TicketActivity[]; // small local tickets (VND)
-  expenses_usd: ExpenseItemUSD[]; // CORE — USD only (no hotels, no food)
+  expenses_usd: ExpenseItemUSD[];
+  planned_activities: PlannedActivity[];
 }
 
 // ============================================================
 // HELPERS
 // ============================================================
-const formatUSD = (n: number) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
 const formatUSD0 = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
@@ -294,21 +314,12 @@ const dayCoverFromDay = (day: ItineraryDay) => {
 };
 
 const badgeForStatus = (s: StatusTag) => {
-  if (s === "CONFIRMED") return { label: "CONFIRMED", cls: "bg-emerald-600 text-white", icon: <BadgeCheck size={14} /> };
-  return { label: "ESTIMATE", cls: "bg-amber-500 text-white", icon: <BadgeHelp size={14} /> };
-};
-
-const copyToClipboard = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
+  if (s === "CONFIRMED") return { label: "CONFIRMÉ", cls: "bg-emerald-600 text-white", icon: <BadgeCheck size={14} /> };
+  return { label: "ESTIMÉ", cls: "bg-amber-500 text-white", icon: <BadgeHelp size={14} /> };
 };
 
 // ============================================================
-// UI ATOMS (Premium, consistent)
+// UI ATOMS
 // ============================================================
 const Glass = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
   <div className={`backdrop-blur-xl bg-white/70 border border-white/40 shadow-xl overflow-hidden ${className}`}>{children}</div>
@@ -434,7 +445,7 @@ const CinemaHero = ({
 
       <div className="absolute top-12 left-0 right-0 px-6 flex justify-between items-start pointer-events-none">
         <div className="pointer-events-auto">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-1">24 Juil → 18 Août</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-1">24 juil → 18 août</p>
           <h1 className="text-4xl font-black text-white leading-none">
             Vietnam <span className="text-emerald-400">2026</span>
           </h1>
@@ -454,7 +465,7 @@ const CinemaHero = ({
 
         <div className="flex items-end justify-between">
           <div>
-            <p className="text-xs font-bold text-white/60 mb-1">Focus du moment :</p>
+            <p className="text-xs font-bold text-white/60 mb-1">Focus :</p>
             <p className="text-2xl font-black text-white tracking-tight italic">{activeCity}</p>
           </div>
         </div>
@@ -477,7 +488,7 @@ const QuickSheet = ({
   return (
     <div className="fixed inset-0 z-[100] bg-slate-900/90 backdrop-blur-xl p-8 flex flex-col">
       <div className="flex justify-between items-center mb-12">
-        <h3 className="text-3xl font-black text-white">Quick Actions</h3>
+        <h3 className="text-3xl font-black text-white">Accès rapide</h3>
         <button onClick={onClose} className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white">
           <X size={24} />
         </button>
@@ -494,7 +505,7 @@ const QuickSheet = ({
           <Lightbulb size={32} />
           <div>
             <p className="font-black text-lg leading-tight mb-1">Conseils</p>
-            <p className="text-xs font-medium text-white/70">Checklist + Argent</p>
+            <p className="text-xs font-medium text-white/70">Checklist + argent</p>
           </div>
         </button>
 
@@ -508,7 +519,7 @@ const QuickSheet = ({
           <Sparkles size={32} />
           <div>
             <p className="font-black text-lg leading-tight mb-1">Activités</p>
-            <p className="text-xs font-medium text-white/70">Core + Tickets</p>
+            <p className="text-xs font-medium text-white/70">Par ville</p>
           </div>
         </button>
 
@@ -522,7 +533,7 @@ const QuickSheet = ({
           <Utensils size={32} />
           <div>
             <p className="font-black text-lg leading-tight mb-1">Guide</p>
-            <p className="text-xs font-medium text-slate-500">Food + Aéroports</p>
+            <p className="text-xs font-medium text-slate-500">Food + aéroports</p>
           </div>
         </button>
 
@@ -536,7 +547,7 @@ const QuickSheet = ({
           <Wallet size={32} />
           <div>
             <p className="font-black text-lg leading-tight mb-1">Budget</p>
-            <p className="text-xs font-medium text-white/70">USD only</p>
+            <p className="text-xs font-medium text-white/70">USD uniquement</p>
           </div>
         </button>
       </div>
@@ -634,7 +645,7 @@ const DayCardMobile = ({
                 <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
                   <Shield size={16} />
                 </div>
-                <p className="text-xs font-bold text-slate-500 italic">Contenu masqué (Mode Kids)</p>
+                <p className="text-xs font-bold text-slate-500 italic">Contenu masqué (mode kids)</p>
               </div>
             );
           }
@@ -655,7 +666,7 @@ const DayCardMobile = ({
                       className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-[10px] font-extrabold text-slate-600"
                     >
                       <Info size={10} />
-                      Info
+                      Lien
                     </a>
                   ))}
                 </div>
@@ -670,7 +681,7 @@ const DayCardMobile = ({
           <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
             <Sparkles size={16} />
           </div>
-          <p className="text-xs font-bold text-amber-800">Énergie au max : on explore un café caché !</p>
+          <p className="text-xs font-bold text-amber-800">Énergie au max : un café caché + balade.</p>
         </div>
       )}
     </div>
@@ -721,7 +732,7 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
 
         <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="p-4 rounded-3xl bg-slate-50 border border-slate-100">
-            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Famille</p>
+            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Nous</p>
             <p className="text-lg font-black text-slate-900 leading-none">{formatUSD0(hotel.budget.us)}</p>
           </div>
           <div className="p-4 rounded-3xl bg-slate-50 border border-slate-100">
@@ -739,7 +750,7 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
               className="flex-1 flex items-center justify-center gap-2 py-4 rounded-3xl bg-indigo-600 text-white text-xs font-black shadow-lg shadow-indigo-100 hover:scale-[1.02] transition-transform"
             >
               <Navigation size={14} />
-              Voir Résa
+              Voir la résa
             </a>
           ) : (
             <div className="flex-1 py-4 rounded-3xl bg-slate-100 text-slate-400 text-xs font-black text-center italic">Pas de lien</div>
@@ -817,7 +828,7 @@ const AirportGlossaryCard = ({ items }: { items: AirportGlossaryItem[] }) => (
           </div>
           <p className="text-xs font-bold text-slate-600 mb-2">{a.airport}</p>
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Depuis hôtel</p>
+            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Depuis l’hôtel</p>
             <p className="text-[10px] font-bold text-slate-700 leading-tight">{a.fromHotel}</p>
             <div className="mt-3 flex items-center justify-between">
               <p className="text-[9px] font-black text-slate-400 uppercase">Trajet</p>
@@ -832,7 +843,7 @@ const AirportGlossaryCard = ({ items }: { items: AirportGlossaryItem[] }) => (
 );
 
 // ============================================================
-// FAMILY (static)
+// FAMILY
 // ============================================================
 const FAMILY_MEMBERS = [
   {
@@ -858,7 +869,7 @@ const FAMILY_MEMBERS = [
   },
   {
     name: "Aydann",
-    desc: "L'Ado",
+    desc: "L’Ado",
     color: "bg-blue-100 text-blue-700",
     src: "/family/public:family:aydann.jpg",
     fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
@@ -885,14 +896,14 @@ const ESSENTIALS_CHECKLIST = [
 ];
 
 const MONEY_TIPS = [
-  "Cash recommandé au Vietnam (certains hôtels/shops facturent des frais carte).",
-  "Je prévois du cash: restaurants locaux et petits commerces = liquide roi.",
-  "ATM: souvent limites + frais; je retire moins souvent mais plus gros.",
-  "Marchés: je vérifie le prix avant, et je négocie (c’est attendu).",
+  "Le cash reste très utile (certains endroits appliquent des frais carte).",
+  "Prévoir du cash pour restos locaux et petits commerces.",
+  "ATM : limites + frais. Mieux vaut retirer moins souvent mais plus gros.",
+  "Marchés : vérifier le prix avant, négocier si besoin (attendu).",
 ];
 
 // ============================================================
-// TRIP DATA (includes the NEW expenses model)
+// TRIP DATA
 // ============================================================
 const TRIP_DATA: TripData = {
   meta: {
@@ -900,8 +911,8 @@ const TRIP_DATA: TripData = {
     travelers: "3 adultes + 2 enfants (12 et 6) + Claudine",
     travelers_count: {
       adults_total: 4,
-      adults_core_family: 3, // Nous
-      adults_claudine: 1, // Claudine
+      adults_core_family: 3,
+      adults_claudine: 1,
       kids_total: 2,
       kids_ages: [12, 6],
     },
@@ -918,17 +929,17 @@ const TRIP_DATA: TripData = {
     {
       city: "Hanoi",
       name: "Ja Cosmo Hotel and Spa",
-      dates: "25 Jul → 28 Jul, puis 15 Aug → 17 Aug",
+      dates: "25 juil → 28 juil, puis 15 août → 17 août",
       budget: { us: 180, claudine: 110, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/ja-cosmo-and-spa.html",
       why: "Central pour ruelles, cafés, culture; simple avec kids + Claudine.",
       cover: "/covers/hotels/hanoi-ja-cosmo.jpg",
-      note: "Extra bed confirmé pour l’enfant de 6 ans (par l’hôtel).",
+      note: "Lit supplémentaire confirmé pour l’enfant de 6 ans.",
     },
     {
       city: "Ninh Binh (Tam Coc)",
       name: "Tam Coc Golden Fields Homestay",
-      dates: "28 Jul → 30 Jul",
+      dates: "28 juil → 30 juil",
       budget: { us: 140, claudine: 110, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/tam-coc-golden-fields-homestay.html",
       why: "Base rizières + liberté; parfait pour le ‘wow’ UNESCO sans galère.",
@@ -937,26 +948,26 @@ const TRIP_DATA: TripData = {
     {
       city: "Ha Long",
       name: "Wyndham Legend Halong",
-      dates: "30 Jul → 31 Jul",
+      dates: "30 juil → 31 juil",
       budget: { us: 130, claudine: 80, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html",
       why: "Transition confortable avant croisière, logistique simple.",
       cover: "/covers/hotels/ha-long-wyndham-legend.jpg",
     },
     {
-      city: "Ha Long (Cruise)",
+      city: "Ha Long (Croisière)",
       name: "Renea Cruises Halong",
-      dates: "31 Jul → 01 Aug",
+      dates: "31 juil → 01 août",
       budget: { us: 330, claudine: 300, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/renea-cruises-halong-ha-long.html",
-      note: "Départ : Halong International Cruise Port",
-      why: "Le cœur ‘cinéma’ du voyage: karsts, baie, expérience famille.",
+      note: "Port : Halong International Cruise Port",
+      why: "Le cœur ‘cinéma’ du voyage : karsts, baie, expérience famille.",
       cover: "/covers/hotels/ha-long-rc-cruise.jpg (Renea).jpg",
     },
     {
       city: "Hoi An (Cua Dai Beach)",
       name: "Palm Garden Beach Resort & Spa",
-      dates: "01 Aug → 06 Aug",
+      dates: "01 août → 06 août",
       budget: { us: 680, claudine: 620, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/palm-garden-beach-resort-spa-510.html",
       why: "Grand resort avec plage et immense piscine. Le top pour se poser en famille.",
@@ -965,7 +976,7 @@ const TRIP_DATA: TripData = {
     {
       city: "Da Nang",
       name: "Seahorse Signature Danang Hotel by Haviland",
-      dates: "06 Aug → 08 Aug",
+      dates: "06 août → 08 août",
       budget: { us: 129, claudine: 92, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/seahorse-signature-danang-by-haviland.html",
       why: "Base urbaine efficace pour culture + ponts + musées.",
@@ -974,7 +985,7 @@ const TRIP_DATA: TripData = {
     {
       city: "Whale Island (Hon Ong)",
       name: "Whale Island Resort",
-      dates: "08 Aug → 12 Aug",
+      dates: "08 août → 12 août",
       budget: { us: 415, claudine: 415, currency: "USD" },
       official_url: "https://whaleislandresort.com/",
       why: "Déconnexion nature pure, rythme famille, mer & ciel.",
@@ -983,7 +994,7 @@ const TRIP_DATA: TripData = {
     {
       city: "Ho Chi Minh City",
       name: "Alagon Saigon Hotel & Spa",
-      dates: "12 Aug → 15 Aug",
+      dates: "12 août → 15 août",
       budget: { us: 275, claudine: 211, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/alagon-saigon.html",
       why: "Très central pour histoire, colonial, street life.",
@@ -997,14 +1008,6 @@ const TRIP_DATA: TripData = {
       { name: "Ha Long Bay - Cat Ba Archipelago", url: "https://whc.unesco.org/en/list/672/" },
       { name: "Hoi An Ancient Town", url: "https://whc.unesco.org/en/list/948/" },
     ],
-    Hanoi: [
-      { name: "Hoa Lo Prison Relic (site)", url: "https://hoalo.vn/EN" },
-      { name: "Thang Long Water Puppet Theatre (tickets)", url: "https://nhahatmuaroithanglong.vn/en/ticket-book/" },
-    ],
-    HoChiMinh: [
-      { name: "War Remnants Museum (EN)", url: "https://baotangchungtichchientranh.vn/en" },
-      { name: "Independence Palace (visiting hours)", url: "https://dinhdoclap.gov.vn/en/visiting-hours/" },
-    ],
   },
 
   itinerary_days: [
@@ -1016,7 +1019,7 @@ const TRIP_DATA: TripData = {
       blocks: [
         { label: "Matin", plan: "Old Quarter + lac + cafés." },
         { label: "Aprem", plan: "Sieste / recharge kids." },
-        { label: "Soir", plan: "Street food + Water Puppet show (ludique & culturel).", links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"] },
+        { label: "Soir", plan: "Street food + spectacle marionnettes sur l’eau (kids-friendly).", links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"] },
       ],
     },
     {
@@ -1034,7 +1037,7 @@ const TRIP_DATA: TripData = {
       city: "Hanoi → Ninh Binh",
       theme: ["histoire", "transfert"],
       blocks: [
-        { label: "Matin", plan: "Hoa Lo Prison (fort, bien fait).", links: ["https://hoalo.vn/EN"] },
+        { label: "Matin", plan: "Musée prison Hoa Lo (fort, bien fait)." },
         { label: "Midi", plan: "Départ driver privé vers Ninh Binh + check-in." },
         { label: "Soir", plan: "Rizières au coucher, dîner au calme." },
       ],
@@ -1042,9 +1045,9 @@ const TRIP_DATA: TripData = {
     {
       date: "2026-07-29",
       city: "Ninh Binh",
-      theme: ["nature", "wow", "boat"],
+      theme: ["nature", "wow", "bateau"],
       blocks: [
-        { label: "Matin", plan: "Trang An boat tour (UNESCO).", links: ["https://whc.unesco.org/en/list/1438/"] },
+        { label: "Matin", plan: "Trang An (UNESCO) — tour en barque." },
         { label: "Aprem", plan: "Repos + vélo doux si énergie." },
         { label: "Soir", plan: "Dîner local." },
       ],
@@ -1059,7 +1062,7 @@ const TRIP_DATA: TripData = {
         { label: "Soir", plan: "Seafood + promenade." },
       ],
     },
-    { date: "2026-07-31", city: "Ha Long", theme: ["unesco", "cruise"], blocks: [{ label: "Midi/Soir", plan: "Embarquement Renea Cruise (Baie / karsts).", links: ["https://whc.unesco.org/en/list/672/"] }] },
+    { date: "2026-07-31", city: "Ha Long", theme: ["unesco", "croisière"], blocks: [{ label: "Jour", plan: "Embarquement Renea Cruise (baie / karsts)." }] },
     {
       date: "2026-08-01",
       city: "Ha Long → Da Nang → Hoi An",
@@ -1069,8 +1072,8 @@ const TRIP_DATA: TripData = {
         { label: "Soir", plan: "Vol HPH→DAD (si pris), transfert Hoi An, dodo." },
       ],
     },
-    { date: "2026-08-02", city: "Hoi An", theme: ["plage", "slow", "night"], blocks: [{ label: "Soir", plan: "Old Town lanterns + food + flânerie.", links: ["https://whc.unesco.org/en/list/948/"] }] },
-    { date: "2026-08-06", city: "Hoi An → Da Nang", theme: ["transfert", "city"], blocks: [{ label: "Soir", plan: "Rivière / ponts + dinner." }] },
+    { date: "2026-08-02", city: "Hoi An", theme: ["plage", "slow", "soir"], blocks: [{ label: "Soir", plan: "Old Town lanterns + food + flânerie." }] },
+    { date: "2026-08-06", city: "Hoi An → Da Nang", theme: ["transfert", "ville"], blocks: [{ label: "Soir", plan: "Rivière / ponts + dîner." }] },
     { date: "2026-08-08", city: "Da Nang → Whale Island", theme: ["early", "nature"], blocks: [{ label: "Jour", plan: "Vol DAD→CXR (si pris), transfert port + bateau, installation." }] },
     { date: "2026-08-12", city: "Whale Island → Ho Chi Minh City", theme: ["transit"], blocks: [{ label: "Jour", plan: "Bateau + transfert CXR, vol vers SGN (si pris), check-in Alagon." }] },
     { date: "2026-08-15", city: "Ho Chi Minh City → Hanoi", theme: ["transit"], blocks: [{ label: "Matin", plan: "Vol SGN→HAN (si pris), check-in Ja Cosmo." }] },
@@ -1107,29 +1110,9 @@ const TRIP_DATA: TripData = {
     { code: "SGN", city: "Ho Chi Minh City", airport: "Tan Son Nhat International", fromHotel: "District 1", eta: "20–40 min", note: "Trafic variable." },
   ],
 
-  // Optional small tickets — NOT included in the “scope” totals by default
-  ticket_activities: [
-    {
-      id: "ticket-hanoi-water-puppets",
-      city: "Hanoi",
-      name: "Thang Long Water Puppet (ticket)",
-      link: "https://nhahatmuaroithanglong.vn/en/ticket-book/",
-      cost: { currency: "VND", adult_vnd: 150000, notes: "Fourchette 100k–200k selon placement." },
-      tags: ["kids-friendly", "culture"],
-    },
-    {
-      id: "ticket-hanoi-hoa-lo",
-      city: "Hanoi",
-      name: "Hoa Lo Prison (ticket)",
-      link: "https://hoalo.vn/EN",
-      cost: { currency: "VND", adult_vnd: 50000, notes: "Enfants parfois gratuits/discount (à confirmer sur place)." },
-      tags: ["impact", "histoire"],
-    },
-  ],
-
-  // CORE expenses (USD only, no hotels, no food) — as provided
+  // CORE expenses (USD only, no hotels, no food)
   expenses_usd: [
-    // 1A — Ja Cosmo transfers (CONFIRMED)
+    // Ja Cosmo transfers (CONFIRMED)
     {
       id: "T-JC-001",
       category: "transport",
@@ -1140,11 +1123,11 @@ const TRIP_DATA: TripData = {
       date: "2026-07-25",
       from: "Hanoi Airport (HAN)",
       to: "Ja Cosmo Hotel (Hanoi)",
-      title: "Private transfer (7-seater) — Airport → Hotel",
+      title: "Transfert privé (7 places) — Aéroport → Hôtel",
       price_total_usd: 20.02,
       payer_rule: "claudine_20pct_transport",
-      notes: "Confirmed by Ja Cosmo. Private 7-seat vehicle.",
-      tags: ["ja_cosmo", "private", "HAN"],
+      notes: "Confirmé par Ja Cosmo.",
+      tags: ["ja_cosmo", "privé", "HAN"],
     },
     {
       id: "T-JC-002",
@@ -1155,12 +1138,12 @@ const TRIP_DATA: TripData = {
       status: "CONFIRMED",
       date: "2026-07-28",
       from: "Ja Cosmo Hotel (Hanoi)",
-      to: "Ninh Binh (hotel TBD)",
-      title: "Private transfer (7-seater) — Hanoi → Ninh Binh",
+      to: "Ninh Binh (hôtel à confirmer)",
+      title: "Transfert privé (7 places) — Hanoi → Ninh Binh",
       price_total_usd: 57.75,
       payer_rule: "claudine_20pct_transport",
-      notes: "Confirmed by Ja Cosmo. Early departure requested.",
-      tags: ["ja_cosmo", "private"],
+      notes: "Confirmé par Ja Cosmo. Départ tôt demandé.",
+      tags: ["ja_cosmo", "privé"],
     },
     {
       id: "T-JC-003",
@@ -1170,13 +1153,13 @@ const TRIP_DATA: TripData = {
       operated_by_ja_cosmo: true,
       status: "CONFIRMED",
       date: "2026-07-30",
-      from: "Ninh Binh (hotel TBD)",
-      to: "Ha Long (hotel/port TBD)",
-      title: "Private transfer (7-seater) — Ninh Binh → Ha Long",
+      from: "Ninh Binh (hôtel à confirmer)",
+      to: "Ha Long (hôtel/port à confirmer)",
+      title: "Transfert privé (7 places) — Ninh Binh → Ha Long",
       price_total_usd: 77.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Confirmed by Ja Cosmo. Luggage note: upgrade if 4 big suitcases+.",
-      tags: ["ja_cosmo", "private"],
+      notes: "Confirmé par Ja Cosmo. Upgrade si 4 grosses valises+.",
+      tags: ["ja_cosmo", "privé"],
     },
     {
       id: "T-JC-004",
@@ -1188,11 +1171,11 @@ const TRIP_DATA: TripData = {
       date: "2026-08-15",
       from: "Hanoi Airport (HAN)",
       to: "Ja Cosmo Hotel (Hanoi)",
-      title: "Private transfer (7-seater) — Airport → Hotel",
+      title: "Transfert privé (7 places) — Aéroport → Hôtel",
       price_total_usd: 20.02,
       payer_rule: "claudine_20pct_transport",
-      notes: "Confirmed by Ja Cosmo. Time TBD.",
-      tags: ["ja_cosmo", "private", "HAN"],
+      notes: "Confirmé par Ja Cosmo. Heure à préciser.",
+      tags: ["ja_cosmo", "privé", "HAN"],
     },
     {
       id: "T-JC-005",
@@ -1204,14 +1187,14 @@ const TRIP_DATA: TripData = {
       date: "2026-08-17",
       from: "Ja Cosmo Hotel (Hanoi)",
       to: "Hanoi Airport (HAN)",
-      title: "Private transfer (7-seater) — Hotel → Airport",
+      title: "Transfert privé (7 places) — Hôtel → Aéroport",
       price_total_usd: 13.47,
       payer_rule: "claudine_20pct_transport",
-      notes: "Confirmed by Ja Cosmo. Recommended depart hotel 16:00 for 19:30 flight.",
-      tags: ["ja_cosmo", "private", "HAN"],
+      notes: "Confirmé par Ja Cosmo. Départ recommandé 16:00 (vol 19:30).",
+      tags: ["ja_cosmo", "privé", "HAN"],
     },
 
-    // 1B — Ground/limousine estimates (ESTIMATE)
+    // Estimates (kept as ESTIMATE)
     {
       id: "T-OT-101",
       category: "transport",
@@ -1225,8 +1208,8 @@ const TRIP_DATA: TripData = {
       title: "Limousine / van — Hanoi → Ninh Binh",
       price_total_usd: 60.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Estimate (older list). Keep only if not replaced by Ja Cosmo transfer.",
-      tags: ["estimate"],
+      notes: "Ancienne estimation. À ignorer si remplacé par Ja Cosmo.",
+      tags: ["estimation"],
     },
     {
       id: "T-OT-102",
@@ -1241,8 +1224,8 @@ const TRIP_DATA: TripData = {
       title: "Limousine / van — Ninh Binh → Ha Long",
       price_total_usd: 60.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Estimate (older list). Keep only if not replaced.",
-      tags: ["estimate"],
+      notes: "Ancienne estimation. À ignorer si remplacé par Ja Cosmo.",
+      tags: ["estimation"],
     },
     {
       id: "T-OT-103",
@@ -1254,11 +1237,11 @@ const TRIP_DATA: TripData = {
       date: null,
       from: "Ha Long",
       to: "Hai Phong Airport (HPH)",
-      title: "Private transfer — Ha Long → HPH",
+      title: "Transfert privé — Ha Long → HPH",
       price_total_usd: 50.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Estimate (older list).",
-      tags: ["estimate"],
+      notes: "Estimation.",
+      tags: ["estimation"],
     },
     {
       id: "T-OT-104",
@@ -1270,14 +1253,14 @@ const TRIP_DATA: TripData = {
       date: null,
       from: "Da Nang Airport (DAD)",
       to: "Hoi An",
-      title: "Private transfer — DAD → Hoi An",
+      title: "Transfert privé — DAD → Hoi An",
       price_total_usd: 20.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Estimate (older list).",
-      tags: ["estimate"],
+      notes: "Estimation.",
+      tags: ["estimation"],
     },
 
-    // 1C — Domestic flights estimates (ESTIMATE)
+    // Domestic flights estimates
     {
       id: "F-OT-201",
       category: "transport",
@@ -1288,11 +1271,11 @@ const TRIP_DATA: TripData = {
       date: null,
       from: "Hai Phong (HPH)",
       to: "Da Nang (DAD)",
-      title: "Domestic flight — HPH → DAD (for 5)",
+      title: "Vol intérieur — HPH → DAD (pour 5)",
       price_total_usd: 300.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Estimate (older list).",
-      tags: ["estimate", "flight"],
+      notes: "Estimation.",
+      tags: ["estimation", "vol"],
     },
     {
       id: "F-OT-202",
@@ -1304,11 +1287,11 @@ const TRIP_DATA: TripData = {
       date: null,
       from: "Da Nang (DAD)",
       to: "Cam Ranh (CXR)",
-      title: "Domestic flight — DAD → CXR (for 5)",
+      title: "Vol intérieur — DAD → CXR (pour 5)",
       price_total_usd: 300.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Estimate (older list).",
-      tags: ["estimate", "flight"],
+      notes: "Estimation.",
+      tags: ["estimation", "vol"],
     },
     {
       id: "F-OT-203",
@@ -1320,11 +1303,11 @@ const TRIP_DATA: TripData = {
       date: null,
       from: "Cam Ranh (CXR)",
       to: "Ho Chi Minh (SGN)",
-      title: "Domestic flight — CXR → SGN (for 5)",
+      title: "Vol intérieur — CXR → SGN (pour 5)",
       price_total_usd: 300.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Estimate (older list).",
-      tags: ["estimate", "flight"],
+      notes: "Estimation.",
+      tags: ["estimation", "vol"],
     },
     {
       id: "F-OT-204",
@@ -1336,14 +1319,14 @@ const TRIP_DATA: TripData = {
       date: null,
       from: "Ho Chi Minh (SGN)",
       to: "Hanoi (HAN)",
-      title: "Domestic flight — SGN → HAN (for 5)",
+      title: "Vol intérieur — SGN → HAN (pour 5)",
       price_total_usd: 250.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Estimate (older list).",
-      tags: ["estimate", "flight"],
+      notes: "Estimation.",
+      tags: ["estimation", "vol"],
     },
 
-    // 2A — Activities core (explicit split)
+    // Activities core (explicit split)
     {
       id: "A-HL-001",
       category: "activity",
@@ -1354,13 +1337,13 @@ const TRIP_DATA: TripData = {
       date: "2026-07-31",
       from: "Ha Long",
       to: "Ha Long",
-      title: "Renea Cruise (Ha Long) — explicit split",
+      title: "Renea Cruise (Ha Long) — répartition explicite",
       price_total_usd: 630.0,
       payer_rule: "split_given",
       claudine_usd: 300.0,
       nous_usd: 330.0,
-      notes: "Confirmed in internal trip recap.",
-      tags: ["cruise", "confirmed"],
+      notes: "Montants du récap voyage.",
+      tags: ["croisière", "confirmé"],
     },
     {
       id: "A-WI-001",
@@ -1372,13 +1355,331 @@ const TRIP_DATA: TripData = {
       date: "2026-08-08",
       from: "Whale Island",
       to: "Whale Island",
-      title: "Whale Island Resort stay — explicit split",
+      title: "Whale Island Resort — répartition explicite",
       price_total_usd: 830.0,
       payer_rule: "split_given",
       claudine_usd: 415.0,
       nous_usd: 415.0,
-      notes: "Confirmed in internal trip recap.",
-      tags: ["nature", "confirmed"],
+      notes: "Montants du récap voyage.",
+      tags: ["nature", "confirmé"],
+    },
+  ],
+
+  // Planned activities by city (rounded USD using 1 USD ≈ 25 970 VND)
+  planned_activities: [
+    // HANOI
+    {
+      id: "ACT-HAN-001",
+      city: "Hanoi",
+      window: "25–28 juil + 15–17 août",
+      name: "Spectacle marionnettes sur l’eau (Thang Long)",
+      category: "show",
+      duration: "50 min",
+      bestTime: "Soir",
+      pricing: {
+        currency: "VND",
+        vnd_range: [100_000, 200_000],
+        estimatedUSD_range: [vndToUsdRounded(100_000), vndToUsdRounded(200_000)],
+      },
+      kidsRule: "Très kids-friendly",
+      payMode: "réservation",
+      provider: "Traveloka (exemple revendeur)",
+      sourceUrl: "https://www.traveloka.com/en-vn/activities/vietnam/product/thang-long-water-puppet-show-tickets-skip-the-line-2001486919941",
+      notes: "Arriver 20–30 min avant. Parfait après street food.",
+      tags: ["kids", "soir"],
+    },
+    {
+      id: "ACT-HAN-002",
+      city: "Hanoi",
+      window: "25–28 juil + 15–17 août",
+      name: "Musée prison Hoa Lo",
+      category: "histoire",
+      duration: "1–1h30",
+      bestTime: "Matin",
+      pricing: {
+        currency: "VND",
+        vnd_adult: 50_000,
+        estimatedUSD_adult: vndToUsdRounded(50_000),
+      },
+      kidsRule: "Contenu impact (masqué en mode kids)",
+      payMode: "sur place",
+      provider: "Vietnam Airlines (guide)",
+      sourceUrl: "https://www.vietnamairlines.com/ch/en/useful-information/travel-guide/hoa-lo-prison",
+      notes: "Audio guide souvent +50k VND (~$2).",
+      impact: true,
+      tags: ["impact", "culture"],
+    },
+    {
+      id: "ACT-HAN-003",
+      city: "Hanoi",
+      window: "25–28 juil + 15–17 août",
+      name: "Tour en cyclo (Old Quarter / French Quarter)",
+      category: "ville",
+      duration: "1 h",
+      bestTime: "Fin d’aprem",
+      pricing: {
+        currency: "USD",
+        usd_range: [10, 15],
+        estimatedUSD_range: [usdRounded(10), usdRounded(15)],
+      },
+      kidsRule: "OK kids",
+      payMode: "réservation",
+      provider: "GetYourGuide (exemple)",
+      sourceUrl: "https://www.getyourguide.com/hanoi-l205/hanoi-old-quarter-sightseeing-cycling-private-tour-by-cyclo-t870246/",
+      notes: "Très utile pour ‘lire’ la ville au début.",
+      tags: ["famille", "orientation"],
+    },
+
+    // NINH BINH
+    {
+      id: "ACT-NB-001",
+      city: "Ninh Binh",
+      window: "28–30 juil",
+      name: "Trang An (UNESCO) — tour en barque (ticket site)",
+      category: "nature",
+      duration: "2–3 h",
+      bestTime: "Matin",
+      pricing: {
+        currency: "VND",
+        vnd_adult: 250_000,
+        estimatedUSD_adult: vndToUsdRounded(250_000),
+      },
+      kidsRule: "<1 m gratuit • 1–1.3 m : 120k VND • >1.3 m : adulte",
+      payMode: "sur place",
+      provider: "Good Morning Cat Ba (règles/prix)",
+      sourceUrl: "https://goodmorningcatba.com/trang-an-departure-boat-ticket/",
+      notes: "Bateau = 4–5 pax. Possibilité de ‘privatiser’ (supplément).",
+      tags: ["bateau", "wow"],
+    },
+    {
+      id: "ACT-NB-002",
+      city: "Ninh Binh",
+      window: "28–30 juil",
+      name: "Hang Mua (Mua Caves) — viewpoint",
+      category: "nature",
+      duration: "1–2 h",
+      bestTime: "Fin d’aprem",
+      pricing: {
+        currency: "VND",
+        vnd_adult: 100_000,
+        estimatedUSD_adult: vndToUsdRounded(100_000),
+      },
+      kidsRule: "Prévoir eau + chaussures (marches)",
+      payMode: "sur place",
+      provider: "Chris & Wren’s World (guide 2026)",
+      sourceUrl: "https://chrisandwrensworld.com/mua-caves/",
+      notes: "Top ‘wow’ photo. Éviter midi chaleur.",
+      tags: ["photos", "wow"],
+    },
+
+    // HA LONG / BAI TU LONG
+    {
+      id: "ACT-HL-001",
+      city: "Ha Long",
+      window: "30 juil – 1 août",
+      name: "Renea Cruise (2J/1N) — repère prix public",
+      category: "tour",
+      duration: "2 jours / 1 nuit",
+      bestTime: "Jour",
+      pricing: {
+        currency: "USD",
+        usd_range: [330, 380],
+        estimatedUSD_range: [usdRounded(330), usdRounded(380)],
+      },
+      kidsRule: "Selon cabine + lit additionnel (à vérifier dans la résa)",
+      payMode: "réservation",
+      provider: "Halong Bay Tours / HVGTravel / Viator (repères)",
+      sourceUrl: "https://www.halongbaytours.vn/tours/renea-cruise-halong-bay-tour-2-days-1-night.html",
+      notes: "Dans le budget ‘core’, la croisière est déjà enregistrée (split explicite). Ici : repère marché pour comparer.",
+      tags: ["croisière", "inclusions"],
+    },
+
+    // HOI AN
+    {
+      id: "ACT-HA-001",
+      city: "Hoi An",
+      window: "1–6 août",
+      name: "Hoi An Ancient Town — ticket (pass)",
+      category: "culture",
+      duration: "2–4 h",
+      bestTime: "Soir",
+      pricing: {
+        currency: "VND",
+        vnd_adult: 120_000,
+        estimatedUSD_adult: vndToUsdRounded(120_000),
+      },
+      kidsRule: "Souvent gratuit pour petits (à confirmer sur place)",
+      payMode: "sur place",
+      provider: "HoiAnDayTrip (explication + prix)",
+      sourceUrl: "https://hoiandaytrip.com/hoi-an-old-town-ticket-attractions/",
+      notes: "Prévoir cash.",
+      tags: ["UNESCO", "lanterns"],
+    },
+    {
+      id: "ACT-HA-002",
+      city: "Hoi An",
+      window: "1–6 août",
+      name: "Cam Thanh Coconut Village — basket boat",
+      category: "tour",
+      duration: "1–2 h",
+      bestTime: "Matin",
+      pricing: {
+        currency: "VND",
+        vnd_range: [150_000, 200_000],
+        estimatedUSD_range: [vndToUsdRounded(150_000), vndToUsdRounded(200_000)],
+      },
+      kidsRule: "OK kids",
+      payMode: "sur place",
+      provider: "La Siesta Resorts (repère)",
+      sourceUrl: "https://lasiestaresorts.com/hoi-an-coconut-basket-boat-tour.html",
+      notes: "Certaines offres existent via Klook (packagé).",
+      tags: ["mer", "fun"],
+    },
+    {
+      id: "ACT-HA-003",
+      city: "Hoi An",
+      window: "1–6 août",
+      name: "My Son Sanctuary (UNESCO) — ticket site",
+      category: "culture",
+      duration: "3–5 h (avec trajet)",
+      bestTime: "Très tôt",
+      pricing: {
+        currency: "VND",
+        vnd_adult: 150_000,
+        estimatedUSD_adult: vndToUsdRounded(150_000),
+      },
+      kidsRule: "Chaleur : prévoir eau + chapeau",
+      payMode: "sur place",
+      provider: "HoiAnDayTrip (guide + ticket)",
+      sourceUrl: "https://hoiandaytrip.com/my-son-sanctuary-travel-guide/",
+      notes: "À caler tôt le matin (chaleur).",
+      tags: ["UNESCO", "histoire"],
+    },
+    {
+      id: "ACT-HA-004",
+      city: "Hoi An",
+      window: "1–6 août",
+      name: "Hoi An Memories Show",
+      category: "show",
+      duration: "1–2 h",
+      bestTime: "Soir",
+      pricing: {
+        currency: "USD",
+        usd_range: [20, 60],
+        estimatedUSD_range: [usdRounded(20), usdRounded(60)],
+      },
+      kidsRule: "OK kids (selon énergie)",
+      payMode: "réservation",
+      provider: "Site officiel + plateformes",
+      sourceUrl: "https://hoianmemoriesshow.com/",
+      notes: "Prix variable selon catégorie (ECO/HIGH/VIP).",
+      tags: ["soir", "show"],
+    },
+    {
+      id: "ACT-HA-005",
+      city: "Hoi An",
+      window: "1–6 août",
+      name: "Cham Islands — journée snorkeling (option mer)",
+      category: "mer",
+      duration: "Journée",
+      bestTime: "Selon météo",
+      pricing: {
+        currency: "USD",
+        usd_adult: 35,
+        estimatedUSD_adult: usdRounded(35),
+      },
+      kidsRule: "Mer/météo : variable",
+      payMode: "réservation",
+      provider: "Viator (repère)",
+      sourceUrl: "https://www.viator.com/tours/Hoi-An/Group-Tour-Cham-Island-Day-Tour-and-Snorkeling/d5229-163636P4",
+      notes: "Champ ‘saisonnalité’ conseillé.",
+      tags: ["mer", "snorkeling"],
+    },
+
+    // DA NANG
+    {
+      id: "ACT-DAD-001",
+      city: "Da Nang",
+      window: "6–8 août",
+      name: "Marble Mountains (Ngu Hanh Son)",
+      category: "nature",
+      duration: "2–3 h",
+      bestTime: "Matin",
+      pricing: {
+        currency: "VND",
+        vnd_adult: 40_000,
+        estimatedUSD_adult: vndToUsdRounded(40_000),
+      },
+      kidsRule: "Escaliers : attention fatigue",
+      payMode: "sur place",
+      provider: "Vietnam.travel (tourisme)",
+      sourceUrl: "https://vietnam.travel/things-to-do/around-marble-mountains",
+      notes: "Ascenseur parfois +15k VND (~$1).",
+      tags: ["pagodes", "grottes"],
+    },
+    {
+      id: "ACT-DAD-002",
+      city: "Da Nang",
+      window: "6–8 août",
+      name: "Ba Na Hills (Golden Bridge) — option",
+      category: "tour",
+      duration: "Journée",
+      bestTime: "Matin",
+      pricing: {
+        currency: "VND",
+        vnd_adult: 1_000_000,
+        vnd_child: 800_000,
+        estimatedUSD_adult: vndToUsdRounded(1_000_000),
+      },
+      kidsRule: "Règle souvent par taille (1m / 1.4m) + combos repas",
+      payMode: "réservation",
+      provider: "Distributeur / infos 2026",
+      sourceUrl: "https://danaticket.com/ba-na-hills-ticket",
+      notes: "À ne garder que si vous voulez une ‘grosse journée parc’.",
+      tags: ["parc", "téléphérique"],
+    },
+
+    // HO CHI MINH
+    {
+      id: "ACT-SGN-001",
+      city: "Ho Chi Minh City",
+      window: "12–15 août",
+      name: "Mekong Delta — journée (My Tho / Ben Tre)",
+      category: "tour",
+      duration: "Journée",
+      bestTime: "Matin",
+      pricing: {
+        currency: "USD",
+        usd_range: [17, 52],
+        estimatedUSD_range: [usdRounded(17), usdRounded(52)],
+      },
+      kidsRule: "OK kids (longue journée) — prévoir snacks",
+      payMode: "réservation",
+      provider: "GetYourGuide / Viator (repères)",
+      sourceUrl: "https://www.getyourguide.com/ho-chi-minh-city-l272/from-ho-chi-minh-city-mekong-delta-small-group-tour-t60784/",
+      notes: "Souvent pickup District 1 uniquement (à vérifier).",
+      tags: ["bateau", "journée"],
+    },
+    {
+      id: "ACT-SGN-002",
+      city: "Ho Chi Minh City",
+      window: "12–15 août",
+      name: "Cu Chi Tunnels — demi-journée (histoire)",
+      category: "histoire",
+      duration: "5–6 h",
+      bestTime: "Matin",
+      pricing: {
+        currency: "USD",
+        usd_range: [18, 18],
+        estimatedUSD_range: [usdRounded(18), usdRounded(18)],
+      },
+      kidsRule: "Contenu impact (masqué en mode kids si souhaité)",
+      payMode: "réservation",
+      provider: "Backpackers Wanderlust (repères 2026)",
+      sourceUrl: "https://www.backpackerswanderlust.com/cheap-tour-cu-chi-tunnels/",
+      notes: "Chaleur + tunnels : prévoir eau. Extras parfois payants.",
+      impact: true,
+      tags: ["impact", "histoire"],
     },
   ],
 };
@@ -1431,16 +1732,15 @@ const TipsChecklist = () => {
 };
 
 // ============================================================
-// Expense Engine (Scope & Rules)
-// - USD only, no hotels, no food
-// - Transport allocation: 20% Claudine, 80% Nous (on the included transport set)
-// - Activities: explicit split if provided else adult_equal_split (not used here)
+// Budget Engine (USD only, no hotels, no food)
+// - Transport: 20% Claudine / 80% Nous (on included transport set)
+// - Activities: explicit split if provided else adult_equal_split
 // ============================================================
 type BudgetFilters = {
-  includeConfirmed: boolean;
-  includeEstimates: boolean;
-  onlyJaCosmo: boolean;
-  search: string;
+  inclureConfirmes: boolean;
+  inclureEstimes: boolean;
+  seulementJaCosmo: boolean;
+  recherche: string;
 };
 
 type BudgetComputed = {
@@ -1464,12 +1764,12 @@ type BudgetComputed = {
 };
 
 const computeBudget = (expenses: ExpenseItemUSD[], filters: BudgetFilters): BudgetComputed => {
-  const q = filters.search.trim().toLowerCase();
+  const q = filters.recherche.trim().toLowerCase();
 
   const filtered = expenses.filter((e) => {
-    if (!filters.includeConfirmed && e.status === "CONFIRMED") return false;
-    if (!filters.includeEstimates && e.status === "ESTIMATE") return false;
-    if (filters.onlyJaCosmo && !e.operated_by_ja_cosmo) return false;
+    if (!filters.inclureConfirmes && e.status === "CONFIRMED") return false;
+    if (!filters.inclureEstimes && e.status === "ESTIMATE") return false;
+    if (filters.seulementJaCosmo && !e.operated_by_ja_cosmo) return false;
 
     if (q) {
       const blob = [
@@ -1511,8 +1811,7 @@ const computeBudget = (expenses: ExpenseItemUSD[], filters: BudgetFilters): Budg
     if (a.payer_rule === "split_given") {
       return { ...a, alloc_claudine: a.claudine_usd ?? 0, alloc_nous: a.nous_usd ?? 0 };
     }
-    // fallback adult_equal_split if ever used:
-    const each = a.price_total_usd / 3;
+    const each = a.price_total_usd / 3; // fallback
     return { ...a, alloc_claudine: each, alloc_nous: a.price_total_usd - each };
   });
 
@@ -1532,7 +1831,7 @@ const computeBudget = (expenses: ExpenseItemUSD[], filters: BudgetFilters): Budg
 };
 
 // ============================================================
-// Expense UI
+// Budget UI (rows)
 // ============================================================
 const ExpenseRow = ({
   item,
@@ -1597,7 +1896,7 @@ const ExpenseRow = ({
           <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-black ${badge.cls}`}>
             {badge.icon} {badge.label}
           </div>
-          <p className="mt-2 text-xl font-black text-slate-900">{formatUSD(item.price_total_usd)}</p>
+          <p className="mt-2 text-xl font-black text-slate-900">{formatUSD0(item.price_total_usd)}</p>
           {item.date && <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">{item.date}</p>}
         </div>
       </div>
@@ -1606,11 +1905,11 @@ const ExpenseRow = ({
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Claudine</p>
-            <p className="text-sm font-black text-slate-900">{formatUSD(item.alloc_claudine)}</p>
+            <p className="text-sm font-black text-slate-900">{formatUSD0(item.alloc_claudine)}</p>
           </div>
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Nous</p>
-            <p className="text-sm font-black text-slate-900">{formatUSD(item.alloc_nous)}</p>
+            <p className="text-sm font-black text-slate-900">{formatUSD0(item.alloc_nous)}</p>
           </div>
         </div>
       )}
@@ -1618,105 +1917,112 @@ const ExpenseRow = ({
   );
 };
 
-const TicketsCard = ({
-  title,
-  items,
-  kidsMode,
-  includeTicket,
-  setIncludeTicket,
-  vndPerUsd,
-  setVndPerUsd,
-}: {
-  title: string;
-  items: TicketActivity[];
-  kidsMode: boolean;
-  includeTicket: Record<string, boolean>;
-  setIncludeTicket: (next: Record<string, boolean>) => void;
-  vndPerUsd: number;
-  setVndPerUsd: (n: number) => void;
-}) => {
-  const visible = items.filter((a) => {
-    if (kidsMode && a.tags?.includes("impact")) return false;
-    return true;
-  });
+// ============================================================
+// Activities UI (by city)
+// ============================================================
+const ActivityCard = ({ a }: { a: PlannedActivity }) => {
+  const priceLine = (() => {
+    if (a.pricing.estimatedUSD_range) {
+      const [min, max] = a.pricing.estimatedUSD_range;
+      return `$${min}–$${max} (arrondi)`;
+    }
+    if (typeof a.pricing.estimatedUSD_adult === "number") {
+      return `$${a.pricing.estimatedUSD_adult} (arrondi)`;
+    }
+    if (a.pricing.usd_range) {
+      const [min, max] = a.pricing.usd_range;
+      return `$${usdRounded(min)}–$${usdRounded(max)} (arrondi)`;
+    }
+    if (typeof a.pricing.usd_adult === "number") {
+      return `$${usdRounded(a.pricing.usd_adult)} (arrondi)`;
+    }
+    return "—";
+  })();
 
-  const totalUsd = sum(
-    visible.map((a) => {
-      const on = includeTicket[a.id] ?? false;
-      if (!on || !a.cost) return 0;
-      // Tickets: assume "Nous" = 3 adults + 2 kids, Claudine = 1 adult
-      const child = a.cost.child_vnd ?? a.cost.adult_vnd;
-      const nousVnd = a.cost.adult_vnd * 3 + child * 2;
-      const claudineVnd = a.cost.adult_vnd * 1;
-      return (nousVnd + claudineVnd) / vndPerUsd;
-    })
-  );
+  const rawLine = (() => {
+    if (a.pricing.vnd_range) {
+      const [min, max] = a.pricing.vnd_range;
+      return `${min.toLocaleString("vi-VN")}–${max.toLocaleString("vi-VN")} VND`;
+    }
+    if (typeof a.pricing.vnd_adult === "number") {
+      return `${a.pricing.vnd_adult.toLocaleString("vi-VN")} VND`;
+    }
+    if (a.pricing.usd_range) {
+      const [min, max] = a.pricing.usd_range;
+      return `$${min}–$${max}`;
+    }
+    if (typeof a.pricing.usd_adult === "number") return `$${a.pricing.usd_adult}`;
+    return "";
+  })();
 
   return (
-    <div className="bg-white rounded-[40px] border border-slate-100 shadow-xl p-8">
-      <div className="flex items-end justify-between mb-6">
-        <div>
-          <h4 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">{title}</h4>
-          <p className="text-xs font-bold text-slate-400 italic mt-1">Optionnel — conversion VND → USD</p>
-        </div>
-        <div className="text-right">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total tickets (est.)</p>
-          <p className="text-xl font-black text-slate-900">{formatUSD(totalUsd)}</p>
-        </div>
-      </div>
+    <div className="bg-white rounded-[36px] border border-slate-100 shadow-xl p-7">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">{a.city}{a.window ? ` • ${a.window}` : ""}</p>
+          <h4 className="text-xl font-black text-slate-900 tracking-tighter leading-tight">{a.name}</h4>
 
-      <div className="p-5 rounded-[28px] bg-slate-50 border border-slate-100 mb-6">
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
-          <Banknote size={14} /> Taux (VND / $1)
-        </p>
-        <input
-          type="number"
-          value={vndPerUsd}
-          onChange={(e) => setVndPerUsd(Number(e.target.value || 0))}
-          className="bg-white px-5 py-4 rounded-2xl border border-slate-200 w-full text-lg font-black text-slate-900 shadow-sm"
-        />
-      </div>
-
-      <div className="space-y-4">
-        {visible.map((a) => {
-          const on = includeTicket[a.id] ?? false;
-          const usd = a.cost ? a.cost.adult_vnd / vndPerUsd : 0;
-          return (
-            <div key={a.id} className="p-5 rounded-[28px] bg-slate-50 border border-slate-100">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-sm font-black text-slate-900">{a.name}</p>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">{a.city}</p>
-                  {a.cost && (
-                    <p className="mt-2 text-xs font-bold text-slate-600">
-                      Base: {a.cost.adult_vnd.toLocaleString("vi-VN")} VND (~ {formatUSD(usd)} / adulte)
-                    </p>
-                  )}
-                  {a.cost?.notes && <p className="mt-2 text-[11px] font-semibold text-slate-500 leading-relaxed">{a.cost.notes}</p>}
-                  {a.link && (
-                    <a
-                      href={a.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full bg-white border border-slate-200 text-[10px] font-black text-slate-700"
-                    >
-                      <Info size={12} />
-                      Lien
-                    </a>
-                  )}
-                </div>
-
-                <button
-                  onClick={() => setIncludeTicket({ ...includeTicket, [a.id]: !on })}
-                  className={`w-12 h-7 rounded-full p-1 transition-colors ${on ? "bg-emerald-500" : "bg-slate-200"}`}
-                  aria-label="toggle"
-                >
-                  <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${on ? "translate-x-5" : "translate-x-0"}`} />
-                </button>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
+              <p className="text-[9px] font-black text-emerald-700 uppercase tracking-widest mb-1">Prix</p>
+              <p className="text-sm font-black text-slate-900">{priceLine}</p>
+              <p className="text-[10px] font-bold text-emerald-700/80 mt-1">{rawLine}</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+              <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Cadre</p>
+              <div className="flex items-center gap-2 text-slate-700">
+                <Clock size={14} />
+                <p className="text-xs font-bold">{a.duration ?? "—"}</p>
+              </div>
+              <div className="flex items-center gap-2 text-slate-700 mt-2">
+                <Users size={14} />
+                <p className="text-xs font-bold">{a.kidsRule ?? "—"}</p>
               </div>
             </div>
-          );
-        })}
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-[10px] font-black text-indigo-700 uppercase tracking-widest">
+              <Ticket size={14} /> {a.category}
+            </span>
+            {a.payMode && (
+              <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-black text-slate-700 uppercase tracking-widest">
+                {a.payMode}
+              </span>
+            )}
+            <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-black text-slate-700">
+              <Tag size={14} /> {a.provider}
+            </span>
+          </div>
+
+          {a.notes && <p className="mt-4 text-[12px] font-semibold text-slate-600 leading-relaxed">{a.notes}</p>}
+
+          <div className="mt-4 flex gap-2">
+            {a.sourceUrl ? (
+              <a
+                href={a.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black"
+              >
+                <Info size={16} />
+                Source
+              </a>
+            ) : (
+              <div className="px-4 py-3 rounded-2xl bg-slate-100 text-slate-400 text-xs font-black italic">Pas de source</div>
+            )}
+
+            <a
+              href={googleMapsSearchUrl(a.name + " " + a.city)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-100 text-slate-700"
+              aria-label="Maps"
+            >
+              <MapPin size={18} />
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1731,18 +2037,14 @@ export default function App() {
   const [kidsMode, setKidsMode] = useState(false);
   const [quickOpen, setQuickOpen] = useState(false);
 
-  // Budget filters
+  // Budget filters (FR)
   const [budgetTab, setBudgetTab] = useState<"overview" | "transport" | "activities">("overview");
   const [filters, setFilters] = useState<BudgetFilters>({
-    includeConfirmed: true,
-    includeEstimates: true,
-    onlyJaCosmo: false,
-    search: "",
+    inclureConfirmes: true,
+    inclureEstimes: true,
+    seulementJaCosmo: false,
+    recherche: "",
   });
-
-  // Optional tickets toggles
-  const [vndPerUsd, setVndPerUsd] = useState(26000);
-  const [includeTicket, setIncludeTicket] = useState<Record<string, boolean>>({});
 
   const cities = useMemo(() => uniqCitiesByOrder(TRIP_DATA.itinerary_days), []);
   const [activeCity, setActiveCity] = useState(cities[0] || "Hanoi");
@@ -1758,6 +2060,7 @@ export default function App() {
   }, [todayISO]);
 
   const [focusDayIndex, setFocusDayIndex] = useState(todayIndex);
+  const focusDay = TRIP_DATA.itinerary_days[clamp(focusDayIndex, 0, TRIP_DATA.itinerary_days.length - 1)];
 
   // Persist
   useEffect(() => {
@@ -1770,28 +2073,18 @@ export default function App() {
     const savedFocus = localStorage.getItem("trip_focus_day");
     if (savedFocus) setFocusDayIndex(Number(savedFocus));
 
-    const savedVnd = localStorage.getItem("trip_vnd_per_usd");
-    if (savedVnd) setVndPerUsd(Number(savedVnd));
-
-    const savedTickets = localStorage.getItem("trip_ticket_toggle");
-    if (savedTickets) setIncludeTicket(JSON.parse(savedTickets));
-
-    const savedBudgetFilters = localStorage.getItem("trip_budget_filters_v2");
+    const savedBudgetFilters = localStorage.getItem("trip_budget_filters_v3");
     if (savedBudgetFilters) setFilters(JSON.parse(savedBudgetFilters));
 
-    const savedBudgetTab = localStorage.getItem("trip_budget_tab_v2");
+    const savedBudgetTab = localStorage.getItem("trip_budget_tab_v3");
     if (savedBudgetTab) setBudgetTab(savedBudgetTab as any);
   }, []);
 
   useEffect(() => localStorage.setItem("trip_kids_mode", kidsMode ? "1" : "0"), [kidsMode]);
   useEffect(() => localStorage.setItem("trip_active_city", activeCity), [activeCity]);
   useEffect(() => localStorage.setItem("trip_focus_day", String(focusDayIndex)), [focusDayIndex]);
-  useEffect(() => localStorage.setItem("trip_vnd_per_usd", String(vndPerUsd)), [vndPerUsd]);
-  useEffect(() => localStorage.setItem("trip_ticket_toggle", JSON.stringify(includeTicket)), [includeTicket]);
-  useEffect(() => localStorage.setItem("trip_budget_filters_v2", JSON.stringify(filters)), [filters]);
-  useEffect(() => localStorage.setItem("trip_budget_tab_v2", budgetTab), [budgetTab]);
-
-  const focusDay = TRIP_DATA.itinerary_days[clamp(focusDayIndex, 0, TRIP_DATA.itinerary_days.length - 1)];
+  useEffect(() => localStorage.setItem("trip_budget_filters_v3", JSON.stringify(filters)), [filters]);
+  useEffect(() => localStorage.setItem("trip_budget_tab_v3", budgetTab), [budgetTab]);
 
   const setCityFromFocus = () => {
     const base = focusDay.city.split("→").map((s) => s.trim())[0];
@@ -1799,24 +2092,6 @@ export default function App() {
   };
 
   const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd, filters), [filters]);
-
-  // Optional tickets computed (for display in activities / budget overview)
-  const optionalTickets = useMemo(() => {
-    const visible = TRIP_DATA.ticket_activities.filter((a) => !(kidsMode && a.tags?.includes("impact")));
-    const totalUsd = sum(
-      visible.map((a) => {
-        const on = includeTicket[a.id] ?? false;
-        if (!on || !a.cost) return 0;
-        const child = a.cost.child_vnd ?? a.cost.adult_vnd;
-        const nousVnd = a.cost.adult_vnd * 3 + child * 2;
-        const claudineVnd = a.cost.adult_vnd;
-        return (nousVnd + claudineVnd) / vndPerUsd;
-      })
-    );
-    return { totalUsd, countOn: visible.filter((a) => includeTicket[a.id]).length };
-  }, [includeTicket, kidsMode, vndPerUsd]);
-
-  const grandPlusTickets = budget.grand.total + optionalTickets.totalUsd;
 
   const TabsList = [
     { id: "home", icon: Star },
@@ -1828,62 +2103,27 @@ export default function App() {
     { id: "budget", icon: Wallet },
   ] as const;
 
-  // copy JSON of the *filtered* view to feed another AI / spreadsheet
-  const exportPayload = useMemo(() => {
-    const payload = {
-      scope: "USD only, no hotels, no food. Includes transports + explicitly priced activities.",
-      rules: {
-        transport: "Claudine 20% of transport total; Nous 80%.",
-        activities: "Use explicit split if provided; else adult_equal_split (3 adults = 33.33% each).",
-        status: "CONFIRMED or ESTIMATE",
-      },
-      filters,
-      computed: {
-        transport_total_usd: budget.transport.total,
-        activities_total_usd: budget.activities.total,
-        grand_total_usd: budget.grand.total,
-        claudine_total_usd: budget.grand.claudine_total,
-        nous_total_usd: budget.grand.nous_total,
-        optional_tickets_usd_estimate: optionalTickets.totalUsd,
-        grand_plus_tickets_estimate: grandPlusTickets,
-      },
-      items_transport: budget.transport.items.map((x) => ({
-        id: x.id,
-        status: x.status,
-        operator: x.operator,
-        operated_by_ja_cosmo: x.operated_by_ja_cosmo,
-        mode: x.mode,
-        date: x.date ?? null,
-        from: x.from ?? null,
-        to: x.to ?? null,
-        title: x.title,
-        price_total_usd: Number(x.price_total_usd.toFixed(2)),
-        allocated: {
-          claudine_usd: Number(x.alloc_claudine.toFixed(2)),
-          nous_usd: Number(x.alloc_nous.toFixed(2)),
-        },
-        notes: x.notes ?? null,
-        tags: x.tags ?? [],
-      })),
-      items_activities: budget.activities.items.map((x) => ({
-        id: x.id,
-        status: x.status,
-        operator: x.operator,
-        mode: x.mode,
-        date: x.date ?? null,
-        title: x.title,
-        price_total_usd: Number(x.price_total_usd.toFixed(2)),
-        allocated: {
-          claudine_usd: Number(x.alloc_claudine.toFixed(2)),
-          nous_usd: Number(x.alloc_nous.toFixed(2)),
-        },
-        payer_rule: x.payer_rule,
-        notes: x.notes ?? null,
-        tags: x.tags ?? [],
-      })),
-    };
-    return JSON.stringify(payload, null, 2);
-  }, [filters, budget, optionalTickets.totalUsd, grandPlusTickets]);
+  // Activities filtered by city & kids mode
+  const activitiesByCity = useMemo(() => {
+    const list = TRIP_DATA.planned_activities.filter((a) => !(kidsMode && a.impact));
+    const map = new Map<string, PlannedActivity[]>();
+    for (const a of list) {
+      const k = a.city;
+      if (!map.has(k)) map.set(k, []);
+      map.get(k)!.push(a);
+    }
+    // Keep a consistent order
+    const order = ["Hanoi", "Ninh Binh", "Ha Long", "Hoi An", "Da Nang", "Ho Chi Minh City", "Whale Island"];
+    const out: { city: string; items: PlannedActivity[] }[] = [];
+    for (const c of order) {
+      if (map.has(c)) out.push({ city: c, items: map.get(c)! });
+    }
+    // add any leftover
+    for (const [c, items] of map.entries()) {
+      if (!order.includes(c)) out.push({ city: c, items });
+    }
+    return out;
+  }, [kidsMode]);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans pb-32 overflow-x-hidden select-none">
@@ -1892,13 +2132,18 @@ export default function App() {
       {/* HOME */}
       {view === "home" && (
         <div className="animate-in fade-in duration-500">
-          <CinemaHero onOpenQuick={() => setQuickOpen(true)} activeCity={activeCity} coverSrc={cityCoverFromLabel(activeCity)} subtitle="Mobile HQ — Itinerary • Budget • Activities" />
+          <CinemaHero
+            onOpenQuick={() => setQuickOpen(true)}
+            activeCity={activeCity}
+            coverSrc={cityCoverFromLabel(activeCity)}
+            subtitle="HQ Mobile — Itinéraire • Budget • Activités"
+          />
 
           <div className="relative -mt-10 px-6 space-y-8">
             <Glass className="rounded-[40px] p-8 flex items-center justify-between">
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status</p>
-                <p className="text-sm font-black text-slate-900 leading-none">{isWithinTrip ? "Trip en cours 🇻🇳" : "En préparation 📝"}</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Statut</p>
+                <p className="text-sm font-black text-slate-900 leading-none">{isWithinTrip ? "Voyage en cours 🇻🇳" : "Préparation 📝"}</p>
               </div>
               <button onClick={() => setView("itinerary")} className="w-12 h-12 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg">
                 <ChevronRight size={24} />
@@ -1906,7 +2151,13 @@ export default function App() {
             </Glass>
 
             <div className="grid grid-cols-1 gap-4">
-              <Toggle label="Mode Kids" icon={<Smartphone size={20} />} value={kidsMode} onChange={setKidsMode} hint="Masque les contenus ‘impact’ + tickets sensibles." />
+              <Toggle
+                label="Mode kids"
+                icon={<Smartphone size={20} />}
+                value={kidsMode}
+                onChange={setKidsMode}
+                hint="Masque les activités ‘impact’."
+              />
             </div>
 
             <div>
@@ -1922,8 +2173,8 @@ export default function App() {
             <div>
               <div className="flex justify-between items-end mb-6">
                 <div>
-                  <h3 className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-1">Focus Jour</h3>
-                  <p className="text-xs font-bold text-slate-400 italic">Swipe mental</p>
+                  <h3 className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-1">Jour focus</h3>
+                  <p className="text-xs font-bold text-slate-400 italic">Carte du jour</p>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -1950,7 +2201,7 @@ export default function App() {
                 }}
                 className="w-full py-5 rounded-[32px] bg-slate-100 text-slate-600 text-xs font-black uppercase tracking-widest mt-4"
               >
-                Explorer cet itinéraire
+                Voir l’itinéraire
               </button>
             </div>
 
@@ -1958,12 +2209,12 @@ export default function App() {
               <button onClick={() => setView("activities")} className="p-6 rounded-[40px] bg-emerald-50 border border-emerald-100 text-left">
                 <Sparkles size={24} className="text-emerald-600 mb-4" />
                 <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Activités</p>
-                <p className="text-[10px] font-bold text-emerald-500">Core + Tickets</p>
+                <p className="text-[10px] font-bold text-emerald-500">Par ville</p>
               </button>
               <button onClick={() => setView("budget")} className="p-6 rounded-[40px] bg-amber-50 border border-amber-100 text-left">
                 <Wallet size={24} className="text-amber-600 mb-4" />
                 <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Budget</p>
-                <p className="text-[10px] font-bold text-amber-500">USD • split auto</p>
+                <p className="text-[10px] font-bold text-amber-500">USD uniquement</p>
               </button>
             </div>
           </div>
@@ -2004,7 +2255,7 @@ export default function App() {
           <div className="flex justify-between items-center mb-12">
             <div>
               <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Hôtels</h2>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Le repos du guerrier</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Repos & logistique</p>
             </div>
             <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
               <X size={20} />
@@ -2015,13 +2266,15 @@ export default function App() {
         </div>
       )}
 
-      {/* ACTIVITIES */}
+      {/* ACTIVITIES (UPDATED) */}
       {view === "activities" && (
         <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
           <div className="flex justify-between items-center mb-10">
             <div>
               <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Activités</h2>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Core (USD) + Tickets (option)</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                Prix arrondis • USD via 1$ ≈ {VND_PER_USD.toLocaleString("fr-FR")} VND
+              </p>
             </div>
             <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
               <X size={20} />
@@ -2031,32 +2284,44 @@ export default function App() {
           <Glass className="rounded-[40px] p-7 mb-8">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Core activities (USD)</p>
-                <p className="text-3xl font-black text-slate-900 tracking-tighter">{formatUSD(budget.activities.total)}</p>
-                <p className="mt-2 text-xs font-bold text-slate-500">Split: Claudine {formatUSD(budget.activities.claudine_total)} • Nous {formatUSD(budget.activities.nous_total)}</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode d’affichage</p>
+                <p className="text-xl font-black text-slate-900 tracking-tighter">Liste complète, par ville</p>
+                <p className="mt-2 text-xs font-bold text-slate-500">
+                  Les activités ‘impact’ sont masquées si le mode kids est activé.
+                </p>
               </div>
-              <div className="grid gap-2">
-                <StatChip label="Tickets ON" value={`${optionalTickets.countOn}`} accent="slate" />
+              <div className="w-44">
+                <Toggle label="Mode kids" icon={<Smartphone size={18} />} value={kidsMode} onChange={setKidsMode} hint="Masque ‘impact’" />
               </div>
             </div>
           </Glass>
 
-          <div className="space-y-5 mb-10">
-            {budget.activities.items.map((item) => (
-              <ExpenseRow key={item.id} item={item} showAlloc />
-            ))}
-          </div>
+          <div className="space-y-10 pb-20">
+            {activitiesByCity.map((group) => (
+              <div key={group.city} className="space-y-4">
+                <div className="flex items-center justify-between px-1">
+                  <div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ville</p>
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tighter">{group.city}</h3>
+                  </div>
+                  <a
+                    href={googleMapsSearchUrl(group.city)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-slate-100 text-slate-700 text-xs font-black"
+                  >
+                    <MapPin size={16} />
+                    Carte
+                  </a>
+                </div>
 
-          <div className="pb-20">
-            <TicketsCard
-              title="Tickets locaux (optionnels)"
-              items={TRIP_DATA.ticket_activities}
-              kidsMode={kidsMode}
-              includeTicket={includeTicket}
-              setIncludeTicket={setIncludeTicket}
-              vndPerUsd={vndPerUsd}
-              setVndPerUsd={setVndPerUsd}
-            />
+                <div className="space-y-4">
+                  {group.items.map((a) => (
+                    <ActivityCard key={a.id} a={a} />
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -2067,14 +2332,14 @@ export default function App() {
           <div className="flex justify-between items-center mb-12">
             <div>
               <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Guide</h2>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Food + Logistique</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Food + aéroports</p>
             </div>
             <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
               <X size={20} />
             </button>
           </div>
 
-          <SimpleListCard title="Miam Miam" icon={<Utensils size={24} />} items={Object.entries(TRIP_DATA.food).map(([r, f]) => `${r}: ${f.join(", ")}`)} />
+          <SimpleListCard title="Food" icon={<Utensils size={24} />} items={Object.entries(TRIP_DATA.food).map(([r, f]) => `${r}: ${f.join(", ")}`)} />
           <AirportGlossaryCard items={TRIP_DATA.airport_glossary} />
           <PhrasebookCard items={TRIP_DATA.phrasebook} />
         </div>
@@ -2086,7 +2351,7 @@ export default function App() {
           <div className="flex justify-between items-center mb-12">
             <div>
               <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Conseils</h2>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Argent & Culture</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Pratique</p>
             </div>
             <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
               <X size={20} />
@@ -2096,17 +2361,17 @@ export default function App() {
           <TipsChecklist />
           <div className="h-8" />
           <SimpleListCard title="Argent" icon={<Wallet size={24} />} items={MONEY_TIPS} />
-          <SimpleListCard title="Rappels utiles" icon={<Info size={24} />} items={TRIP_DATA.glossary.map((g) => `${g.term}: ${g.note}`)} />
+          <SimpleListCard title="Rappels" icon={<Info size={24} />} items={TRIP_DATA.glossary.map((g) => `${g.term}: ${g.note}`)} />
         </div>
       )}
 
-      {/* BUDGET */}
+      {/* BUDGET (FR, no “Copy JSON”) */}
       {view === "budget" && (
         <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
           <div className="flex justify-between items-center mb-10">
             <div>
               <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Budget</h2>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">USD only • No hotels • No food</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">USD uniquement • sans hôtels • sans food</p>
             </div>
             <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
               <X size={20} />
@@ -2118,9 +2383,9 @@ export default function App() {
               value={budgetTab}
               onChange={(id) => setBudgetTab(id as any)}
               items={[
-                { id: "overview", label: "Overview", icon: <Wallet size={16} /> },
-                { id: "transport", label: "Transport", icon: <Car size={16} /> },
-                { id: "activities", label: "Activities", icon: <Sparkles size={16} /> },
+                { id: "overview", label: "Vue d’ensemble", icon: <Wallet size={16} /> },
+                { id: "transport", label: "Transports", icon: <Car size={16} /> },
+                { id: "activities", label: "Activités", icon: <Sparkles size={16} /> },
               ]}
             />
           </div>
@@ -2130,38 +2395,26 @@ export default function App() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600">
-                  <Filter size={18} />
+                  <Search size={18} />
                 </div>
                 <div>
                   <p className="text-sm font-black text-slate-900">Filtres</p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Affecte les totaux + export</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Affecte les totaux</p>
                 </div>
               </div>
-
-              <button
-                onClick={async () => {
-                  const ok = await copyToClipboard(exportPayload);
-                  if (ok) alert("Export JSON copié ✅");
-                  else alert("Impossible de copier (permissions navigateur).");
-                }}
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black"
-              >
-                <Copy size={16} />
-                Copy JSON
-              </button>
             </div>
 
             <div className="grid grid-cols-1 gap-3">
               <div className="p-4 rounded-3xl bg-slate-50 border border-slate-100">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Search</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Recherche</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-500">
                     <Search size={18} />
                   </div>
                   <input
-                    value={filters.search}
-                    onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
-                    placeholder="id, operator, route, notes, tags…"
+                    value={filters.recherche}
+                    onChange={(e) => setFilters((f) => ({ ...f, recherche: e.target.value }))}
+                    placeholder="id, opérateur, trajet, notes, tag…"
                     className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm font-bold text-slate-900"
                   />
                 </div>
@@ -2169,32 +2422,32 @@ export default function App() {
 
               <div className="grid grid-cols-2 gap-3">
                 <Toggle
-                  label="Include CONFIRMED"
+                  label="Inclure confirmés"
                   icon={<BadgeCheck size={18} />}
-                  value={filters.includeConfirmed}
-                  onChange={(v) => setFilters((f) => ({ ...f, includeConfirmed: v }))}
+                  value={filters.inclureConfirmes}
+                  onChange={(v) => setFilters((f) => ({ ...f, inclureConfirmes: v }))}
                   hint="Données confirmées"
                 />
                 <Toggle
-                  label="Include ESTIMATE"
+                  label="Inclure estimés"
                   icon={<BadgeHelp size={18} />}
-                  value={filters.includeEstimates}
-                  onChange={(v) => setFilters((f) => ({ ...f, includeEstimates: v }))}
+                  value={filters.inclureEstimes}
+                  onChange={(v) => setFilters((f) => ({ ...f, inclureEstimes: v }))}
                   hint="Montants non confirmés"
                 />
                 <Toggle
-                  label="Only Ja Cosmo"
+                  label="Uniquement Ja Cosmo"
                   icon={<BadgeCheck size={18} />}
-                  value={filters.onlyJaCosmo}
-                  onChange={(v) => setFilters((f) => ({ ...f, onlyJaCosmo: v }))}
-                  hint="Uniquement transferts opérés"
+                  value={filters.seulementJaCosmo}
+                  onChange={(v) => setFilters((f) => ({ ...f, seulementJaCosmo: v }))}
+                  hint="Transferts opérés"
                 />
                 <Toggle
-                  label="Mode Kids"
+                  label="Mode kids"
                   icon={<Smartphone size={18} />}
                   value={kidsMode}
                   onChange={setKidsMode}
-                  hint="Masque ‘impact’ (tickets)"
+                  hint="Masque ‘impact’"
                 />
               </div>
             </div>
@@ -2204,51 +2457,26 @@ export default function App() {
           {budgetTab === "overview" && (
             <div className="space-y-6 pb-20">
               <Glass className="rounded-[40px] p-8">
-                <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-4">Grand Total (scope)</p>
-                <p className="text-5xl font-black text-slate-900 tracking-tighter mb-3">{formatUSD(budget.grand.total)}</p>
-                <p className="text-xs font-bold text-slate-500">Transport + Activities (USD only). Hotels/Food excluded.</p>
+                <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-4">Total (scope)</p>
+                <p className="text-5xl font-black text-slate-900 tracking-tighter mb-3">{formatUSD0(budget.grand.total)}</p>
+                <p className="text-xs font-bold text-slate-500">Transports + activités (USD uniquement). Hôtels/food exclus.</p>
 
                 <div className="mt-6 grid grid-cols-2 gap-3">
-                  <StatChip label="Claudine" value={formatUSD(budget.grand.claudine_total)} accent="indigo" />
-                  <StatChip label="Nous" value={formatUSD(budget.grand.nous_total)} accent="slate" />
-                  <StatChip label="Transport total" value={formatUSD(budget.transport.total)} accent="emerald" />
-                  <StatChip label="Activities total" value={formatUSD(budget.activities.total)} accent="amber" />
+                  <StatChip label="Claudine" value={formatUSD0(budget.grand.claudine_total)} accent="indigo" />
+                  <StatChip label="Nous" value={formatUSD0(budget.grand.nous_total)} accent="slate" />
+                  <StatChip label="Transports" value={formatUSD0(budget.transport.total)} accent="emerald" />
+                  <StatChip label="Activités" value={formatUSD0(budget.activities.total)} accent="amber" />
                 </div>
 
                 <div className="mt-6 p-5 rounded-[28px] bg-slate-50 border border-slate-100">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Rule recap</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Règles</p>
                   <div className="space-y-2">
-                    <p className="text-xs font-bold text-slate-700">1) Transport split: Claudine 20% • Nous 80%</p>
-                    <p className="text-xs font-bold text-slate-700">2) Activities: split_given if provided (here: yes)</p>
-                    <p className="text-xs font-bold text-slate-700">3) Status: CONFIRMED vs ESTIMATE (filters apply)</p>
+                    <p className="text-xs font-bold text-slate-700">1) Transports : Claudine 20% • Nous 80%</p>
+                    <p className="text-xs font-bold text-slate-700">2) Activités : répartition explicite si disponible</p>
+                    <p className="text-xs font-bold text-slate-700">3) Confirmé vs estimé : dépend des filtres</p>
                   </div>
                 </div>
               </Glass>
-
-              <div className="bg-white rounded-[40px] border border-slate-100 shadow-xl p-8">
-                <div className="flex items-end justify-between mb-4">
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Optional add-on</p>
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">Tickets locaux (est.)</h3>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Tickets total</p>
-                    <p className="text-2xl font-black text-slate-900">{formatUSD(optionalTickets.totalUsd)}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <StatChip label="Tickets ON" value={`${optionalTickets.countOn}`} accent="slate" />
-                  <StatChip label="Grand + Tickets" value={formatUSD(grandPlusTickets)} accent="emerald" />
-                </div>
-
-                <button
-                  onClick={() => setView("activities")}
-                  className="mt-6 w-full py-5 rounded-[32px] bg-slate-900 text-white text-xs font-black uppercase tracking-widest"
-                >
-                  Gérer les tickets
-                </button>
-              </div>
             </div>
           )}
 
@@ -2256,10 +2484,10 @@ export default function App() {
           {budgetTab === "transport" && (
             <div className="space-y-5 pb-20">
               <Glass className="rounded-[40px] p-8">
-                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Transport total (filtered)</p>
-                <p className="text-4xl font-black text-slate-900 tracking-tighter">{formatUSD(budget.transport.total)}</p>
+                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Transports (filtrés)</p>
+                <p className="text-4xl font-black text-slate-900 tracking-tighter">{formatUSD0(budget.transport.total)}</p>
                 <p className="mt-2 text-xs font-bold text-slate-500">
-                  Split auto: Claudine {formatUSD(budget.transport.claudine_total)} • Nous {formatUSD(budget.transport.nous_total)}
+                  Répartition : Claudine {formatUSD0(budget.transport.claudine_total)} • Nous {formatUSD0(budget.transport.nous_total)}
                 </p>
               </Glass>
 
@@ -2275,10 +2503,10 @@ export default function App() {
           {budgetTab === "activities" && (
             <div className="space-y-5 pb-20">
               <Glass className="rounded-[40px] p-8">
-                <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-3">Activities total (filtered)</p>
-                <p className="text-4xl font-black text-slate-900 tracking-tighter">{formatUSD(budget.activities.total)}</p>
+                <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-3">Activités (filtrées)</p>
+                <p className="text-4xl font-black text-slate-900 tracking-tighter">{formatUSD0(budget.activities.total)}</p>
                 <p className="mt-2 text-xs font-bold text-slate-500">
-                  Split (explicit): Claudine {formatUSD(budget.activities.claudine_total)} • Nous {formatUSD(budget.activities.nous_total)}
+                  Répartition : Claudine {formatUSD0(budget.activities.claudine_total)} • Nous {formatUSD0(budget.activities.nous_total)}
                 </p>
               </Glass>
 
@@ -2305,6 +2533,7 @@ export default function App() {
                 className={`flex-1 flex flex-col items-center justify-center py-4 rounded-3xl transition-all ${
                   active ? "bg-white text-slate-900 scale-105 shadow-xl" : "text-white/40"
                 }`}
+                aria-label={tab.id}
               >
                 <Icon size={18} />
               </button>
