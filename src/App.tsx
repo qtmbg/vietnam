@@ -1470,7 +1470,7 @@ const TRIP_DATA: TripData = {
       payMode: "sur place",
       provider: "HoiAnDayTrip (explication + prix)",
       sourceUrl: "https://hoiandaytrip.com/hoi-an-old-town-ticket-attractions/",
-      notes: "Prévoir cash.",
+      notes: "Total : 480 000 VND = $18.48 (4 payants). Souvent gratuit pour petits. Prévoir cash.",
       tags: ["UNESCO", "lanterns"],
     },
     {
@@ -1510,7 +1510,7 @@ const TRIP_DATA: TripData = {
       payMode: "sur place",
       provider: "HoiAnDayTrip (guide + ticket)",
       sourceUrl: "https://hoiandaytrip.com/my-son-sanctuary-travel-guide/",
-      notes: "À caler tôt le matin (chaleur).",
+      notes: "Total : 600 000 VND = $23.10 (4 payants). À caler tôt le matin (chaleur).",
       tags: ["UNESCO", "histoire"],
     },
     {
