@@ -919,13 +919,18 @@ const dayCoverFromDay = (day: ItineraryDay) => {
     " " +
     (day.blocks?.map((b) => b.plan).join(" ") ?? "");
 
-  // moments d’abord
-  const moment = momentCoverFromText(text);
-  if (moment) return moment;
+  // Cover de ville en priorité
+  const cityCover = cityCoverFromLabel(day.city);
 
-  // sinon cover de ville
-  return cityCoverFromLabel(day.city);
-};
+  // Moments uniquement pour les jours de transit pur (ville contient →)
+  if (day.city.includes("\u2192")) {
+    const moment = momentCoverFromText(text);
+    if (moment) return moment;
+  }
+
+  return cityCover;
+}
+  
 
 
 const googleMapsSearchUrl = (q: string) =>
