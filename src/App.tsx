@@ -28,6 +28,7 @@ import {
   Shield,
   Search,
 } from "lucide-react";
+
 // ------------------------------------------------------------
 // ASSET URL (Vite) — works locally + Vercel + base path
 // Put your files in /public/covers/... and /public/family/...
@@ -54,7 +55,6 @@ const ASSETS = {
     aydann: P("/family/aydann.jpg"),
     milann: P("/family/milann.jpg"),
   },
-
   // Covers (public/covers/)
   covers: {
     sections: {
@@ -65,7 +65,6 @@ const ASSETS = {
       tips: P("/covers/moments/market.png"),
       budget: P("/covers/cities/hcmc.jpg"),
     },
-
     cities: {
       hanoi: P("/covers/cities/hanoi.jpg"),
       ninh_binh: P("/covers/cities/ninh-binh.jpg"),
@@ -75,7 +74,6 @@ const ASSETS = {
       hcmc: P("/covers/cities/hcmc.jpg"),
       whale_island: P("/covers/cities/whale-island.jpg"),
     },
-
     moments: {
       arrival: P("/covers/moments/arrival.jpg"),
       transfer: P("/covers/moments/transfer.jpg"),
@@ -93,38 +91,31 @@ const ASSETS = {
       massage: P("/covers/moments/massage.jpg"),
       love: P("/covers/moments/love.jpg"),
       family: P("/covers/moments/family.jpg"),
-
       // spécifiques (si présents)
       hanoi_train_street: P("/covers/moments/hanoi-train-street.jpg"),
       hanoi_lan_ong: P("/covers/moments/hanoi-lan-ong.jpg"),
       hanoi_hoan_kiem: P("/covers/moments/hanoi-hoan-kiem.jpg"),
       hanoi_temple_of_literature: P("/covers/moments/hanoi-temple-of-literature.jpg"),
-
       ninhbinh_hang_mua: P("/covers/moments/ninhbinh-hang-mua.jpg"),
       ninh_binh_trang_an: P("/covers/moments/ninh-binh-trang-an.jpg"),
       ninh_binh_tam_coc: P("/covers/moments/ninh-binh-tam-coc.jpg"),
-
       ha_long_sunset: P("/covers/moments/ha-long-sunset.jpg"),
       ha_long_cruise: P("/covers/moments/ha-long-cruise.jpg"),
-
       hoi_an_an_bang: P("/covers/moments/hoi-an-an-bang.jpg"),
       hoi_an_old_town_night: P("/covers/moments/hoi-an-old-town-night.jpg"),
-
       hcmc_war_museum: P("/covers/moments/hcmc-war-museum.jpg"),
       hcmc_ben_thanh: P("/covers/moments/hcmc-ben-thanh.jpg"),
       hcmc_central_post_office: P("/covers/moments/hcmc-central-post-office.jpg"),
-
       whale_island_ponton: P("/covers/moments/whale-island-ponton.jpg"),
       pont_dragon_da_nang: P("/covers/moments/pont-dragon-da-nang.jpg"),
     },
-
     // Hotels (public/covers/hotels/)
     hotels: {
       hanoi_ja_cosmo: P("/covers/hotels/hanoi-ja-cosmo.jpg"),
       ninh_binh_tam_coc_golden_fields: P("/covers/hotels/ninh-binh-tam-coc-golden-fields.jpg"),
       ha_long_wyndham_legend: P("/covers/hotels/ha-long-wyndham-legend.jpg"),
-      ha_long_renea_cruise: P("/covers/hotels/ha-long-renea-cruise.jpg"),
-      hoi_an_sea_la_vie: P("/covers/hotels/hoi-an-sea-la-vie.jpg"),
+      ha_long_renea_cruise: P("/covers/hotels/ha-long-rc-cruise.jpg (Renea).jpg"),
+      hoi_an_palm_garden: P("/covers/hotels/hoi-an-palm-garden.png"),
       da_nang_seahorse_signature: P("/covers/hotels/da-nang-seahorse-signature.jpg"),
       whale_island_resort: P("/covers/hotels/whale-island-resort.jpg"),
       hcmc_alagon_spa: P("/covers/hotels/hcmc-alagon-spa.jpg"),
@@ -132,10 +123,8 @@ const ASSETS = {
   },
 } as const;
 
-
 const cityCoverFromLabel = (label?: string) => {
   const s = (label ?? "").toLowerCase();
-
   if (s.includes("hanoi")) return ASSETS.covers.cities.hanoi;
   if (s.includes("ninh")) return ASSETS.covers.cities.ninh_binh;
   if (s.includes("ha long") || s.includes("halong")) return ASSETS.covers.cities.ha_long;
@@ -143,7 +132,6 @@ const cityCoverFromLabel = (label?: string) => {
   if (s.includes("da nang") || s.includes("danang")) return ASSETS.covers.cities.da_nang;
   if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return ASSETS.covers.cities.hcmc;
   if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
-
   return ASSETS.covers.sections.home;
 };
 
@@ -152,12 +140,7 @@ const cityCoverFromLabel = (label?: string) => {
 // ------------------------------------------------------------
 type Mood = "fatigue" | "normal" | "energy";
 type View = "home" | "itinerary" | "hotels" | "culture" | "guide" | "tips" | "budget";
-
-type Money = {
-  us: number;
-  claudine: number;
-  currency: "USD";
-};
+type Money = { us: number; claudine: number; currency: "USD"; };
 
 type HotelItem = {
   city: string;
@@ -270,7 +253,6 @@ const TRIP_DATA: TripData = {
       return_arrive_marrakech: { date: "2026-08-18", time: "09:20" },
     },
   },
-
   hero_images: {
     Hanoi: {
       src: "https://images.unsplash.com/photo-1528127269322-81bef729b60c?auto=format&fit=crop&w=1600&q=80",
@@ -297,7 +279,6 @@ const TRIP_DATA: TripData = {
       source: "Wikimedia",
     },
   },
-
   hotels: [
     {
       city: "Hanoi",
@@ -307,7 +288,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/ja-cosmo-and-spa.html",
       why: "Central pour ruelles, cafés, culture; simple avec kids + Claudine.",
       imageKey: "Hanoi",
-      cover: "/covers/hanoi-ja-cosmo.jpg",
+      cover: "/covers/hotels/hanoi-ja-cosmo.jpg",
     },
     {
       city: "Ninh Binh (Tam Coc)",
@@ -317,7 +298,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/tam-coc-golden-fields-homestay.html",
       why: "Base rizières + liberté; parfait pour le ‘wow’ Trang An sans galère.",
       imageKey: "NinhBinh_TrangAn",
-      cover: "/covers/ninh-binh-tam-coc-golden-fields.jpg",
+      cover: "/covers/hotels/ninh-binh-tam-coc-golden-fields.jpg",
     },
     {
       city: "Ha Long",
@@ -327,7 +308,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html",
       why: "Transition confortable avant croisière, logistique simple.",
       imageKey: "HaLong",
-      cover: "/covers/ha-long-wyndham-legend.jpg",
+      cover: "/covers/hotels/ha-long-wyndham-legend.jpg",
     },
     {
       city: "Ha Long (Cruise)",
@@ -338,18 +319,17 @@ const TRIP_DATA: TripData = {
       note: "Départ : Halong International Cruise Port",
       why: "Le cœur ‘cinéma’ du voyage: karsts, baie, expérience famille.",
       imageKey: "HaLong",
-      cover: "/covers/ha-long-renea-cruise.jpg",
+      cover: "/covers/hotels/ha-long-rc-cruise.jpg (Renea).jpg",
     },
     {
-      city: "Hoi An (An Bang Beach)",
-      name: "Sea Lavie Boutique Resort & Spa",
+      city: "Hoi An (Cua Dai Beach)",
+      name: "Palm Garden Beach Resort & Spa",
       dates: "01 Aug → 06 Aug",
-      budget: { us: 530, claudine: 350, currency: "USD" },
-      booking_url: "https://www.booking.com/hotel/vn/sea-39-lavie-boutique-resort.html",
-      why: "Plage + slow nights Old Town; bon équilibre famille/ambiance.",
-      note: "À surveiller: selon saison, certains accès plage peuvent changer.",
+      budget: { us: 680, claudine: 620, currency: "USD" },
+      booking_url: "https://www.booking.com/hotel/vn/palm-garden-beach-resort-spa-510.html",
+      why: "Grand resort 5* avec plage privée, jardins tropicaux et immense piscine. Le top pour se détendre en famille.",
       imageKey: "HoiAn",
-      cover: "/covers/hoi-an-sea-la-vie.jpg",
+      cover: "/covers/hotels/hoi-an-palm-garden.png",
     },
     {
       city: "Da Nang",
@@ -359,7 +339,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/seahorse-signature-danang-by-haviland.html",
       why: "Base urbaine efficace pour culture + musées + ponts.",
       imageKey: "DaNang",
-      cover: "/covers/da-nang-seahorse-signature.jpg",
+      cover: "/covers/hotels/da-nang-seahorse-signature.jpg",
     },
     {
       city: "Whale Island (Hon Ong)",
@@ -369,7 +349,7 @@ const TRIP_DATA: TripData = {
       official_url: "https://whaleislandresort.com/",
       why: "Déconnexion nature pure, rythme famille, mer & ciel.",
       imageKey: "DaNang",
-      cover: "/covers/whale-island-resort.jpg",
+      cover: "/covers/hotels/whale-island-resort.jpg",
     },
     {
       city: "Ho Chi Minh City",
@@ -379,10 +359,9 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/alagon-saigon.html",
       why: "Très central pour histoire, colonial, street life.",
       imageKey: "HCMC",
-      cover: "/covers/hcmc-alagon-spa.jpg",
+      cover: "/covers/hotels/hcmc-alagon-spa.jpg",
     },
   ],
-
   culture_links: {
     UNESCO: [
       { name: "Trang An Landscape Complex (Ninh Binh)", url: "https://whc.unesco.org/en/list/1438/" },
@@ -402,14 +381,12 @@ const TRIP_DATA: TripData = {
       { name: "Independence Palace (visiting hours)", url: "https://dinhdoclap.gov.vn/en/visiting-hours/" },
     ],
   },
-
   internal_flights: [
     { route: "HPH → DAD", time: "19:00", group_cost_usd: 200 },
     { route: "DAD → CXR", time: "06:00", group_cost_usd: 250 },
     { route: "CXR → SGN", time: "16:00", group_cost_usd: 300 },
     { route: "SGN → HAN", time: "11:00", group_cost_usd: 250 },
   ],
-
   ground_transfers: [
     { name: "HAN airport → Ja Cosmo", cost_usd: 20 },
     { name: "Hanoi → Ninh Binh (limousine)", cost_usd: 60 },
@@ -425,7 +402,6 @@ const TRIP_DATA: TripData = {
     { name: "HAN airport → Ja Cosmo", cost_usd: 20 },
     { name: "Ja Cosmo → HAN airport", cost_usd: 15 },
   ],
-
   itinerary_days: [
     {
       date: "2026-07-25",
@@ -440,11 +416,7 @@ const TRIP_DATA: TripData = {
       blocks: [
         { label: "Matin", plan: "Old Quarter + lac + cafés." },
         { label: "Aprem", plan: "Sieste / recharge kids." },
-        {
-          label: "Soir",
-          plan: "Street food + Water Puppet show (ludique & culturel).",
-          links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"],
-        },
+        { label: "Soir", plan: "Street food + Water Puppet show (ludique & culturel).", links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"] },
       ],
     },
     {
@@ -640,21 +612,18 @@ const TRIP_DATA: TripData = {
       ],
     },
   ],
-
   glossary: [
     { term: "Grab", note: "App voiture/taxi la plus simple. Paiement carte ou cash." },
     { term: "Cash petites coupures", note: "Street food, marchés, petits achats." },
     { term: "Temples / lieux sacrés", note: "Épaules/genoux couverts, ton calme." },
     { term: "Rythme kids", note: "Matin actif / aprem repos / soir doux. Eau + snacks." },
   ],
-
   food: {
     Hanoi: ["Bún chả", "Phở", "Café à l’œuf"],
     NinhBinh: ["Chèvre (dê)", "Cơm cháy (riz croustillant)"],
     HoiAn_DaNang: ["Cao lầu", "Bánh mì", "White rose", "Mì Quảng"],
     HCMC: ["Cơm tấm", "Bánh xèo", "Hủ tiếu"],
   },
-
   activities: [
     {
       id: "hoa-lo",
@@ -731,41 +700,36 @@ const FAMILY_MEMBERS = [
     name: "Marilyne",
     desc: "La Boss",
     color: "bg-pink-100 text-pink-700",
-    src: "/family/public:family:marilyne.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
+    src: "/family/marilyne.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
   },
   {
     name: "Claudine",
     desc: "La Sage",
     color: "bg-indigo-100 text-indigo-700",
-    src: "/family/public:family:claudine.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
+    src: "/family/claudine.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
   },
   {
     name: "Nizzar",
     desc: "Le Pilote",
     color: "bg-slate-100 text-slate-700",
-    src: "/family/public:family:nizzar.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
+    src: "/family/nizzar.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
   },
   {
     name: "Aydann",
     desc: "L'Ado",
     color: "bg-blue-100 text-blue-700",
-    src: "/family/public:family:aydann.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
+    src: "/family/aydann.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
   },
   {
     name: "Milann",
     desc: "La Mascotte",
     color: "bg-orange-100 text-orange-700",
-    src: "/family/public:family:milann.jpg",
-    fallback:
-      "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
+    src: "/family/milann.jpg",
+    fallback: "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
   },
 ];
 
@@ -844,19 +808,11 @@ const PHRASEBOOK: PhraseItem[] = [
 // ------------------------------------------------------------
 // HELPERS
 // ------------------------------------------------------------
-const formatUSD = (n: number) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-
-const formatVND = (n: number) =>
-  n.toLocaleString("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 });
-
+const formatUSD = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+const formatVND = (n: number) => n.toLocaleString("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 });
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
-
-const safeDateLabel = (iso: string) =>
-  new Date(iso).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
-
+const safeDateLabel = (iso: string) => new Date(iso).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
 const toISO = (d: Date) => d.toISOString().slice(0, 10);
-
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 
 const cityKeyFromName = (city: string) => {
@@ -872,8 +828,6 @@ const cityKeyFromName = (city: string) => {
 // ------------------------------------------------------------
 // COVERS (Focus du jour / Itinéraire)
 // ------------------------------------------------------------
-
-
 const MOMENT_COVERS: Record<string, string> = {
   arrival: "/covers/moments/arrival.jpg",
   transfer: "/covers/moments/transfer.jpg",
@@ -891,11 +845,8 @@ const MOMENT_COVERS: Record<string, string> = {
   love: "/covers/moments/love.jpg",
 };
 
-
-
 const momentCoverFromText = (text: string) => {
   const t = text.toLowerCase();
-
   if (t.includes("vol") || t.includes("aéroport") || t.includes("airport") || t.includes("flight")) return MOMENT_COVERS.plane;
   if (t.includes("bateau") || t.includes("croisi") || t.includes("cruise") || t.includes("boat")) return MOMENT_COVERS.boat;
   if (t.includes("plage") || t.includes("beach")) return MOMENT_COVERS.beach;
@@ -908,33 +859,22 @@ const momentCoverFromText = (text: string) => {
   if (t.includes("arrivée") || t.includes("arrivee") || t.includes("check-in") || t.includes("check in") || t.includes("arrival")) return MOMENT_COVERS.arrival;
   if (t.includes("transfert") || t.includes("transfer") || t.includes("limousine") || t.includes("drive")) return MOMENT_COVERS.transfer;
   if (t.includes("soir") || t.includes("night") || t.includes("lantern")) return MOMENT_COVERS.night;
-
   return null;
 };
 
 const dayCoverFromDay = (day: ItineraryDay) => {
-
-  const text =
-    (day.theme?.join(" ") ?? "") +
-    " " +
-    (day.blocks?.map((b) => b.plan).join(" ") ?? "");
-
+  const text = (day.theme?.join(" ") ?? "") + " " + (day.blocks?.map((b) => b.plan).join(" ") ?? "");
   // Cover de ville en priorité
   const cityCover = cityCoverFromLabel(day.city);
-
   // Moments uniquement pour les jours de transit pur (ville contient →)
   if (day.city.includes("\u2192")) {
     const moment = momentCoverFromText(text);
     if (moment) return moment;
   }
-
   return cityCover;
 }
-  
 
-
-const googleMapsSearchUrl = (q: string) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const googleMapsSearchUrl = (q: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 
 const uniqCitiesByOrder = (days: ItineraryDay[]) => {
   const out: string[] = [];
@@ -949,7 +889,9 @@ const uniqCitiesByOrder = (days: ItineraryDay[]) => {
 // UI ATOMS V2
 // ------------------------------------------------------------
 const Glass = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={`bg-white/80 backdrop-blur-md border border-white/60 shadow-sm ${className}`}>{children}</div>
+  <div className={`backdrop-blur-xl bg-white/70 border border-white/40 shadow-xl overflow-hidden ${className}`}>
+    {children}
+  </div>
 );
 
 const Pill = ({
@@ -963,10 +905,10 @@ const Pill = ({
 }) => (
   <button
     onClick={onClick}
-    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+    className={`px-3 py-1.5 rounded-2xl text-xs font-bold transition-all ${
       active
-        ? "bg-emerald-600 text-white border-emerald-600 shadow"
-        : "bg-white/70 text-slate-600 border-slate-200 hover:bg-white"
+        ? "bg-slate-900 text-white shadow-lg scale-105"
+        : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
     }`}
   >
     {children}
@@ -986,21 +928,25 @@ const Toggle = ({
   onChange: (v: boolean) => void;
   hint?: string;
 }) => (
-  <div className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm">
-    <div className="min-w-0">
-      <div className="flex items-center gap-2">
+  <div className="flex items-center justify-between p-4 rounded-3xl bg-slate-50 border border-slate-100 shadow-sm">
+    <div className="flex items-center gap-3">
+      <div className="p-2 rounded-2xl bg-white shadow-sm text-slate-600">
         {icon}
-        <div className="font-bold text-slate-800">{label}</div>
       </div>
-      {hint && <div className="text-xs text-slate-500 mt-1">{hint}</div>}
+      <div>
+        <p className="text-sm font-extrabold text-slate-900">{label}</p>
+        {hint && <p className="text-[10px] text-slate-500 font-medium">{hint}</p>}
+      </div>
     </div>
     <button
       onClick={() => onChange(!value)}
-      className={`w-12 h-7 rounded-full p-1 transition-colors ${value ? "bg-emerald-500" : "bg-slate-200"}`}
+      className={`w-12 h-7 rounded-full p-1 transition-colors ${
+        value ? "bg-emerald-500" : "bg-slate-200"
+      }`}
       aria-label={label}
     >
       <div
-        className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${
+        className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${
           value ? "translate-x-5" : "translate-x-0"
         }`}
       />
@@ -1008,55 +954,64 @@ const Toggle = ({
   </div>
 );
 
-const MoodSelector = ({ currentMood, setMood }: { currentMood: Mood; setMood: (m: Mood) => void }) => {
+const MoodSelector = ({
+  currentMood,
+  setMood,
+}: {
+  currentMood: Mood;
+  setMood: (m: Mood) => void;
+}) => {
   return (
-    <div className="flex bg-white/70 backdrop-blur-md rounded-full p-1 border border-white shadow-sm">
+    <div className="flex bg-slate-100 p-1 rounded-2xl gap-1">
       <button
         onClick={() => setMood("fatigue")}
         className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "fatigue" ? "bg-indigo-100 text-indigo-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          currentMood === "fatigue"
+            ? "bg-indigo-100 text-indigo-700 shadow-sm"
+            : "text-slate-500 hover:text-slate-700"
         }`}
       >
-        <Moon className="w-4 h-4" /> <span className="hidden sm:inline">Repos</span>
+        Repos
       </button>
       <button
         onClick={() => setMood("normal")}
         className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "normal" ? "bg-emerald-100 text-emerald-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          currentMood === "normal"
+            ? "bg-emerald-100 text-emerald-700 shadow-sm"
+            : "text-slate-500 hover:text-slate-700"
         }`}
       >
-        <BatteryCharging className="w-4 h-4" /> <span className="hidden sm:inline">Normal</span>
+        Normal
       </button>
       <button
         onClick={() => setMood("energy")}
         className={`px-3 py-1.5 rounded-full flex items-center gap-1 text-xs font-semibold transition-all ${
-          currentMood === "energy" ? "bg-amber-100 text-amber-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          currentMood === "energy"
+            ? "bg-amber-100 text-amber-700 shadow-sm"
+            : "text-slate-500 hover:text-slate-700"
         }`}
       >
-        <Flame className="w-4 h-4" /> <span className="hidden sm:inline">Énergie</span>
+        ⚡ Énergie
       </button>
     </div>
   );
 };
 
 const FamilyStrip = () => (
-  <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+  <div className="flex -space-x-3 overflow-hidden p-2">
     {FAMILY_MEMBERS.map((m) => (
-      <div
-        key={m.name}
-        className="shrink-0 flex items-center gap-3 bg-white rounded-2xl border border-slate-100 px-3 py-2 shadow-sm"
-      >
-        <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 ring-2 ring-white">
-          <img
-            src={m.src}
-            alt={m.name}
-            className="w-full h-full object-cover"
-            onError={(e) => (e.currentTarget.src = m.fallback)}
-          />
-        </div>
-        <div className="leading-tight">
-          <div className="text-sm font-bold text-slate-800">{m.name}</div>
-          <div className={`text-[11px] font-semibold inline-block px-2 py-0.5 rounded-full ${m.color}`}>{m.desc}</div>
+      <div key={m.name} className="group relative">
+        <img
+          src={P(m.src)}
+          alt={m.name}
+          className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md transition-transform group-hover:scale-110"
+          onError={(e) => {
+            // fallback "safe"
+            e.currentTarget.src = m.fallback;
+          }}
+        />
+        <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white flex items-center justify-center shadow-sm">
+          <div className={`w-2.5 h-2.5 rounded-full ${m.color.split(" ")[0]}`} />
         </div>
       </div>
     ))}
@@ -1077,51 +1032,59 @@ const CinemaHero = ({
   const src = coverSrc || hero?.src;
 
   return (
-    <div className="relative rounded-3xl overflow-hidden shadow-xl">
-      <div className="absolute inset-0">
-        <img src={src} alt="Hero" className="w-full h-full object-cover scale-[1.02]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent" />
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,transparent_45%),radial-gradient(circle_at_80%_30%,#818cf8_0%,transparent_40%),radial-gradient(circle_at_55%_85%,#fbbf24_0%,transparent_35%)]" />
+    <div className="relative h-[80vh] w-full bg-slate-900">
+      <img
+        src={src}
+        alt="Hero"
+        className="absolute inset-0 w-full h-full object-cover opacity-60"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/20 to-slate-900" />
+
+      <div className="absolute top-12 left-0 right-0 px-6 flex justify-between items-start pointer-events-none">
+        <div className="pointer-events-auto">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-1">
+            24 Juil → 18 Août
+          </p>
+          <h1 className="text-4xl font-black text-white leading-none">
+            Vietnam <span className="text-emerald-400">2026</span>
+          </h1>
+        </div>
+        <button
+          onClick={onOpenQuick}
+          className="pointer-events-auto w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white"
+        >
+          <Search size={20} />
+        </button>
       </div>
 
-      <div className="relative z-10 p-6 sm:p-8">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex gap-2 flex-wrap">
-            <span className="px-3 py-1 rounded-full bg-white/15 border border-white/25 text-xs font-semibold text-white">
-              24 Juil → 18 Août
-            </span>
-            <span className="px-3 py-1 rounded-full bg-emerald-500/80 border border-emerald-300/30 text-xs font-semibold text-white">
-              Vietnam 2026
-            </span>
-          </div>
+      <div className="absolute bottom-10 left-0 right-0 px-6">
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400 mb-2">
+          Family Trip
+        </p>
+        <h2 className="text-6xl font-black text-white leading-none mb-6">
+          VIETNAM
+        </h2>
 
-          <button
-            onClick={onOpenQuick}
-            className="px-3 py-2 rounded-2xl bg-white/15 border border-white/25 text-white text-xs font-bold flex items-center gap-2 hover:bg-white/20"
-          >
-            <Sparkles size={14} /> Quick
-          </button>
+        <div className="flex flex-wrap gap-2 mb-8">
+          {TRIP_DATA.meta.vibe.map((v) => (
+            <span
+              key={v}
+              className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[10px] font-bold text-white uppercase tracking-wider"
+            >
+              {v}
+            </span>
+          ))}
         </div>
 
-        <div className="mt-6">
-          <div className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-[0.95]">
-            VIETNAM
-            <span className="block text-emerald-200 font-light mt-2">Family Trip</span>
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-xs font-bold text-white/60 mb-1">Focus du moment :</p>
+            <p className="text-2xl font-black text-white tracking-tight italic">
+              {activeCity}
+            </p>
           </div>
-          <p className="mt-3 text-white/90 text-base sm:text-lg">
-            Culture, histoire, art, nature, bonne bouffe 🍲 — et moments d&apos;amour.
-          </p>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            {TRIP_DATA.meta.vibe.map((v) => (
-              <span key={v} className="text-[11px] px-2 py-1 rounded bg-black/20 border border-white/15 text-white/90">
-                {v}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-4 text-xs text-white/60">
-            Focus du moment : <span className="font-semibold text-white/85">{activeCity}</span>
+          <div className="flex flex-col items-end gap-2">
+             <FamilyStrip />
           </div>
         </div>
       </div>
@@ -1141,64 +1104,69 @@ const QuickSheet = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[80]">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl p-5 pb-7">
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-            <Sparkles size={18} className="text-emerald-600" />
-            Quick Actions
+    <div className="fixed inset-0 z-[100] bg-slate-900/90 backdrop-blur-xl p-8 flex flex-col">
+      <div className="flex justify-between items-center mb-12">
+        <h3 className="text-3xl font-black text-white">Quick Actions</h3>
+        <button
+          onClick={onClose}
+          className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white"
+        >
+          <X size={24} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <button
+          onClick={() => { onGoto("tips"); onClose(); }}
+          className="p-6 rounded-3xl bg-indigo-500 text-white text-left aspect-square flex flex-col justify-between"
+        >
+          <Lightbulb size={32} />
+          <div>
+            <p className="font-black text-lg leading-tight mb-1">Bon à savoir</p>
+            <p className="text-xs font-medium text-white/70">Checklist + Argent</p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-xl bg-slate-100 text-slate-700">
-            <X size={18} />
-          </button>
-        </div>
+        </button>
 
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            onClick={() => (onGoto("tips"), onClose())}
-            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
-          >
-            <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Lightbulb size={16} className="text-emerald-600" /> Bon à savoir
-            </div>
-            <div className="text-xs text-slate-500 mt-1">Checklist + argent + règles street</div>
-          </button>
+        <button
+          onClick={() => { onGoto("guide"); onClose(); }}
+          className="p-6 rounded-3xl bg-emerald-500 text-white text-left aspect-square flex flex-col justify-between"
+        >
+          <Utensils size={32} />
+          <div>
+            <p className="font-black text-lg leading-tight mb-1">Food + Logistique</p>
+            <p className="text-xs font-medium text-white/70">Aéroports + Plats</p>
+          </div>
+        </button>
 
-          <button
-            onClick={() => (onGoto("guide"), onClose())}
-            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
-          >
-            <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Utensils size={16} className="text-orange-600" /> Food + logistique
-            </div>
-            <div className="text-xs text-slate-500 mt-1">Plats cultes + transferts</div>
-          </button>
+        <a
+          href={googleMapsSearchUrl("Grab")}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-6 rounded-3xl bg-slate-100 text-slate-900 text-left aspect-square flex flex-col justify-between"
+        >
+          <Navigation size={32} />
+          <div>
+            <p className="font-black text-lg leading-tight mb-1">Grab (rappel)</p>
+            <p className="text-xs font-medium text-slate-500">Taxi & Food</p>
+          </div>
+        </a>
 
-          <a
-            href={googleMapsSearchUrl("Grab Vietnam")}
-            target="_blank"
-            rel="noreferrer"
-            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
-          >
-            <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Smartphone size={16} className="text-indigo-600" /> Grab (rappel)
-            </div>
-            <div className="text-xs text-slate-500 mt-1">Au besoin: recherche rapide</div>
-          </a>
+        <button
+          onClick={() => { onGoto("budget"); onClose(); }}
+          className="p-6 rounded-3xl bg-amber-500 text-white text-left aspect-square flex flex-col justify-between"
+        >
+          <Wallet size={32} />
+          <div>
+            <p className="font-black text-lg leading-tight mb-1">Budget</p>
+            <p className="text-xs font-medium text-white/70">Totaux + Tickets</p>
+          </div>
+        </button>
+      </div>
 
-          <button
-            onClick={() => (onGoto("budget"), onClose())}
-            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-left"
-          >
-            <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Wallet size={16} className="text-slate-800" /> Budget
-            </div>
-            <div className="text-xs text-slate-500 mt-1">Totaux + activités</div>
-          </button>
-        </div>
-
-        <div className="mt-4 text-xs text-slate-500">Astuce: sur mobile, l’écran “Home” sert de hub. Tout le reste = navigation.</div>
+      <div className="mt-auto">
+        <p className="text-center text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">
+          Vietnam Trip 2026 — Hub Mobile
+        </p>
       </div>
     </div>
   );
@@ -1214,18 +1182,20 @@ const CityTimeline = ({
   onSelect: (c: string) => void;
 }) => {
   return (
-    <div className="mt-5">
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-sm font-extrabold text-slate-900">Timeline</div>
-        <div className="text-xs text-slate-500">Swipe →</div>
-      </div>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-        {cities.map((c) => (
-          <Pill key={c} active={c === activeCity} onClick={() => onSelect(c)}>
-            {c}
-          </Pill>
-        ))}
-      </div>
+    <div className="flex items-center gap-2 overflow-x-auto pb-4 px-6 no-scrollbar">
+      {cities.map((c) => (
+        <button
+          key={c}
+          onClick={() => onSelect(c)}
+          className={`whitespace-nowrap px-6 py-3 rounded-full text-sm font-black transition-all ${
+            activeCity === c
+              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 -rotate-2"
+              : "bg-white text-slate-400 border border-slate-100"
+          }`}
+        >
+          {c}
+        </button>
+      ))}
     </div>
   );
 };
@@ -1259,163 +1229,197 @@ const DayCardMobile = ({
   };
 
   return (
-    <div className="relative bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-      <div className="relative h-28">
+    <div className="group relative w-full mb-8 last:mb-0">
+      <div className="relative h-64 rounded-[40px] overflow-hidden shadow-2xl">
         <img
           src={coverSrc}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
+          alt={day.city}
+          className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110 duration-700"
           onError={(e) => {
             // fallback "safe" si un path est faux
             e.currentTarget.src = ASSETS.covers.sections.itinerary;
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-black/20" />
-        <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-3">
-          <div>
-            <div className="text-xs text-slate-600 font-semibold">
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent" />
+        <div className="absolute bottom-8 left-8 right-8">
+          <div className="flex items-center gap-2 mb-2">
+            <Calendar size={12} className="text-emerald-400" />
+            <p className="text-[10px] font-black text-white/80 uppercase tracking-widest">
               {safeDateLabel(day.date)}
-            </div>
-            <div className="text-lg font-extrabold text-slate-900 leading-tight">
-              {day.city}
-            </div>
+            </p>
           </div>
-          <button
-            onClick={onFav}
-            className="p-2 rounded-2xl bg-white/80 border border-white shadow"
-          >
-            <Heart
-              size={18}
-              className={isFav ? "text-amber-500" : "text-slate-400"}
-              fill={isFav ? "currentColor" : "none"}
-            />
-          </button>
+          <h4 className="text-2xl font-black text-white tracking-tighter mb-4 leading-none">
+            {day.city}
+          </h4>
+          <div className="flex flex-wrap gap-1.5">
+            {day.theme.map((t) => (
+              <span
+                key={t}
+                className="px-2 py-0.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[8px] font-black text-white uppercase tracking-wider"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="p-4">
-        <div className="flex flex-wrap gap-2 mb-3">
-          {day.theme.map((t) => (
-            <span
-              key={t}
-              className="text-[10px] uppercase tracking-wide text-slate-500 bg-slate-100 px-2 py-1 rounded-full"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-
-        <div className="space-y-3">
-          {day.blocks.map((b, idx) => {
-            if (isFatigue && b.label === "Soir" && !b.plan.toLowerCase().includes("repos")) {
-              return (
-                <div key={idx} className="text-sm text-slate-400 italic">
-                  Soir: repos suggéré (activité masquée)
-                </div>
-              );
-            }
-            if (kidsMode && shouldHideImpact(b.plan)) {
-              return (
-                <div key={idx} className="text-sm text-slate-400 italic">
-                  {b.label}: (Masqué en mode kids)
-                </div>
-              );
-            }
+      <div className="mt-6 px-4 space-y-4">
+        {day.blocks.map((b, idx) => {
+          if (isFatigue && b.label === "Soir" && !b.plan.toLowerCase().includes("repos")) {
             return (
-              <div key={idx} className="rounded-2xl bg-slate-50 border border-slate-100 p-3">
-                <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 mb-1">
-                  {b.label}
+              <div key={idx} className="p-4 rounded-3xl bg-indigo-50/50 border border-indigo-100 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                  <Moon size={16} />
                 </div>
-                <div className="text-sm text-slate-800 leading-relaxed">{b.plan}</div>
-                {b.links?.length ? (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {b.links.map((l, i) => (
-                      <a
-                        key={i}
-                        href={l}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-xl"
-                      >
-                        Lien
-                      </a>
-                    ))}
-                  </div>
-                ) : null}
+                <p className="text-xs font-bold text-indigo-700 italic">
+                  Repos suggéré ce soir 😴
+                </p>
               </div>
             );
-          })}
-        </div>
+          }
 
-        {mood === "energy" && (
-          <div className="mt-3 text-xs text-amber-700 font-semibold flex items-center gap-2">
-            <Flame size={14} /> Bonus énergie: marche 30 min + “café trouvé à l’instinct”.
-          </div>
-        )}
+          if (kidsMode && shouldHideImpact(b.plan)) {
+            return (
+               <div key={idx} className="p-4 rounded-3xl bg-slate-50 border border-slate-100 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
+                  <Shield size={16} />
+                </div>
+                <p className="text-xs font-bold text-slate-500 italic">
+                  Contenu masqué (Mode Kids)
+                </p>
+              </div>
+            );
+          }
+
+          return (
+            <div key={idx} className="relative pl-6 border-l-2 border-slate-100">
+              <div className="absolute top-0 left-[-5px] w-2 h-2 rounded-full bg-slate-200" />
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                {b.label}
+              </p>
+              <p className="text-sm font-bold text-slate-800 leading-relaxed">
+                {b.plan}
+              </p>
+              {b.links?.length ? (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {b.links.map((l, i) => (
+                    <a
+                      key={i}
+                      href={l}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-[10px] font-extrabold text-slate-600"
+                    >
+                      <Info size={10} />
+                      Info
+                    </a>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
+
+      {mood === "energy" && (
+        <div className="mt-6 mx-4 p-4 rounded-3xl bg-amber-50 border border-amber-100 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+            <Sparkles size={16} />
+          </div>
+          <p className="text-xs font-bold text-amber-800">
+            Énergie au max : on explore un café caché !
+          </p>
+        </div>
+      )}
     </div>
   );
 };
 
-
 const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
   const link = hotel.booking_url || hotel.official_url;
+
   return (
-    <div className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg transition-shadow">
-      <div className="relative h-40">
+    <div className="group bg-white rounded-[40px] border border-slate-100 shadow-xl overflow-hidden mb-8">
+      <div className="relative h-48 overflow-hidden">
         {hotel.cover ? (
-          <img src={hotel.cover} alt={hotel.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+          <img
+            src={P(hotel.cover)}
+            alt={hotel.name}
+            className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-700"
+            onError={(e) => {
+               e.currentTarget.src = ASSETS.covers.sections.hotels;
+            }}
+          />
         ) : (
-          <div className="absolute inset-0 bg-slate-100" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/25 to-black/10" />
-        <div className="absolute bottom-3 left-4 right-4">
-          <div className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
-            <MapPin size={12} /> {hotel.city}
+          <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
+             <Hotel size={48} />
           </div>
-          <div className="text-lg font-extrabold text-slate-900 leading-tight">{hotel.name}</div>
-          <div className="text-xs text-slate-500">{hotel.dates}</div>
+        )}
+        <div className="absolute top-4 left-4">
+          <span className="px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-[10px] font-black text-white uppercase tracking-widest">
+            {hotel.city}
+          </span>
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-8">
+        <h4 className="text-2xl font-black text-slate-900 tracking-tighter mb-1">
+          {hotel.name}
+        </h4>
+        <div className="flex items-center gap-2 text-indigo-600 mb-6">
+          <Calendar size={14} />
+          <p className="text-xs font-black">{hotel.dates}</p>
+        </div>
+
         {hotel.note && (
-          <div className="text-xs text-slate-600 bg-slate-50 border border-slate-100 rounded-2xl p-3 mb-3 flex gap-2">
-            <Info size={14} className="mt-0.5 text-slate-400" />
-            <div>{hotel.note}</div>
+          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 text-[10px] font-bold text-amber-800 mb-6 leading-relaxed">
+            {hotel.note}
           </div>
         )}
 
-        <div className="text-sm text-slate-700 italic mb-3">“{hotel.why}”</div>
+        <p className="text-sm font-bold text-slate-500 italic mb-8">
+          “{hotel.why}”
+        </p>
 
-        <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3 mb-3">
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-500">Famille</span>
-            <span className="font-extrabold text-slate-900">${hotel.budget.us}</span>
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="p-4 rounded-3xl bg-slate-50 border border-slate-100">
+            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Famille</p>
+            <p className="text-lg font-black text-slate-900 leading-none">
+              {formatUSD(hotel.budget.us)}
+            </p>
           </div>
-          <div className="flex justify-between text-xs mt-1">
-            <span className="text-slate-500">Claudine</span>
-            <span className="font-extrabold text-slate-900">${hotel.budget.claudine}</span>
+          <div className="p-4 rounded-3xl bg-slate-50 border border-slate-100">
+            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Claudine</p>
+            <p className="text-lg font-black text-slate-900 leading-none">
+              {formatUSD(hotel.budget.claudine)}
+            </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="flex gap-2">
           {link ? (
-            <a href={link} target="_blank" rel="noreferrer" className="py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold text-center">
-              Voir
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 py-4 rounded-3xl bg-indigo-600 text-white text-xs font-black shadow-lg shadow-indigo-100 hover:scale-[1.02] transition-transform"
+            >
+              <Navigation size={14} />
+              Voir Résa
             </a>
           ) : (
-            <div className="py-2 rounded-2xl bg-slate-200 text-slate-500 text-xs font-extrabold text-center">—</div>
+             <div className="flex-1 py-4 rounded-3xl bg-slate-100 text-slate-400 text-xs font-black text-center italic">
+               Pas de lien
+             </div>
           )}
-
           <a
-            href={googleMapsSearchUrl(hotel.name + " " + hotel.city)}
+            href={googleMapsSearchUrl(hotel.name)}
             target="_blank"
-            rel="noreferrer"
-            className="py-2 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-extrabold text-center"
+            rel="noopener noreferrer"
+            className="w-14 flex items-center justify-center rounded-3xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
           >
-            Maps
+            <MapPin size={20} />
           </a>
         </div>
       </div>
@@ -1425,13 +1429,16 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
 
 const TipsChecklist = () => {
   const [checked, setChecked] = useState<string[]>([]);
+
   useEffect(() => {
     const saved = localStorage.getItem("trip_tips_checklist");
     if (saved) setChecked(JSON.parse(saved));
   }, []);
 
   const toggle = (item: string) => {
-    const next = checked.includes(item) ? checked.filter((i) => i !== item) : [...checked, item];
+    const next = checked.includes(item)
+      ? checked.filter((i) => i !== item)
+      : [...checked, item];
     setChecked(next);
     localStorage.setItem("trip_tips_checklist", JSON.stringify(next));
   };
@@ -1439,31 +1446,26 @@ const TipsChecklist = () => {
   const progress = Math.round((checked.length / ESSENTIALS_CHECKLIST.length) * 100);
 
   return (
-    <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
-      <div className="flex justify-between items-end mb-3">
-        <div className="text-lg font-extrabold text-slate-900">Essentiels</div>
-        <div className="text-xs font-extrabold text-emerald-600">{progress}% prêt</div>
+    <div className="bg-white rounded-[40px] border border-slate-100 shadow-xl p-8">
+      <div className="flex justify-between items-end mb-8">
+        <h4 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">Essentiels</h4>
+        <p className="text-xs font-black text-emerald-500 uppercase tracking-widest">{progress}% prêt</p>
       </div>
-
-      <div className="h-2 w-full bg-slate-100 rounded-full mb-4 overflow-hidden">
-        <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${progress}%` }} />
-      </div>
-
-      <div className="space-y-2">
+      <div className="space-y-3">
         {ESSENTIALS_CHECKLIST.map((item) => (
           <button
             key={item}
             onClick={() => toggle(item)}
-            className="w-full flex items-center gap-3 text-left p-3 rounded-2xl border border-slate-100 bg-slate-50"
+            className="w-full flex items-center gap-4 p-4 rounded-3xl border border-slate-50 bg-slate-50/50 transition-all active:scale-95"
           >
-            <div
-              className={`w-5 h-5 rounded-md border flex items-center justify-center ${
-                checked.includes(item) ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"
-              }`}
-            >
-              <CheckSquare size={14} />
+            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+              checked.includes(item) ? "bg-emerald-500 border-emerald-500" : "border-slate-200"
+            }`}>
+              {checked.includes(item) && <CheckSquare size={14} className="text-white" />}
             </div>
-            <div className={`text-sm ${checked.includes(item) ? "text-slate-400 line-through" : "text-slate-800"}`}>{item}</div>
+            <p className={`text-sm font-bold ${checked.includes(item) ? "text-slate-400 line-through" : "text-slate-700"}`}>
+              {item}
+            </p>
           </button>
         ))}
       </div>
@@ -1472,16 +1474,18 @@ const TipsChecklist = () => {
 };
 
 const SimpleListCard = ({ title, icon, items }: { title: string; icon: ReactNode; items: string[] }) => (
-  <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
-    <div className="flex items-center gap-2 mb-3">
-      <div className="text-emerald-700">{icon}</div>
-      <div className="text-lg font-extrabold text-slate-900">{title}</div>
+  <div className="bg-white rounded-[40px] border border-slate-100 shadow-xl p-8 mb-8">
+    <div className="flex items-center gap-3 mb-8">
+      <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-600">
+        {icon}
+      </div>
+      <h4 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">{title}</h4>
     </div>
-    <div className="space-y-2 text-sm text-slate-800">
+    <div className="space-y-4">
       {items.map((t, i) => (
-        <div key={i} className="flex gap-2">
-          <div className="mt-2 w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0" />
-          <div>{t}</div>
+        <div key={i} className="flex gap-4">
+          <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-2 shrink-0" />
+          <p className="text-sm font-bold text-slate-700 leading-relaxed">{t}</p>
         </div>
       ))}
     </div>
@@ -1489,17 +1493,20 @@ const SimpleListCard = ({ title, icon, items }: { title: string; icon: ReactNode
 );
 
 const PhrasebookCard = () => (
-  <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
-    <div className="flex items-center gap-2 mb-3">
-      <Languages className="text-emerald-700" size={18} />
-      <div className="text-lg font-extrabold text-slate-900">Mots utiles (phonétique)</div>
+  <div className="bg-white rounded-[40px] border border-slate-100 shadow-xl p-8 mb-8">
+    <div className="flex items-center gap-3 mb-8">
+      <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-600">
+        <Languages size={24} />
+      </div>
+      <h4 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">Mots utiles</h4>
     </div>
-    <div className="grid sm:grid-cols-2 gap-3">
+    <div className="space-y-6">
       {PHRASEBOOK.map((p) => (
-        <div key={p.fr} className="rounded-2xl border border-slate-100 bg-slate-50 p-3">
-          <div className="text-sm font-extrabold text-slate-900">{p.fr}</div>
-          <div className="text-xs text-slate-700 mt-1">
-            <span className="font-semibold">{p.vi}</span> • <span className="font-mono">{p.phon}</span>
+        <div key={p.fr}>
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{p.fr}</p>
+          <div className="flex items-baseline gap-2">
+            <p className="text-lg font-black text-slate-900">{p.vi}</p>
+            <p className="text-xs font-bold text-emerald-500 italic">• {p.phon}</p>
           </div>
         </div>
       ))}
@@ -1508,30 +1515,32 @@ const PhrasebookCard = () => (
 );
 
 const AirportGlossary = () => (
-  <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
-    <div className="flex items-center gap-2 mb-3">
-      <Plane className="text-indigo-700" size={18} />
-      <div className="text-lg font-extrabold text-slate-900">Aéroports (codes + trajets)</div>
+  <div className="bg-white rounded-[40px] border border-slate-100 shadow-xl p-8 mb-8">
+    <div className="flex items-center gap-3 mb-2">
+      <div className="p-3 rounded-2xl bg-amber-50 text-amber-600">
+        <Plane size={24} />
+      </div>
+      <h4 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">Aéroports</h4>
     </div>
-    <div className="text-xs text-slate-500 mb-3">Estimations simples. On part “large” les jours de vol.</div>
-    <div className="space-y-3">
+    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">Codes + trajets estimés</p>
+
+    <div className="space-y-8">
       {AIRPORT_GLOSSARY.map((a, i) => (
-        <div key={`${a.code}-${a.fromHotel}-${i}`} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <div className="text-sm font-extrabold text-slate-900">
-                <span className="font-mono text-indigo-700">{a.code}</span> • {a.city}
-              </div>
-              <div className="text-xs text-slate-600 mt-1">{a.airport}</div>
-              <div className="text-xs text-slate-600 mt-1">
-                Depuis <span className="font-semibold">{a.fromHotel}</span>
-              </div>
-              {a.note ? <div className="text-xs text-slate-500 mt-1">{a.note}</div> : null}
+        <div key={i} className="relative pl-6 border-l-2 border-slate-100">
+          <div className="absolute top-0 left-[-5px] w-2 h-2 rounded-full bg-slate-200" />
+          <div className="flex items-baseline gap-2 mb-1">
+             <span className="text-lg font-black text-slate-900 tracking-tight">{a.code}</span>
+             <span className="text-xs font-bold text-indigo-500 italic">• {a.city}</span>
+          </div>
+          <p className="text-xs font-bold text-slate-600 mb-2">{a.airport}</p>
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Depuis hôtel</p>
+            <p className="text-[10px] font-bold text-slate-700 leading-tight">{a.fromHotel}</p>
+            <div className="mt-3 flex items-center justify-between">
+              <p className="text-[9px] font-black text-slate-400 uppercase">Trajet</p>
+              <p className="text-xs font-black text-emerald-600 uppercase tracking-tighter">{a.eta}</p>
             </div>
-            <div className="text-right shrink-0">
-              <div className="text-sm font-extrabold text-slate-900">{a.eta}</div>
-              <div className="text-[10px] uppercase tracking-wide text-slate-500">hotel → airport</div>
-            </div>
+            {a.note && <p className="mt-2 text-[9px] font-bold text-amber-600 italic">! {a.note}</p>}
           </div>
         </div>
       ))}
@@ -1546,49 +1555,42 @@ export default function App() {
   const [view, setView] = useState<View>("home");
   const [mood, setMood] = useState<Mood>("normal");
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [kidsMode, setKidsMode] = useState<boolean>(false);
-  const [cinemaMode, setCinemaMode] = useState<boolean>(true); // gardé (UI)
+  const [kidsMode, setKidsMode] = useState(false);
+  const [cinemaMode, setCinemaMode] = useState(true);
   const [quickOpen, setQuickOpen] = useState(false);
-
-  const [vndPerUsd, setVndPerUsd] = useState<number>(26000);
+  const [vndPerUsd, setVndPerUsd] = useState(26000);
   const [includeActivities, setIncludeActivities] = useState<Record<string, boolean>>({});
   const [search, setSearch] = useState("");
 
   const cities = useMemo(() => uniqCitiesByOrder(TRIP_DATA.itinerary_days), []);
-  const [activeCity, setActiveCity] = useState<string>(cities[0] || "Hanoi");
+  const [activeCity, setActiveCity] = useState(cities[0] || "Hanoi");
 
   const todayISO = toISO(new Date());
   const tripStart = TRIP_DATA.itinerary_days[0]?.date;
   const tripEnd = TRIP_DATA.itinerary_days[TRIP_DATA.itinerary_days.length - 1]?.date;
-
-  const isWithinTrip = tripStart && tripEnd ? todayISO >= tripStart && todayISO <= tripEnd : false;
+  const isWithinTrip = tripStart && tripEnd ? (todayISO >= tripStart && todayISO <= tripEnd) : false;
 
   const todayIndex = useMemo(() => {
     const idx = TRIP_DATA.itinerary_days.findIndex((d) => d.date === todayISO);
     return idx >= 0 ? idx : 0;
   }, [todayISO]);
 
-  const [focusDayIndex, setFocusDayIndex] = useState<number>(todayIndex);
+  const [focusDayIndex, setFocusDayIndex] = useState(todayIndex);
 
+  // Sync localStorage
   useEffect(() => {
     const savedFavs = localStorage.getItem("trip_favs");
     if (savedFavs) setFavorites(JSON.parse(savedFavs));
-
     const savedRate = localStorage.getItem("trip_vnd_per_usd");
     if (savedRate) setVndPerUsd(Number(savedRate));
-
     const savedAct = localStorage.getItem("trip_activities_toggle");
     if (savedAct) setIncludeActivities(JSON.parse(savedAct));
-
     const savedKids = localStorage.getItem("trip_kids_mode");
     if (savedKids) setKidsMode(savedKids === "1");
-
     const savedCinema = localStorage.getItem("trip_cinema_mode");
     if (savedCinema) setCinemaMode(savedCinema === "1");
-
     const savedCity = localStorage.getItem("trip_active_city");
     if (savedCity) setActiveCity(savedCity);
-
     const savedFocus = localStorage.getItem("trip_focus_day");
     if (savedFocus) setFocusDayIndex(Number(savedFocus));
   }, []);
@@ -1606,11 +1608,7 @@ export default function App() {
     localStorage.setItem("trip_favs", JSON.stringify(next));
   };
 
-  const handlePrint = () => window.print();
-
-  // ------------------------------------------------------------
-  // FILTERS
-  // ------------------------------------------------------------
+  // Filters
   const filteredDays = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return TRIP_DATA.itinerary_days;
@@ -1620,14 +1618,11 @@ export default function App() {
     });
   }, [search]);
 
-  // ------------------------------------------------------------
-  // BUDGET
-  // ------------------------------------------------------------
+  // Budget calculations
   const budgetSplit = useMemo(() => {
     const adults = TRIP_DATA.meta.travelers_count.adults;
     const kids = TRIP_DATA.meta.travelers_count.kids;
-
-    // split simple
+    
     const RATIO_FAM = 0.8;
     const RATIO_CLAU = 0.2;
 
@@ -1639,7 +1634,6 @@ export default function App() {
 
     const flightsFam = flightsTotal * RATIO_FAM;
     const flightsClaudine = flightsTotal * RATIO_CLAU;
-
     const transfersFam = transfersTotal * RATIO_FAM;
     const transfersClaudine = transfersTotal * RATIO_CLAU;
 
@@ -1657,11 +1651,10 @@ export default function App() {
         const enabled = includeActivities[a.id] ?? true;
         if (!enabled || !a.cost) return 0;
         if (kidsMode && a.tags?.includes("impact")) return 0;
-
-        const famAdults = adults - 1; // Claudine séparée
+        const famAdults = adults - 1;
         const famKids = kids;
         const childVnd = a.cost.child_vnd ?? a.cost.adult_vnd;
-        const groupVnd = a.cost.adult_vnd * famAdults + childVnd * famKids;
+        const groupVnd = (a.cost.adult_vnd * famAdults) + (childVnd * famKids);
         return groupVnd / vndPerUsd;
       })
     );
@@ -1684,10 +1677,8 @@ export default function App() {
     };
   }, [includeActivities, vndPerUsd, kidsMode]);
 
-  // ------------------------------------------------------------
-  // NAV
-  // ------------------------------------------------------------
-  const Tabs = [
+  // UI Tabs
+  const TabsList = [
     { id: "home", icon: Star, label: "Home" },
     { id: "itinerary", icon: Calendar, label: "Itinéraire" },
     { id: "hotels", icon: Hotel, label: "Hôtels" },
@@ -1696,13 +1687,8 @@ export default function App() {
     { id: "budget", icon: Wallet, label: "Budget" },
   ] as const;
 
-  // ------------------------------------------------------------
-  // HOME “CINEMA HUB”
-  // ------------------------------------------------------------
+  // Home logic
   const focusDay = TRIP_DATA.itinerary_days[clamp(focusDayIndex, 0, TRIP_DATA.itinerary_days.length - 1)];
-
-  const gotoNextDay = () => setFocusDayIndex((i) => clamp(i + 1, 0, TRIP_DATA.itinerary_days.length - 1));
-  const gotoPrevDay = () => setFocusDayIndex((i) => clamp(i - 1, 0, TRIP_DATA.itinerary_days.length - 1));
 
   const setCityFromFocus = () => {
     const base = focusDay.city.split("→").map((s) => s.trim())[0];
@@ -1710,591 +1696,328 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 text-slate-900 pb-24 print:bg-white print:pb-0">
-      {/* TOP BAR */}
-      <header className="sticky top-0 z-50 print:hidden">
-        <Glass className="border-b border-slate-200">
-          <div className="mx-auto w-full min-w-0 max-w-[560px] px-4 h-16 flex items-center justify-between sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-extrabold shrink-0">
-                V
-              </div>
-              <div className="leading-tight min-w-0">
-                <div className="text-sm font-extrabold text-slate-900 truncate">Vietnam 2026</div>
-                <div className="text-[11px] text-slate-500 truncate">Mobile Hub • Cinema V2</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 shrink-0">
-              <MoodSelector currentMood={mood} setMood={setMood} />
-              <button onClick={() => setQuickOpen(true)} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
-                <Sparkles size={18} />
-              </button>
-              <button onClick={handlePrint} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
-                <Printer size={18} />
-              </button>
-            </div>
-          </div>
-        </Glass>
-      </header>
-
+    <div className="min-h-screen bg-slate-50 font-sans pb-32 overflow-x-hidden select-none">
       <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
-      <main className="mx-auto w-full min-w-0 max-w-[560px] px-4 py-5 space-y-6 sm:max-w-[720px] lg:max-w-[1120px] lg:px-8">
-        {/* HOME */}
-        {view === "home" && (
-          <div className="space-y-6">
-            <CinemaHero onOpenQuick={() => setQuickOpen(true)} activeCity={activeCity} coverSrc={cityCoverFromLabel(activeCity)} />
+      {/* HOME VIEW */}
+      {view === "home" && (
+        <div className="animate-in fade-in duration-500">
+          <CinemaHero
+            onOpenQuick={() => setQuickOpen(true)}
+            activeCity={activeCity}
+            coverSrc={cityCoverFromLabel(activeCity)}
+          />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left */}
-              <div className="lg:col-span-2 space-y-6 min-w-0">
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <div>
-                      <div className="text-lg font-extrabold text-slate-900">Dashboard</div>
-                      <div className="text-xs text-slate-500">
-                        {isWithinTrip ? "On est dans la période du trip." : "Preview — le trip n’a pas commencé (ou est fini)."}
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setView("itinerary")}
-                        className="px-3 py-2 rounded-2xl bg-indigo-600 text-white text-xs font-extrabold flex items-center gap-2"
-                      >
-                        Itinéraire <ChevronRight size={14} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <Toggle
-                      label="Mode Kids"
-                      icon={<Shield size={16} className="text-emerald-600" />}
-                      value={kidsMode}
-                      onChange={setKidsMode}
-                      hint="Masque les contenus ‘impact’ et simplifie."
-                    />
-                    <Toggle
-                      label="Cinema Mode"
-                      icon={<Star size={16} className="text-amber-500" />}
-                      value={cinemaMode}
-                      onChange={setCinemaMode}
-                      hint="Cartes plus immersives, plus de visuel."
-                    />
-                  </div>
-
-                  <CityTimeline cities={cities} activeCity={activeCity} onSelect={setActiveCity} />
-
-                  <div className="mt-4">
-                    <div className="text-sm font-extrabold text-slate-900 mb-2">Équipage</div>
-                    <FamilyStrip />
-                  </div>
-                </div>
-
-                {/* FOCUS DAY */}
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <div className="text-lg font-extrabold text-slate-900">Focus du jour</div>
-                      <div className="text-xs text-slate-500">Swipe mental: 1 carte = 1 journée.</div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button onClick={gotoPrevDay} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
-                        <ChevronLeft size={18} />
-                      </button>
-                      <button onClick={gotoNextDay} className="p-2 rounded-2xl bg-slate-100 text-slate-700">
-                        <ChevronRight size={18} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <div className="text-xs font-bold text-slate-600">
-                      {safeDateLabel(focusDay.date)} • <span className="text-slate-900">{focusDay.city}</span>
-                    </div>
-                    <button
-                      onClick={() => (setCityFromFocus(), setView("itinerary"))}
-                      className="text-xs font-extrabold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-2xl"
-                    >
-                      Voir en itinéraire
-                    </button>
-                  </div>
-
-                  <DayCardMobile
-                    day={focusDay}
-                    coverSrc={dayCoverFromDay(focusDay)}
-                    mood={mood}
-                    isFav={favorites.includes(focusDay.date)}
-                    onFav={() => toggleFavorite(focusDay.date)}
-                    kidsMode={kidsMode}
-                  />
-                </div>
-
-                {/* SEARCH */}
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <div className="text-lg font-extrabold text-slate-900">Recherche</div>
-                    <button onClick={() => setSearch("")} className="text-xs font-bold text-slate-500">
-                      Reset
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2">
-                    <Search size={16} className="text-slate-400" />
-                    <input
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      className="w-full bg-transparent outline-none text-sm"
-                      placeholder="Tape un mot: ‘plage’, ‘café’, ‘musée’, ‘transfert’..."
-                    />
-                  </div>
-
-                  {search.trim() ? (
-                    <div className="mt-3 text-xs text-slate-500">
-                      Résultats: <span className="font-bold">{filteredDays.length}</span> jour(s)
-                    </div>
-                  ) : (
-                    <div className="mt-3 text-xs text-slate-500">Astuce: utile quand on doit “retrouver” un truc vite.</div>
-                  )}
-                </div>
-              </div>
-
-              {/* Right */}
-              <div className="lg:col-span-1 space-y-6">
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="text-lg font-extrabold text-slate-900 mb-3">Shortcuts</div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button onClick={() => setView("tips")} className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-left">
-                      <div className="font-extrabold text-emerald-900 flex items-center gap-2">
-                        <Lightbulb size={16} /> Tips
-                      </div>
-                      <div className="text-xs text-emerald-700 mt-1">Checklist + argent</div>
-                    </button>
-                    <button onClick={() => setView("guide")} className="p-4 rounded-2xl bg-orange-50 border border-orange-100 text-left">
-                      <div className="font-extrabold text-orange-900 flex items-center gap-2">
-                        <Utensils size={16} /> Food
-                      </div>
-                      <div className="text-xs text-orange-700 mt-1">Plats cultes</div>
-                    </button>
-                    <button onClick={() => setView("hotels")} className="p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-left">
-                      <div className="font-extrabold text-indigo-900 flex items-center gap-2">
-                        <Hotel size={16} /> Hôtels
-                      </div>
-                      <div className="text-xs text-indigo-700 mt-1">Covers + liens</div>
-                    </button>
-                    <button onClick={() => setView("budget")} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left">
-                      <div className="font-extrabold text-slate-900 flex items-center gap-2">
-                        <Wallet size={16} /> Budget
-                      </div>
-                      <div className="text-xs text-slate-600 mt-1">Totaux + tickets</div>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="text-lg font-extrabold text-slate-900 mb-3">Budget (snapshot)</div>
-                  <div className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600 font-semibold">Famille</span>
-                      <span className="font-extrabold">{formatUSD(budgetSplit.fam.total)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm mt-2">
-                      <span className="text-slate-600 font-semibold">Claudine</span>
-                      <span className="font-extrabold">{formatUSD(budgetSplit.claudine.total)}</span>
-                    </div>
-                    <div className="mt-3 text-xs text-slate-500">Activités: dépend du taux VND/USD et des toggles.</div>
-                  </div>
-                </div>
-
-                <AirportGlossary />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ITINERARY */}
-        {view === "itinerary" && (
-          <div className="space-y-5">
-            <div className="flex items-center justify-between gap-3">
+          <div className="relative -mt-10 px-6 space-y-8">
+            <Glass className="rounded-[40px] p-8 flex items-center justify-between">
               <div>
-                <div className="text-2xl font-extrabold text-slate-900">Itinéraire</div>
-                <div className="text-xs text-slate-500">Mobile-first: cartes immersives.</div>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status</p>
+                <p className="text-sm font-black text-slate-900 leading-none">
+                  {isWithinTrip ? "Trip en cours 🇻🇳" : "En préparation 📝"}
+                </p>
               </div>
-              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
-                Retour Home
+              <button
+                onClick={() => setView("itinerary")}
+                className="w-12 h-12 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </Glass>
+
+            <div className="grid grid-cols-1 gap-4">
+              <Toggle
+                label="Mode Kids"
+                icon={<Smartphone size={20} />}
+                value={kidsMode}
+                onChange={setKidsMode}
+                hint="Masque les contenus ‘impact’."
+              />
+            </div>
+
+            <div>
+               <div className="flex justify-between items-end mb-6">
+                <div>
+                  <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Équipage</h3>
+                  <p className="text-xs font-bold text-slate-400 tracking-tight italic">Les aventuriers</p>
+                </div>
+              </div>
+              <FamilyStrip />
+            </div>
+
+            <div>
+              <div className="flex justify-between items-end mb-6">
+                <div>
+                  <h3 className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-1">Focus Jour</h3>
+                  <p className="text-xs font-bold text-slate-400 italic"> Swipe mental</p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setFocusDayIndex(i => clamp(i - 1, 0, TRIP_DATA.itinerary_days.length - 1))}
+                    className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    onClick={() => setFocusDayIndex(i => clamp(i + 1, 0, TRIP_DATA.itinerary_days.length - 1))}
+                    className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="overflow-hidden">
+                <div className="flex transition-transform duration-500">
+                  <div className="w-full shrink-0">
+                    <DayCardMobile
+                      day={focusDay}
+                      coverSrc={dayCoverFromDay(focusDay)}
+                      mood={mood}
+                      isFav={favorites.includes(focusDay.date)}
+                      onFav={() => toggleFavorite(focusDay.date)}
+                      kidsMode={kidsMode}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => { setCityFromFocus(); setView("itinerary"); }}
+                className="w-full py-5 rounded-[32px] bg-slate-100 text-slate-600 text-xs font-black uppercase tracking-widest mt-4"
+              >
+                Explorer cet itinéraire
               </button>
             </div>
 
-            <CityTimeline cities={cities} activeCity={activeCity} onSelect={setActiveCity} />
-
-            <div className="grid lg:grid-cols-2 gap-5">
-              {(search.trim() ? filteredDays : TRIP_DATA.itinerary_days)
-                .filter((d) => (search.trim() ? true : d.city.toLowerCase().includes(activeCity.toLowerCase())))
-                .map((day) => (
-                  <DayCardMobile
-                    key={day.date}
-                    day={day}
-                    coverSrc={dayCoverFromDay(day)}
-                    mood={mood}
-                    isFav={favorites.includes(day.date)}
-                    onFav={() => toggleFavorite(day.date)}
-                    kidsMode={kidsMode}
-                  />
-                ))}
+            <div className="grid grid-cols-2 gap-4 pb-12">
+               <button
+                  onClick={() => setView("tips")}
+                  className="p-6 rounded-[40px] bg-indigo-50 border border-indigo-100 text-left"
+               >
+                  <Lightbulb size={24} className="text-indigo-500 mb-4" />
+                  <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Conseils</p>
+                  <p className="text-[10px] font-bold text-indigo-400">Argent & Culture</p>
+               </button>
+               <button
+                  onClick={() => setView("budget")}
+                  className="p-6 rounded-[40px] bg-amber-50 border border-amber-100 text-left"
+               >
+                  <Wallet size={24} className="text-amber-500 mb-4" />
+                  <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Budget</p>
+                  <p className="text-[10px] font-bold text-amber-400">Totaux & Taux</p>
+               </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* HOTELS */}
-        {view === "hotels" && (
-          <div className="space-y-5">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-2xl font-extrabold text-slate-900">Hôtels</div>
-                <div className="text-xs text-slate-500">Covers + Booking + Maps</div>
-              </div>
-              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
-                Retour Home
-              </button>
+      {/* ITINERARY VIEW */}
+      {view === "itinerary" && (
+        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+          <div className="flex justify-between items-center mb-10">
+            <div>
+              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Itinéraire</h2>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Carte par carte</p>
             </div>
+            <button
+              onClick={() => setView("home")}
+              className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {TRIP_DATA.hotels.map((h, i) => (
-                <HotelCard key={i} hotel={h} />
+          <div className="mb-10">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-2">Filtrer par ville</p>
+            <CityTimeline
+              cities={cities}
+              activeCity={activeCity}
+              onSelect={setActiveCity}
+            />
+          </div>
+
+          <div className="space-y-12 pb-20">
+            {TRIP_DATA.itinerary_days
+              .filter(d => d.city.toLowerCase().includes(activeCity.toLowerCase()))
+              .map((day) => (
+                <DayCardMobile
+                  key={day.date}
+                  day={day}
+                  coverSrc={dayCoverFromDay(day)}
+                  mood={mood}
+                  isFav={favorites.includes(day.date)}
+                  onFav={() => toggleFavorite(day.date)}
+                  kidsMode={kidsMode}
+                />
               ))}
-            </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* GUIDE */}
-        {view === "guide" && (
-          <div className="space-y-5">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-2xl font-extrabold text-slate-900">Guide & Food</div>
-                <div className="text-xs text-slate-500">Plats cultes + logistique + aéroports</div>
-              </div>
-              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
-                Retour Home
-              </button>
+      {/* HOTELS VIEW */}
+      {view === "hotels" && (
+        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+          <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Hôtels</h2>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Le repos du guerrier</p>
             </div>
-
-            <div className="bg-orange-50 rounded-3xl border border-orange-100 p-5">
-              <div className="text-xl font-extrabold text-orange-900 flex items-center gap-2">
-                <Utensils size={18} className="text-orange-600" /> Miam Miam (plats cultes)
-              </div>
-
-              <div className="mt-4 grid sm:grid-cols-2 gap-4">
-                {Object.entries(TRIP_DATA.food).map(([region, dishes]) => (
-                  <div key={region} className="bg-white rounded-3xl border border-orange-100 p-4">
-                    <div className="text-[11px] font-extrabold uppercase tracking-wide text-orange-800 mb-2">
-                      {region.replace("_", " & ")}
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {dishes.map((d) => (
-                        <span key={d} className="px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-orange-900 text-sm font-semibold">
-                          {d}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-5">
-              <div className="text-xl font-extrabold text-indigo-900 flex items-center gap-2">
-                <Plane size={18} className="text-indigo-600" /> Logistique (rappel)
-              </div>
-
-              <div className="mt-4 grid lg:grid-cols-2 gap-4">
-                <div className="bg-white rounded-3xl border border-indigo-100 p-4">
-                  <div className="text-sm font-extrabold text-indigo-900 mb-2">Vols internes</div>
-                  <div className="space-y-2">
-                    {TRIP_DATA.internal_flights.map((f, i) => (
-                      <div key={i} className="flex justify-between text-sm bg-indigo-50 border border-indigo-100 p-2 rounded-2xl">
-                        <span className="font-mono font-extrabold text-indigo-700">{f.route}</span>
-                        <span className="text-slate-600">{f.time}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-3xl border border-indigo-100 p-4">
-                  <div className="text-sm font-extrabold text-indigo-900 mb-2">Transferts</div>
-                  <div className="space-y-2">
-                    {TRIP_DATA.ground_transfers.map((t, i) => (
-                      <div key={i} className="flex justify-between text-sm bg-indigo-50 border border-indigo-100 p-2 rounded-2xl">
-                        <span className="text-slate-800">{t.name}</span>
-                        <span className="font-extrabold">{formatUSD(t.cost_usd)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <AirportGlossary />
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-              <div className="text-lg font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                <Landmark size={18} className="text-emerald-600" /> Petit glossaire
-              </div>
-              <div className="grid gap-3">
-                {TRIP_DATA.glossary.map((g, i) => (
-                  <div key={i} className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
-                    <div className="font-extrabold text-emerald-700">{g.term}</div>
-                    <div className="text-sm text-slate-700 mt-1">{g.note}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <button
+              onClick={() => setView("home")}
+              className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"
+            >
+              <X size={20} />
+            </button>
           </div>
-        )}
 
-        {/* TIPS */}
-        {view === "tips" && (
-          <div className="space-y-5">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-2xl font-extrabold text-slate-900">Bon à savoir</div>
-                <div className="text-xs text-slate-500">Simple, clair, utile.</div>
-              </div>
-              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
-                Retour Home
-              </button>
-            </div>
-
-            <div className="grid lg:grid-cols-3 gap-5">
-              <div className="lg:col-span-1 space-y-5">
-                <TipsChecklist />
-                <SimpleListCard title="Traverser la rue" icon={<Navigation size={18} />} items={STREET_CROSSING} />
-                <SimpleListCard title="Premier jour Hanoi" icon={<MapPin size={18} />} items={FIRST_DAY_HANOI} />
-              </div>
-
-              <div className="lg:col-span-2 space-y-5">
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <SimpleListCard title="Argent & paiements" icon={<Banknote size={18} />} items={MONEY_TIPS} />
-                  <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
-                    <div className="text-lg font-extrabold text-slate-900 mb-3">Repères prix</div>
-                    <div className="space-y-3">
-                      {QUICK_PRICES.map((p) => (
-                        <div key={p.label} className="flex justify-between gap-4 border-b border-slate-100 pb-2 last:border-b-0 last:pb-0">
-                          <div className="text-sm font-semibold text-slate-800">{p.label}</div>
-                          <div className="text-sm font-extrabold text-slate-900 text-right">{p.value}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <SimpleListCard title="Pratique (zéro galère)" icon={<Smartphone size={18} />} items={PRACTICAL_TIPS} />
-                <PhrasebookCard />
-              </div>
-            </div>
+          <div className="pb-20">
+            {TRIP_DATA.hotels.map((h, i) => (
+              <HotelCard key={i} hotel={h} />
+            ))}
           </div>
-        )}
+        </div>
+      )}
 
-        {/* BUDGET */}
-        {view === "budget" && (
-          <div className="space-y-5">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-2xl font-extrabold text-slate-900">Budget</div>
-                <div className="text-xs text-slate-500">Famille vs Claudine</div>
-              </div>
-              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
-                Retour Home
-              </button>
+      {/* GUIDE VIEW */}
+      {view === "guide" && (
+        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+           <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Guide</h2>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Food & Logistique</p>
             </div>
+            <button
+              onClick={() => setView("home")}
+              className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
-            <div className="grid lg:grid-cols-3 gap-5">
-              <div className="lg:col-span-1 space-y-5">
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="text-lg font-extrabold text-slate-900 mb-3">Totaux</div>
+          <SimpleListCard
+            title="Miam Miam"
+            icon={<Utensils size={24} />}
+            items={Object.entries(TRIP_DATA.food).map(([r, f]) => `${r}: ${f.join(", ")}`)}
+          />
 
-                  <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
-                    <div className="text-xs font-bold text-emerald-700 uppercase">Famille</div>
-                    <div className="text-2xl font-extrabold text-emerald-800 mt-1">{formatUSD(budgetSplit.fam.total)}</div>
-                    <div className="text-xs text-emerald-700 mt-2">
-                      Hôtels {formatUSD(budgetSplit.fam.hotels)} • Vols {formatUSD(budgetSplit.fam.flights)} • Transferts {formatUSD(budgetSplit.fam.transfers)}
-                    </div>
-                  </div>
+          <AirportGlossary />
 
-                  <div className="rounded-2xl bg-indigo-50 border border-indigo-100 p-4 mt-4">
-                    <div className="text-xs font-bold text-indigo-700 uppercase">Claudine</div>
-                    <div className="text-2xl font-extrabold text-indigo-800 mt-1">{formatUSD(budgetSplit.claudine.total)}</div>
-                    <div className="text-xs text-indigo-700 mt-2">
-                      Hôtels {formatUSD(budgetSplit.claudine.hotels)} • Vols {formatUSD(budgetSplit.claudine.flights)} • Transferts {formatUSD(budgetSplit.claudine.transfers)}
-                    </div>
-                  </div>
+          <SimpleListCard
+            title="Transport"
+            icon={<Navigation size={24} />}
+            items={TRIP_DATA.internal_flights.map(f => `${f.route} • ${f.time} • $${f.group_cost_usd}`)}
+          />
+
+          <PhrasebookCard />
+        </div>
+      )}
+
+      {/* TIPS VIEW */}
+      {view === "tips" && (
+        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+           <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Conseils</h2>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Argent & Culture</p>
+            </div>
+            <button
+              onClick={() => setView("home")}
+              className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          <TipsChecklist />
+          <div className="h-8" />
+          <SimpleListCard title="Argent" icon={<Wallet size={24} />} items={MONEY_TIPS} />
+          <SimpleListCard title="Culture" icon={<Info size={24} />} items={PRACTICAL_TIPS} />
+        </div>
+      )}
+
+      {/* BUDGET VIEW */}
+      {view === "budget" && (
+        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+           <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Budget</h2>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Vietnam 2026</p>
+            </div>
+            <button
+              onClick={() => setView("home")}
+              className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="space-y-6 pb-20">
+             <Glass className="rounded-[40px] p-8">
+                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-4">Total Famille</p>
+                <p className="text-5xl font-black text-slate-900 tracking-tighter mb-4">
+                  {formatUSD(budgetSplit.fam.total)}
+                </p>
+                <div className="grid grid-cols-2 gap-y-4">
+                   <div>
+                      <p className="text-[9px] font-black text-slate-400 uppercase">Hôtels</p>
+                      <p className="text-sm font-black text-slate-800">{formatUSD(budgetSplit.fam.hotels)}</p>
+                   </div>
+                   <div>
+                      <p className="text-[9px] font-black text-slate-400 uppercase">Vols</p>
+                      <p className="text-sm font-black text-slate-800">{formatUSD(budgetSplit.fam.flights)}</p>
+                   </div>
+                   <div>
+                      <p className="text-[9px] font-black text-slate-400 uppercase">Transferts</p>
+                      <p className="text-sm font-black text-slate-800">{formatUSD(budgetSplit.fam.transfers)}</p>
+                   </div>
                 </div>
+             </Glass>
 
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="text-sm font-extrabold text-slate-900 mb-2">Taux VND → USD</div>
-                  <div className="flex items-center gap-2">
-                    <input
+             <Glass className="rounded-[40px] p-8 border-indigo-100 bg-indigo-50/30">
+                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-4">Total Claudine</p>
+                <p className="text-4xl font-black text-slate-900 tracking-tighter mb-4">
+                  {formatUSD(budgetSplit.claudine.total)}
+                </p>
+             </Glass>
+
+             <div className="p-8 rounded-[40px] bg-slate-100 border border-slate-200">
+                <p className="text-xs font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                   <Banknote size={16} /> Taux de change
+                </p>
+                <div className="flex items-center gap-4">
+                   <input
                       type="number"
                       value={vndPerUsd}
-                      onChange={(e) => setVndPerUsd(Number(e.target.value || 0))}
-                      className="w-full px-3 py-2 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 font-semibold outline-none"
-                      min={10000}
-                      step={100}
-                    />
-                    <div className="text-xs text-slate-500 whitespace-nowrap">VND / 1 USD</div>
-                  </div>
-
-                  <div className="mt-3 text-xs text-slate-500">
-                    Astuce: si kidsMode ON, on retire les activités tag “impact” dans les estimations.
-                  </div>
+                      onChange={(e) => setVndPerUsd(Number(e.target.value))}
+                      className="bg-white px-6 py-4 rounded-3xl border border-slate-200 w-full text-lg font-black text-slate-900 shadow-sm"
+                   />
+                   <span className="text-xs font-black text-slate-400 uppercase shrink-0">VND / 1$</span>
                 </div>
-              </div>
-
-              <div className="lg:col-span-2 space-y-5">
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="text-lg font-extrabold text-slate-900 mb-2">Activités (toggle)</div>
-                  <div className="text-xs text-slate-500 mb-4">Active/désactive selon envie. Calcul basé sur 4 adultes + 2 enfants.</div>
-
-                  <div className="space-y-3">
-                    {TRIP_DATA.activities
-                      .filter((a) => !(kidsMode && a.tags?.includes("impact")))
-                      .map((a) => {
-                        const enabled = includeActivities[a.id] ?? true;
-                        const c = a.cost;
-                        let usd = 0;
-                        let vnd = 0;
-
-                        if (c) {
-                          const child = c.child_vnd ?? c.adult_vnd;
-                          vnd = c.adult_vnd * TRIP_DATA.meta.travelers_count.adults + child * TRIP_DATA.meta.travelers_count.kids;
-                          usd = vnd / vndPerUsd;
-                        }
-
-                        return (
-                          <div key={a.id} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="min-w-0">
-                                <button
-                                  onClick={() => setIncludeActivities({ ...includeActivities, [a.id]: !(includeActivities[a.id] ?? true) })}
-                                  className="flex items-center gap-2 text-left"
-                                >
-                                  <div
-                                    className={`w-5 h-5 rounded-md border flex items-center justify-center ${
-                                      enabled ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-transparent"
-                                    }`}
-                                  >
-                                    <CheckSquare size={14} />
-                                  </div>
-                                  <div>
-                                    <div className="text-sm font-extrabold text-slate-900">{a.name}</div>
-                                    <div className="text-xs text-slate-500">{a.city}</div>
-                                  </div>
-                                </button>
-
-                                {a.tags?.length ? (
-                                  <div className="mt-2 flex flex-wrap gap-2">
-                                    {a.tags.map((t) => (
-                                      <span
-                                        key={t}
-                                        className="text-[10px] uppercase tracking-wide px-2 py-1 rounded-full bg-white border border-slate-200 text-slate-600"
-                                      >
-                                        {t}
-                                      </span>
-                                    ))}
-                                  </div>
-                                ) : null}
-
-                                {a.link ? (
-                                  <a
-                                    href={a.link}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-block mt-2 text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-2xl"
-                                  >
-                                    Lien
-                                  </a>
-                                ) : null}
-                              </div>
-
-                              <div className="text-right shrink-0">
-                                {c ? (
-                                  <>
-                                    <div className={`text-sm font-extrabold ${enabled ? "text-slate-900" : "text-slate-400"}`}>{formatUSD(usd)}</div>
-                                    <div className="text-xs text-slate-500">{formatVND(vnd)}</div>
-                                  </>
-                                ) : (
-                                  <div className="text-xs text-slate-400">—</div>
-                                )}
-                              </div>
-                            </div>
-
-                            {c?.notes ? <div className="mt-2 text-xs text-slate-500">{c.notes}</div> : null}
-                          </div>
-                        );
-                      })}
-                  </div>
-
-                  {kidsMode && <div className="mt-4 text-xs text-emerald-700 font-semibold">Mode kids ON: activités “impact” masquées ici.</div>}
-                </div>
-
-                <AirportGlossary />
-              </div>
-            </div>
+             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* CULTURE (optionnel) */}
-        {view === "culture" && (
-          <div className="space-y-5">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-2xl font-extrabold text-slate-900">Culture</div>
-                <div className="text-xs text-slate-500">Liens essentiels</div>
-              </div>
-              <button onClick={() => setView("home")} className="px-3 py-2 rounded-2xl bg-slate-100 text-slate-700 text-xs font-extrabold">
-                Retour Home
+      {/* MOBILE NAV BAR */}
+      <div className="fixed bottom-6 left-6 right-6 z-[90]">
+        <div className="backdrop-blur-2xl bg-slate-900/90 rounded-[40px] border border-white/10 p-2 flex items-center justify-between shadow-2xl">
+          {TabsList.map((tab) => {
+            const Icon = tab.icon;
+            const active = view === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setView(tab.id as View)}
+                className={`flex-1 flex flex-col items-center justify-center py-4 rounded-3xl transition-all ${
+                  active ? "bg-white text-slate-900 scale-105 shadow-xl" : "text-white/40"
+                }`}
+              >
+                <Icon size={18} />
               </button>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-5">
-              {Object.entries(TRIP_DATA.culture_links).map(([cat, links]) => (
-                <div key={cat} className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                  <div className="text-lg font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                    <BookOpen size={18} className="text-emerald-600" /> {cat}
-                  </div>
-                  <div className="space-y-3">
-                    {links.map((l, i) => (
-                      <a key={i} href={l.url} target="_blank" rel="noreferrer" className="block p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                        <div className="text-sm font-extrabold text-slate-900">{l.name}</div>
-                        <div className="text-xs text-slate-500 mt-1">Ouvrir</div>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* MOBILE NAV */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 md:hidden flex justify-around p-2 z-50 print:hidden">
-        {Tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setView(tab.id as View)}
-            className={`flex flex-col items-center p-2 rounded-2xl transition-colors ${
-              view === tab.id ? "text-emerald-600 bg-emerald-50" : "text-slate-400"
-            }`}
-          >
-            <tab.icon size={20} />
-            <span className="text-[10px] font-semibold mt-1">{tab.label}</span>
-          </button>
-        ))}
-      </nav>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
