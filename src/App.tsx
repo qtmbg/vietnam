@@ -58,12 +58,12 @@ const ASSETS = {
   // Covers (public/covers/)
   covers: {
     sections: {
-      home: P("/covers/sections/cover-home.jpg"),
-      itinerary: P("/covers/sections/cover-itinerary.jpg"),
-      hotels: P("/covers/sections/cover-hotels.jpg"),
-      guide: P("/covers/sections/cover-guide.jpg"),
-      tips: P("/covers/sections/cover-tips.jpg"),
-      budget: P("/covers/sections/cover-budget.jpg"),
+      home: P("/covers/cities/hanoi.jpg"),
+      itinerary: P("/covers/moments/train.jpg"),
+      hotels: P("/covers/cities/hoi-an.jpg"),
+      guide: P("/covers/moments/streetfood.png"),
+      tips: P("/covers/moments/market.png"),
+      budget: P("/covers/cities/hcmc.jpg"),
     },
 
     cities: {
