@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Banknote, BatteryCharging, BookOpen, Calendar, CheckSquare, Heart, Hotel, Info, Landmark, Languages, Lightbulb, MapPin, Navigation, Plane, Printer, Sparkles, Smartphone, Star, Utensils, Wallet, X, ChevronRight, ChevronLeft, Flame, Moon, Shield, Search, } from "lucide-react";
+import { 
+  Banknote, BatteryCharging, BookOpen, Calendar, CheckSquare, Heart, Hotel, Info, 
+  Landmark, Languages, Lightbulb, MapPin, Navigation, Plane, Printer, Sparkles, 
+  Smartphone, Star, Utensils, Wallet, X, ChevronRight, ChevronLeft, Flame, Moon, Shield, Search,
+  TrendingUp, Calculator, ArrowRightLeft, User, Users
+} from "lucide-react";
 
 // ------------------------------------------------------------
 // ASSET URL (Vite)
@@ -144,7 +149,11 @@ interface TripData {
   meta: {
     title: string;
     travelers: string;
-    travelers_count: { adults: number; kids: number; kids_ages: number[] };
+    travelers_count: {
+      adults: number;
+      kids: number;
+      kids_ages: number[]
+    };
     vibe: string[];
     flights: {
       outbound: { from: string; date: string; time: string };
@@ -177,14 +186,78 @@ const TRIP_DATA: TripData = {
     },
   },
   hotels: [
-    { city: "Hanoi", name: "Ja Cosmo Hotel and Spa", dates: "25 Jul → 28 Jul, puis 15 Aug → 17 Aug", budget: { us: 180, claudine: 110, currency: "USD" }, booking_url: "https://www.booking.com/hotel/vn/ja-cosmo-and-spa.html", why: "Central pour ruelles, cafés, culture; simple avec kids + Claudine.", cover: ASSETS.covers.hotels.hanoi_ja_cosmo },
-    { city: "Ninh Binh (Tam Coc)", name: "Tam Coc Golden Fields Homestay", dates: "28 Jul → 30 Jul", budget: { us: 140, claudine: 110, currency: "USD" }, booking_url: "https://www.booking.com/hotel/vn/tam-coc-golden-fields-homestay.html", why: "Base rizières + liberté; parfait pour le ‘wow’ Trang An sans galère.", cover: ASSETS.covers.hotels.ninh_binh_tam_coc_golden_fields },
-    { city: "Ha Long", name: "Wyndham Legend Halong", dates: "30 Jul → 31 Jul", budget: { us: 130, claudine: 80, currency: "USD" }, booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html", why: "Transition confortable avant croisière, logistique simple.", cover: ASSETS.covers.hotels.ha_long_wyndham_legend },
-    { city: "Ha Long (Cruise)", name: "Renea Cruises Halong", dates: "31 Jul → 01 Aug", budget: { us: 330, claudine: 300, currency: "USD" }, booking_url: "https://www.booking.com/hotel/vn/renea-cruises-halong-ha-long.html", why: "Le cœur ‘cinéma’ du voyage: karsts, baie, expérience famille.", cover: ASSETS.covers.hotels.ha_long_renea_cruise },
-    { city: "Hoi An (Cua Dai Beach)", name: "Palm Garden Beach Resort & Spa", dates: "01 Aug → 06 Aug", budget: { us: 680, claudine: 620, currency: "USD" }, booking_url: "https://www.booking.com/hotel/vn/palm-garden-beach-resort-spa-510.html", why: "Grand resort 5* avec plage privée, jardins tropicaux et immense piscine.", cover: ASSETS.covers.hotels.hoi_an_palm_garden },
-    { city: "Da Nang", name: "Seahorse Signature Danang Hotel by Haviland", dates: "06 Aug → 08 Aug", budget: { us: 129, claudine: 92, currency: "USD" }, booking_url: "https://www.booking.com/hotel/vn/seahorse-signature-danang-by-haviland.html", why: "Base urbaine efficace pour culture + musées + ponts.", cover: ASSETS.covers.hotels.da_nang_seahorse_signature },
-    { city: "Whale Island (Hon Ong)", name: "Whale Island Resort", dates: "08 Aug → 12 Aug", budget: { us: 415, claudine: 415, currency: "USD" }, official_url: "https://whaleislandresort.com/", why: "Déconnexion nature pure, rythme famille, mer & ciel.", cover: ASSETS.covers.hotels.whale_island_resort },
-    { city: "Ho Chi Minh City", name: "Alagon Saigon Hotel & Spa", dates: "12 Aug → 15 Aug", budget: { us: 275, claudine: 211, currency: "USD" }, booking_url: "https://www.booking.com/hotel/vn/alagon-saigon.html", why: "Très central pour histoire, colonial, street life.", cover: ASSETS.covers.hotels.hcmc_alagon_spa },
+    {
+      city: "Hanoi",
+      name: "Ja Cosmo Hotel and Spa",
+      dates: "25 Jul → 28 Jul, puis 15 Aug → 17 Aug",
+      budget: { us: 180, claudine: 110, currency: "USD" },
+      booking_url: "https://www.booking.com/hotel/vn/ja-cosmo-and-spa.html",
+      why: "Central pour ruelles, cafés, culture; simple avec kids + Claudine.",
+      cover: ASSETS.covers.hotels.hanoi_ja_cosmo
+    },
+    {
+      city: "Ninh Binh (Tam Coc)",
+      name: "Tam Coc Golden Fields Homestay",
+      dates: "28 Jul → 30 Jul",
+      budget: { us: 140, claudine: 110, currency: "USD" },
+      booking_url: "https://www.booking.com/hotel/vn/tam-coc-golden-fields-homestay.html",
+      why: "Base rizières + liberté; parfait pour le ‘wow’ Trang An sans galère.",
+      cover: ASSETS.covers.hotels.ninh_binh_tam_coc_golden_fields
+    },
+    {
+      city: "Ha Long",
+      name: "Wyndham Legend Halong",
+      dates: "30 Jul → 31 Jul",
+      budget: { us: 130, claudine: 80, currency: "USD" },
+      booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html",
+      why: "Transition confortable avant croisière, logistique simple.",
+      cover: ASSETS.covers.hotels.ha_long_wyndham_legend
+    },
+    {
+      city: "Ha Long (Cruise)",
+      name: "Renea Cruises Halong",
+      dates: "31 Jul → 01 Aug",
+      budget: { us: 330, claudine: 300, currency: "USD" },
+      booking_url: "https://www.booking.com/hotel/vn/renea-cruises-halong-ha-long.html",
+      why: "Le cœur ‘cinéma’ du voyage: karsts, baie, expérience famille.",
+      cover: ASSETS.covers.hotels.ha_long_renea_cruise
+    },
+    {
+      city: "Hoi An (Cua Dai Beach)",
+      name: "Palm Garden Beach Resort & Spa",
+      dates: "01 Aug → 06 Aug",
+      budget: { us: 680, claudine: 620, currency: "USD" },
+      booking_url: "https://www.booking.com/hotel/vn/palm-garden-beach-resort-spa-510.html",
+      why: "Grand resort 5* avec plage privée, jardins tropicaux et immense piscine.",
+      cover: ASSETS.covers.hotels.hoi_an_palm_garden
+    },
+    {
+      city: "Da Nang",
+      name: "Seahorse Signature Danang Hotel by Haviland",
+      dates: "06 Aug → 08 Aug",
+      budget: { us: 129, claudine: 92, currency: "USD" },
+      booking_url: "https://www.booking.com/hotel/vn/seahorse-signature-danang-by-haviland.html",
+      why: "Base urbaine efficace pour culture + musées + ponts.",
+      cover: ASSETS.covers.hotels.da_nang_seahorse_signature
+    },
+    {
+      city: "Whale Island (Hon Ong)",
+      name: "Whale Island Resort",
+      dates: "08 Aug → 12 Aug",
+      budget: { us: 415, claudine: 415, currency: "USD" },
+      official_url: "https://whaleislandresort.com/",
+      why: "Déconnexion nature pure, rythme famille, mer & ciel.",
+      cover: ASSETS.covers.hotels.whale_island_resort
+    },
+    {
+      city: "Ho Chi Minh City",
+      name: "Alagon Saigon Hotel & Spa",
+      dates: "12 Aug → 15 Aug",
+      budget: { us: 275, claudine: 211, currency: "USD" },
+      booking_url: "https://www.booking.com/hotel/vn/alagon-saigon.html",
+      why: "Très central pour histoire, colonial, street life.",
+      cover: ASSETS.covers.hotels.hcmc_alagon_spa
+    },
   ],
   internal_flights: [
     { route: "HPH → DAD", time: "19:00", group_cost_usd: 200 },
@@ -255,9 +328,25 @@ const FAMILY_MEMBERS = [
 ];
 
 // ------------------------------------------------------------
+// COMPONENTS
+// ------------------------------------------------------------
+const Glass = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
+  <div className={`backdrop-blur-xl bg-white/80 border border-white/20 shadow-2xl rounded-[2.5rem] ${className}`}>
+    {children}
+  </div>
+);
+
+const Card = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
+  <div className={`bg-white rounded-3xl p-6 shadow-sm border border-slate-100 ${className}`}>
+    {children}
+  </div>
+);
+
+// ------------------------------------------------------------
 // HELPERS
 // ------------------------------------------------------------
 const formatUSD = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+const formatVND = (n: number) => (n / 1000).toLocaleString() + "k";
 const safeDateLabel = (iso: string) => new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
@@ -265,178 +354,296 @@ const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 // APP
 // ------------------------------------------------------------
 export default function App() {
-  const [view, setView] = useState("home");
+  const [view, setView] = useState<View>("home");
   const [vndPerUsd, setVndPerUsd] = useState(25975);
 
-  // Budget logic
   const budgetSplit = useMemo(() => {
-    const adults = TRIP_DATA.meta.travelers_count.adults;
-    const kids = TRIP_DATA.meta.travelers_count.kids;
-    
+    const adults = TRIP_DATA.meta.travelers_count.adults; // 3
+    const kids = TRIP_DATA.meta.travelers_count.kids; // 2
+    const totalPeople = adults + kids; // 5
+
     const hotelsFam = sum(TRIP_DATA.hotels.map(h => h.budget.us));
     const hotelsClau = sum(TRIP_DATA.hotels.map(h => h.budget.claudine));
     
-    const flightsUsd = sum(TRIP_DATA.internal_flights.map(f => f.group_cost_usd));
-    const transfersUsd = sum(TRIP_DATA.ground_transfers.map(t => t.cost_vnd / vndPerUsd));
-    
-    const famRatio = 4 / 5; // Family (2 Adults + 2 Kids)
-    const clauRatio = 1 / 5; // Claudine (1 Adult)
-    
+    const flightsTotal = sum(TRIP_DATA.internal_flights.map(f => f.group_cost_usd));
+    const transfersTotalVND = sum(TRIP_DATA.ground_transfers.map(t => t.cost_vnd));
+    const transfersTotalUSD = transfersTotalVND / vndPerUsd;
+
+    // Split logic: Family (2A+2K) = 4/5, Claudine (1A) = 1/5
+    const famRatio = 4 / 5;
+    const clauRatio = 1 / 5;
+
     return {
       fam: {
+        count: 4,
+        label: "Famille (2A + 2E)",
         hotels: hotelsFam,
-        flights: flightsUsd * famRatio,
-        transfers: transfersUsd * famRatio,
-        total: hotelsFam + (flightsUsd * famRatio) + (transfersUsd * famRatio),
+        flights: flightsTotal * famRatio,
+        transfers: transfersTotalUSD * famRatio,
+        total: hotelsFam + (flightsTotal * famRatio) + (transfersTotalUSD * famRatio),
       },
       clau: {
+        count: 1,
+        label: "Claudine (1A)",
         hotels: hotelsClau,
-        flights: flightsUsd * clauRatio,
-        transfers: transfersUsd * clauRatio,
-        total: hotelsClau + (flightsUsd * clauRatio) + (transfersUsd * clauRatio),
+        flights: flightsTotal * clauRatio,
+        transfers: transfersTotalUSD * clauRatio,
+        total: hotelsClau + (flightsTotal * clauRatio) + (transfersTotalUSD * clauRatio),
       }
     };
   }, [vndPerUsd]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-24">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-teal-100 pb-32">
       {/* NAV */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur px-2 py-2 rounded-full flex gap-1 z-50 shadow-2xl">
-        {["home", "itinerary", "hotels", "budget"].map((v) => (
-          <button
-            key={v}
-            onClick={() => setView(v as View)}
-            className={`px-6 py-3 rounded-full text-xs font-bold uppercase ${view === v ? "bg-white text-slate-900" : "text-white/50"}`}
-          >
-            {v}
-          </button>
-        ))}
-      </nav>
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+        <Glass className="flex items-center justify-between p-2">
+          {["home", "itinerary", "hotels", "budget"].map((v) => {
+            const active = view === v;
+            const Icon = v === "home" ? Sparkles : v === "itinerary" ? MapPin : v === "hotels" ? Hotel : Banknote;
+            return (
+              <button
+                key={v}
+                onClick={() => setView(v as View)}
+                className={`flex-1 flex flex-col items-center gap-1 py-3 rounded-3xl transition-all duration-500 ${
+                  active ? "bg-slate-900 text-white scale-105 shadow-xl" : "text-slate-400 hover:text-slate-600"
+                }`}
+              >
+                <Icon size={18} />
+                <span className="text-[10px] font-bold uppercase tracking-wider">{v}</span>
+              </button>
+            );
+          })}
+        </Glass>
+      </div>
 
-      {view === "home" && (
-        <div>
-          <header className="h-[60vh] relative flex items-center justify-center overflow-hidden">
-            <img src={ASSETS.covers.sections.home} className="absolute inset-0 w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="relative text-center text-white">
-              <h1 className="text-7xl font-black tracking-tighter">VIETNAM<br/>2026</h1>
-              <p className="mt-4 uppercase tracking-[0.3em] font-bold text-white/70">Family Trip</p>
-            </div>
-          </header>
+      <main className="max-w-2xl mx-auto px-6 pt-12">
+        {view === "home" && (
+          <div className="space-y-12">
+            <header className="space-y-4">
+              <div className="flex items-center gap-3 text-teal-600 font-bold uppercase tracking-widest text-sm">
+                <Flame size={16} fill="currentColor" />
+                <span>Vietnam 2026</span>
+              </div>
+              <h1 className="text-6xl font-black tracking-tighter leading-none italic">
+                SOUVENIR <br /> EN FAMILLE
+              </h1>
+              <p className="text-slate-500 font-medium text-lg leading-relaxed max-w-md">
+                Un voyage conçu pour l'émerveillement, la gourmandise et la douceur entre Marrakech et le Tonkin.
+              </p>
+            </header>
 
-          <section className="p-8 max-w-xl mx-auto">
-            <h2 className="text-3xl font-black mb-8">Équipage</h2>
-            <div className="flex flex-wrap gap-4">
-              {FAMILY_MEMBERS.map(m => (
-                <div key={m.name} className="flex-1 min-w-[100px] text-center">
-                  <img src={m.src} className="w-full aspect-square rounded-3xl object-cover mb-2 border-2 border-slate-200" onError={(e) => e.currentTarget.src = m.fallback} />
-                  <p className="font-bold text-xs">{m.name}</p>
+            <section className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-black uppercase tracking-tight">L'Équipage</h2>
+                <Users size={20} className="text-slate-300" />
+              </div>
+              <div className="grid grid-cols-5 gap-3">
+                {FAMILY_MEMBERS.map(m => (
+                  <div key={m.name} className="flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 rounded-2xl overflow-hidden bg-slate-200 border-2 border-white shadow-sm">
+                      <img 
+                        src={m.src} 
+                        alt={m.name} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => e.currentTarget.src = m.fallback} 
+                      />
+                    </div>
+                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-tighter">{m.name}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+
+        {view === "itinerary" && (
+          <div className="space-y-8">
+            <h2 className="text-4xl font-black italic tracking-tight">Le Chemin.</h2>
+            <div className="space-y-6 relative before:absolute before:left-4 before:top-2 before:bottom-0 before:w-px before:bg-slate-200">
+              {TRIP_DATA.itinerary_days.map((day, idx) => (
+                <div key={idx} className="relative pl-12 group">
+                  <div className="absolute left-3 top-2 w-2 h-2 rounded-full bg-slate-300 group-hover:bg-teal-500 transition-colors" />
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      {safeDateLabel(day.date)} • {day.city}
+                    </span>
+                    <h3 className="text-xl font-bold group-hover:text-teal-700 transition-colors">
+                      {day.theme.join(" • ")}
+                    </h3>
+                    <div className="pt-2 space-y-3">
+                      {day.blocks.map((b, i) => (
+                        <div key={i} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                          <span className="text-[9px] font-black uppercase text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full mb-1 inline-block">
+                            {b.label}
+                          </span>
+                          <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                            {b.plan}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-            <div className="mt-12 p-8 rounded-[40px] bg-indigo-50 border border-indigo-100">
-              <h3 className="font-black text-indigo-900 mb-2">Détails</h3>
-              <p className="text-indigo-700/70 text-sm leading-relaxed">{TRIP_DATA.meta.travelers}</p>
-            </div>
-          </section>
-        </div>
-      )}
+          </div>
+        )}
 
-      {view === "itinerary" && (
-        <div className="p-8 max-w-xl mx-auto">
-          <h2 className="text-3xl font-black mb-8">Itinéraire</h2>
-          {TRIP_DATA.itinerary_days.map((day, idx) => (
-            <div key={idx} className="mb-8 pl-6 border-l-2 border-slate-200 relative">
-              <div className="absolute -left-1.5 top-0 w-3 h-3 rounded-full bg-slate-900" />
-              <p className="text-xs font-black uppercase text-slate-400 mb-1">{safeDateLabel(day.date)} • {day.city}</p>
-              <h3 className="text-xl font-black mb-4">{day.theme.join(" • ")}</h3>
-              {day.blocks.map((b, i) => (
-                <div key={i} className="mb-4 p-4 rounded-2xl bg-white shadow-sm border border-slate-100">
-                  <p className="text-[10px] font-black uppercase text-indigo-500 mb-1">{b.label}</p>
-                  <p className="text-sm leading-relaxed text-slate-600">{b.plan}</p>
-                </div>
+        {view === "hotels" && (
+          <div className="space-y-8">
+            <h2 className="text-4xl font-black italic tracking-tight">Les Escales.</h2>
+            <div className="grid gap-6">
+              {TRIP_DATA.hotels.map((h, i) => (
+                <Card key={i} className="overflow-hidden p-0 group">
+                  {h.cover && (
+                    <div className="h-48 overflow-hidden relative">
+                      <img src={h.cover} alt={h.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{h.city}</span>
+                        <h3 className="text-lg font-bold leading-none">{h.name}</h3>
+                      </div>
+                    </div>
+                  )}
+                  <div className="p-6 space-y-4">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-400">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={12} />
+                        <span>{h.dates}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-slate-600 italic font-medium leading-relaxed">
+                      “{h.why}”
+                    </p>
+                    <div className="flex items-center gap-3 pt-2">
+                      {h.booking_url && (
+                        <a href={h.booking_url} target="_blank" className="flex-1 text-center py-2.5 rounded-xl bg-slate-900 text-white text-[11px] font-black uppercase tracking-wider hover:bg-teal-600 transition-colors">
+                          Booking.com
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </Card>
               ))}
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        )}
 
-      {view === "hotels" && (
-        <div className="p-8 max-w-xl mx-auto">
-          <h2 className="text-3xl font-black mb-8">Hôtels</h2>
-          {TRIP_DATA.hotels.map((h, i) => (
-            <div key={i} className="mb-12 overflow-hidden rounded-[40px] bg-white border border-slate-100 shadow-xl">
-              <img src={h.cover} className="w-full h-48 object-cover" />
-              <div className="p-8">
-                <p className="text-xs font-black uppercase text-indigo-500 mb-1">{h.city}</p>
-                <h3 className="text-2xl font-black mb-2">{h.name}</h3>
-                <p className="text-slate-400 text-xs font-bold mb-6">{h.dates}</p>
-                <p className="text-slate-600 italic leading-relaxed mb-6">“{h.why}”</p>
-                <div className="flex gap-4">
-                   {h.booking_url && <a href={h.booking_url} className="px-6 py-3 rounded-full bg-slate-900 text-white text-xs font-bold">Booking.com</a>}
+        {view === "budget" && (
+          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <header className="space-y-2">
+              <h2 className="text-4xl font-black italic tracking-tight">Budget.</h2>
+              <div className="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-widest">
+                <Calculator size={14} />
+                <span>Base 1$ = {vndPerUsd.toLocaleString()} VND</span>
+              </div>
+            </header>
+
+            {/* Split Summary */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[budgetSplit.fam, budgetSplit.clau].map((group, idx) => (
+                <Card key={idx} className={`relative overflow-hidden ${idx === 0 ? 'bg-slate-900 text-white' : 'bg-white'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`p-2 rounded-xl ${idx === 0 ? 'bg-white/10' : 'bg-slate-100'}`}>
+                      {idx === 0 ? <Users size={20} /> : <User size={20} />}
+                    </div>
+                    <span className={`text-[10px] font-black uppercase tracking-tighter ${idx === 0 ? 'text-white/40' : 'text-slate-400'}`}>
+                      {group.label}
+                    </span>
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-3xl font-black tabular-nums">{formatUSD(group.total)}</div>
+                    <div className={`text-[11px] font-bold ${idx === 0 ? 'text-teal-400' : 'text-teal-600'}`}>
+                      {formatUSD(group.total / group.count)} / personne
+                    </div>
+                  </div>
+                  
+                  <div className={`mt-6 pt-6 border-t ${idx === 0 ? 'border-white/10' : 'border-slate-100'} space-y-2`}>
+                    <div className="flex justify-between text-[10px] font-bold opacity-60 uppercase tracking-widest">
+                      <span>Hôtels</span>
+                      <span>{formatUSD(group.hotels)}</span>
+                    </div>
+                    <div className="flex justify-between text-[10px] font-bold opacity-60 uppercase tracking-widest">
+                      <span>Vols</span>
+                      <span>{formatUSD(group.flights)}</span>
+                    </div>
+                    <div className="flex justify-between text-[10px] font-bold opacity-60 uppercase tracking-widest">
+                      <span>Transferts</span>
+                      <span>{formatUSD(group.transfers)}</span>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Ja Cosmo Table Section */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                    <ArrowRightLeft size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-black uppercase tracking-tight text-sm">Transferts Ja Cosmo</h3>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Suivi des paiements VND</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-black text-teal-600 tabular-nums">4,890k VND</div>
+                  <span className="text-[9px] font-black uppercase text-slate-400">Total Confirmé</span>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
 
-      {view === "budget" && (
-        <div className="p-8 max-w-xl mx-auto">
-          <h2 className="text-3xl font-black mb-2">Budget 💰</h2>
-          <p className="text-slate-500 mb-8 uppercase tracking-widest text-[10px] font-bold">Référence USD • Taux: {vndPerUsd.toLocaleString()} VND</p>
-
-          <div className="grid grid-cols-1 gap-6 mb-12">
-            <div className="p-8 rounded-[40px] bg-slate-900 text-white shadow-2xl">
-              <p className="text-white/50 text-xs font-bold uppercase tracking-widest mb-1">Famille (4p)</p>
-              <div className="text-4xl font-black mb-2">{formatUSD(budgetSplit.fam.total)}</div>
-              <p className="text-white/40 text-[10px] font-bold uppercase">{formatUSD(budgetSplit.fam.total / 4)} / personne</p>
+              <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 border-b border-slate-100">
+                      <th className="p-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Date</th>
+                      <th className="p-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Trajet</th>
+                      <th className="p-4 text-[9px] font-black uppercase tracking-widest text-slate-400 text-right">Prix</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50 text-sm">
+                    {TRIP_DATA.ground_transfers.map((t, i) => (
+                      <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                        <td className="p-4 font-bold text-slate-400 tabular-nums whitespace-nowrap">
+                          {t.date ? safeDateLabel(t.date) : "—"}
+                        </td>
+                        <td className="p-4 font-bold text-slate-800">
+                          {t.name}
+                          {t.status === "ESTIMATE" && (
+                            <span className="ml-2 px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-600 text-[8px] font-black align-middle">EST.</span>
+                          )}
+                        </td>
+                        <td className="p-4 text-right">
+                          <span className="font-black text-slate-900 tabular-nums">{formatVND(t.cost_vnd)}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            <div className="p-8 rounded-[40px] bg-white border border-slate-100 shadow-xl">
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Claudine (1p)</p>
-              <div className="text-4xl font-black mb-2 text-slate-900">{formatUSD(budgetSplit.clau.total)}</div>
-              <p className="text-slate-400 text-[10px] font-bold uppercase">Solo adult rate</p>
-            </div>
+            {/* Currency Input */}
+            <Card className="bg-teal-50 border-teal-100 p-8 text-center space-y-4">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-teal-600">Simulateur de Change</span>
+              <div className="flex items-center justify-center gap-4">
+                <div className="text-4xl font-black text-slate-900">1$</div>
+                <TrendingUp className="text-teal-400" />
+                <input 
+                  type="number" 
+                  value={vndPerUsd}
+                  onChange={(e) => setVndPerUsd(Number(e.target.value))}
+                  className="w-32 px-4 py-2 rounded-2xl bg-white border-2 border-teal-200 font-black text-2xl text-teal-700 focus:outline-none focus:border-teal-500 text-center transition-all tabular-nums"
+                />
+                <div className="text-2xl font-black text-slate-400">VND</div>
+              </div>
+            </Card>
           </div>
-
-          <div className="p-8 rounded-[40px] bg-indigo-50 border border-indigo-100 mb-8">
-             <h4 className="text-xs font-black uppercase tracking-widest text-indigo-900 mb-6">A) Transferts Ja Cosmo</h4>
-             <div className="mb-6 p-4 rounded-2xl bg-indigo-600 text-white">
-                <p className="text-[10px] font-bold uppercase opacity-60">TOTAL TRANSFERTS CONFIRMÉS</p>
-                <p className="text-2xl font-black">4,890k VND</p>
-             </div>
-             
-             <div className="space-y-3">
-               {TRIP_DATA.ground_transfers.map((t, i) => (
-                 <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-white border border-indigo-100 shadow-sm">
-                   <div>
-                     <p className="text-[10px] font-black text-slate-400 uppercase">{t.date ? safeDateLabel(t.date) : "À définir"}</p>
-                     <p className="text-sm font-bold text-slate-900">{t.name}</p>
-                   </div>
-                   <div className="text-right">
-                     <p className="text-sm font-black text-indigo-600">{(t.cost_vnd/1000).toLocaleString()}k</p>
-                     <p className={`text-[8px] font-black px-2 py-0.5 rounded-full inline-block ${t.status === 'CONFIRMED' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>{t.status}</p>
-                   </div>
-                 </div>
-               ))}
-             </div>
-          </div>
-
-          <div className="p-8 rounded-[40px] bg-white border border-slate-200">
-            <p className="text-xs font-black uppercase mb-4 text-slate-400">Taux de Change (Simulateur)</p>
-            <div className="flex items-center gap-4">
-              <input 
-                type="number" 
-                value={vndPerUsd} 
-                onChange={(e) => setVndPerUsd(Number(e.target.value))}
-                className="flex-1 px-6 py-4 rounded-3xl bg-slate-50 border border-slate-200 font-black text-2xl"
-              />
-              <p className="font-bold text-slate-400 uppercase text-xs">VND / $1</p>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
+      </main>
     </div>
   );
 }
