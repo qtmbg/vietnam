@@ -872,15 +872,7 @@ const cityKeyFromName = (city: string) => {
 // ------------------------------------------------------------
 // COVERS (Focus du jour / Itinéraire)
 // ------------------------------------------------------------
-const CITY_COVERS: Record<string, string> = {
-  Hanoi: "/covers/cities/hanoi.jpg",
-  "Ninh Binh": "/covers/cities/ninh-binh.jpg",
-  "Ha Long": "/covers/cities/ha-long.jpg",
-  "Hoi An": "/covers/cities/hoi-an.jpg",
-  "Da Nang": "/covers/cities/da-nang.jpg",
-  "Whale Island": "/covers/cities/whale-island.jpg",
-  "Ho Chi Minh City": "/covers/cities/ho-chi-minh.jpg",
-};
+
 
 const MOMENT_COVERS: Record<string, string> = {
   arrival: "/covers/moments/arrival.jpg",
@@ -899,18 +891,7 @@ const MOMENT_COVERS: Record<string, string> = {
   love: "/covers/moments/love.jpg",
 };
 
-const getBaseCity = (raw: string) => {
-  const first = raw.split("→")[0].trim();
-  const s = first.toLowerCase();
-  if (s.includes("ninh binh")) return "Ninh Binh";
-  if (s.includes("ha long")) return "Ha Long";
-  if (s.includes("hoi an")) return "Hoi An";
-  if (s.includes("da nang")) return "Da Nang";
-  if (s.includes("whale")) return "Whale Island";
-  if (s.includes("ho chi minh")) return "Ho Chi Minh City";
-  if (s.includes("hanoi")) return "Hanoi";
-  return first;
-};
+
 
 const momentCoverFromText = (text: string) => {
   const t = text.toLowerCase();
