@@ -18,7 +18,7 @@ import {
   Wallet,
   X,
   ChevronRight,
-  ChevronLeft,
+  
   Moon,
   Shield,
   BadgeCheck,
@@ -2251,23 +2251,7 @@ export default function App() {
                   <h3 className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-1">Jour focus</h3>
                   <p className="text-xs font-bold text-slate-400 italic">Carte du jour</p>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setFocusDayIndex((i) => clamp(i - 1, 0, TRIP_DATA.itinerary_days.length - 1))}
-                    className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400"
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button
-                    onClick={() => setFocusDayIndex((i) => clamp(i + 1, 0, TRIP_DATA.itinerary_days.length - 1))}
-                    className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400"
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-              </div>
-
-              <DayCardMobile day={focusDay} coverSrc={dayCoverFromDay(focusDay)} mood={mood} kidsMode={kidsMode} />
+                              </div>               <div                 onTouchStart={(e) => { (e.currentTarget as any)._swipeX = e.touches[0].clientX; }}                 onTouchEnd={(e) => {                   const startX = (e.currentTarget as any)._swipeX ?? null;                   if (startX === null) return;                   const delta = e.changedTouches[0].clientX - startX;                   if (Math.abs(delta) > 50) {                     setFocusDayIndex((i) => clamp(i + (delta < 0 ? 1 : -1), 0, TRIP_DATA.itinerary_days.length - 1));                   }                 }}               >                 <DayCardMobile day={focusDay} coverSrc={dayCoverFromDay(focusDay)} mood={mood} kidsMode={kidsMode} />               </div>
 
               <button
                 onClick={() => {
