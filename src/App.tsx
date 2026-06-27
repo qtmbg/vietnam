@@ -140,6 +140,8 @@ type HotelItem = {
   why: string;
   note?: string;
   cover?: string;
+  paidBy?: "Nous" | "Claudine"; // who fronted the payment (cash flow, not the share split)
+  paidNote?: string; // optional clarifier shown next to the "Payé" badge
 };
 
 type LinkItem = { name: string; url: string };
@@ -717,9 +719,24 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
 
       <div className="p-8">
         <h4 className="text-2xl font-black text-slate-900 tracking-tighter mb-1">{hotel.name}</h4>
-        <div className="flex items-center gap-2 text-indigo-600 mb-6">
+        <div className="flex items-center gap-2 text-indigo-600 mb-3">
           <Calendar size={14} />
           <p className="text-xs font-black">{hotel.dates}</p>
+        </div>
+
+        <div className="mb-6">
+          {hotel.paidBy ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest">
+                <BadgeCheck size={12} /> Payé · {hotel.paidBy}
+              </span>
+              {hotel.paidNote && <span className="text-[10px] font-bold text-slate-500">{hotel.paidNote}</span>}
+            </div>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest">
+              <BadgeHelp size={12} /> À régler
+            </span>
+          )}
         </div>
 
         {hotel.note && (
@@ -952,6 +969,7 @@ const TRIP_DATA: TripData = {
       budget: { us: 70, claudine: 90, currency: "USD" },      booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html",
       why: "Transition confortable avant croisière, logistique simple.",
       cover: "/covers/hotels/ha-long-wyndham-legend.jpg",
+      paidBy: "Nous",
     },
     {
       city: "Ha Long (Croisière)",
@@ -971,6 +989,8 @@ const TRIP_DATA: TripData = {
       why: "Grand resort avec plage et immense piscine. Le top pour se poser en famille.",
       cover: "/covers/hotels/hoi-an-palm-garden.png",
       note: "+2 nuits ajoutées (06 → 08 août) : on remplace l’étape Da Nang par 2 nuits de plus au Palm Garden. Da Nang reste faisable en excursion à la journée.",
+      paidBy: "Nous",
+      paidNote: "Nuits 01→06 août réglées · +2 nuits (06→08) à régler",
     },
     {
       city: "Whale Island (Hon Ong)",
@@ -979,6 +999,8 @@ const TRIP_DATA: TripData = {
       budget: { us: 350, claudine: 350, currency: "USD" },      official_url: "https://whaleislandresort.com/",
       why: "Déconnexion nature pure, rythme famille, mer & ciel.",
       cover: "/covers/hotels/whale-island-resort.jpg",
+      paidBy: "Claudine",
+      note: "Réservé via Agoda (#630563199) : 2 Sea View Bungalows, petit-déj + transferts bateau inclus. Transferts voiture CXR ↔ embarcadère Dam Mon en sus (voir Budget).",
     },
     {
       city: "Ho Chi Minh City",
@@ -1219,33 +1241,33 @@ const TRIP_DATA: TripData = {
       id: "T-OT-105",
       category: "transport",
       mode: "limousine_or_private_van",
-      operator: "Other",
+      operator: "Whale Island",
       operated_by_ja_cosmo: false,
       status: "CONFIRMED",
       date: "2026-08-08",
       from: "Cam Ranh Airport (CXR)",
-      to: "Whale Island (port)",
+      to: "Whale Island (port Dam Mon)",
       title: "Transfert privé — CXR → Whale Island",
-      price_total_usd: 80.0,
+      price_total_usd: 80.86,
       payer_rule: "claudine_20pct_transport",
-      notes: "Transfert confirmé.",
-      tags: ["whale", "confirmed"],
+      notes: "VND 2 100 000/trajet (famille). Pickup 07:30 à la sortie arrivées CXR (chauffeur avec pancarte au nom) — buffer possible 07:45–08:15 après VJ581 (07:25). Voiture ~3h jusqu'à l'embarcadère Dam Mon + bateau ~15 min. Petit-déj & transferts bateau inclus dans le tarif chambre. Confirmé par e-mail Whale Island Resort (24/02).",
+      tags: ["whale", "confirmed", "transfert"],
     },
         {
       id: "T-OT-106",
       category: "transport",
       mode: "limousine_or_private_van",
-      operator: "Other",
+      operator: "Whale Island",
       operated_by_ja_cosmo: false,
       status: "CONFIRMED",
       date: "2026-08-12",
-      from: "Whale Island (port)",
+      from: "Whale Island (port Dam Mon)",
       to: "Cam Ranh Airport (CXR)",
       title: "Transfert privé — Whale Island → CXR",
-      price_total_usd: 80.0,
+      price_total_usd: 80.86,
       payer_rule: "claudine_20pct_transport",
-      notes: "Transfert confirmé.",
-      tags: ["whale", "confirmed"],
+      notes: "VND 2 100 000/trajet (famille). Départ de l'île à 10:00 (bateau + voiture) pour être à CXR ~14:05 avant le vol VJ601 (16:05). Confirmé par e-mail Whale Island Resort (24/02).",
+      tags: ["whale", "confirmed", "transfert"],
     },
 
     // Domestic flights estimates
