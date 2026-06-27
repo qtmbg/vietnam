@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   Banknote,
   Calendar,
@@ -28,6 +28,16 @@ import {
   Ticket,
   Clock,
   Users,
+  ChevronLeft,
+  Send,
+  ArrowRight,
+  RotateCcw,
+  BedDouble,
+  Compass,
+  Loader2,
+  CalendarDays,
+  CornerDownLeft,
+  Sparkle,
 } from "lucide-react";
 
 // ============================================================
@@ -55,11 +65,11 @@ const usdRounded = (usd: number) => Math.round(usd);
 // ============================================================
 const ASSETS = {
   family: {
-    marilyne: P("/family/public:family:marilyne.jpg"),
-    claudine: P("/family/public:family:claudine.jpg"),
-    nizzar: P("/family/public:family:nizzar.jpg"),
-    aydann: P("/family/public:family:aydann.jpg"),
-    milann: P("/family/public:family:milann.jpg"),
+    marilyne: P("/family/marilyne.jpg"),
+    claudine: P("/family/claudine.jpg"),
+    nizzar: P("/family/nizzar.jpg"),
+    aydann: P("/family/aydann.jpg"),
+    milann: P("/family/milann.jpg"),
   },
   covers: {
     sections: {
@@ -100,9 +110,8 @@ const ASSETS = {
       hanoi_ja_cosmo: P("/covers/hotels/hanoi-ja-cosmo.jpg"),
       ninh_binh_tam_coc_golden_fields: P("/covers/hotels/ninh-binh-tam-coc-golden-fields.jpg"),
       ha_long_wyndham_legend: P("/covers/hotels/ha-long-wyndham-legend.jpg"),
-      ha_long_renea_cruise: P("/covers/hotels/ha-long-rc-cruise.jpg (Renea).jpg"),
-      hoi_an_palm_garden: P("/covers/hotels/hoi-an-palm-garden.png"),
-      da_nang_seahorse_signature: P("/covers/hotels/da-nang-seahorse-signature.jpg"),
+      ha_long_renea_cruise: P("/covers/hotels/ha-long-renea-cruise.jpg"),
+      hoi_an_palm_garden: P("/covers/hotels/hoi-an-palm-garden.jpg"),
       whale_island_resort: P("/covers/hotels/whale-island-resort.jpg"),
       hcmc_alagon_spa: P("/covers/hotels/hcmc-alagon-spa.jpg"),
     },
@@ -119,6 +128,58 @@ const cityCoverFromLabel = (label?: string) => {
   if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return ASSETS.covers.cities.hcmc;
   if (s.includes("whale")) return ASSETS.covers.cities.whale_island;
   return ASSETS.covers.sections.home;
+};
+
+// Per-city "chapter" accent (literal classes so Tailwind JIT keeps them)
+type CityAccent = { text: string; pill: string; dot: string; soft: string; glow: string };
+const CITY_ACCENT: Record<string, CityAccent> = {
+  Hanoi: { text: "text-indigo-300", pill: "bg-indigo-600 text-white", dot: "bg-indigo-500", soft: "bg-indigo-50 text-indigo-700 border-indigo-100", glow: "bg-indigo-500/20" },
+  "Ninh Binh": { text: "text-emerald-300", pill: "bg-emerald-600 text-white", dot: "bg-emerald-500", soft: "bg-emerald-50 text-emerald-700 border-emerald-100", glow: "bg-emerald-500/20" },
+  "Ha Long": { text: "text-teal-300", pill: "bg-teal-600 text-white", dot: "bg-teal-500", soft: "bg-teal-50 text-teal-700 border-teal-100", glow: "bg-teal-500/20" },
+  "Hoi An": { text: "text-amber-300", pill: "bg-amber-500 text-white", dot: "bg-amber-500", soft: "bg-amber-50 text-amber-700 border-amber-100", glow: "bg-amber-500/20" },
+  "Ho Chi Minh City": { text: "text-rose-300", pill: "bg-rose-600 text-white", dot: "bg-rose-500", soft: "bg-rose-50 text-rose-700 border-rose-100", glow: "bg-rose-500/20" },
+  "Whale Island": { text: "text-sky-300", pill: "bg-sky-600 text-white", dot: "bg-sky-500", soft: "bg-sky-50 text-sky-700 border-sky-100", glow: "bg-sky-500/20" },
+};
+const accentForCity = (label?: string): CityAccent => {
+  const s = (label ?? "").toLowerCase();
+  if (s.includes("ninh")) return CITY_ACCENT["Ninh Binh"];
+  if (s.includes("ha long") || s.includes("halong")) return CITY_ACCENT["Ha Long"];
+  if (s.includes("hoi an") || s.includes("hoian") || s.includes("da nang") || s.includes("danang")) return CITY_ACCENT["Hoi An"];
+  if (s.includes("ho chi minh") || s.includes("hcmc") || s.includes("saigon")) return CITY_ACCENT["Ho Chi Minh City"];
+  if (s.includes("whale")) return CITY_ACCENT["Whale Island"];
+  return CITY_ACCENT["Hanoi"];
+};
+
+// Specific scene photo per itinerary date (uses the rich, previously-unused library)
+const DAY_COVERS: Record<string, string> = {
+  "2026-07-26": "/covers/moments/hanoi-hoan-kiem.jpg",
+  "2026-07-27": "/covers/moments/hanoi-temple-of-literature.jpg",
+  "2026-07-28": "/covers/moments/hanoi-train-street.jpg",
+  "2026-07-29": "/covers/moments/ninh-binh-trang-an.jpg",
+  "2026-07-30": "/covers/moments/ninhbinh-hang-mua.jpg",
+  "2026-07-31": "/covers/moments/ha-long-cruise.jpg",
+  "2026-08-01": "/covers/moments/pont-dragon-da-nang.jpg",
+  "2026-08-02": "/covers/moments/hoi-an-old-town-night.jpg",
+  "2026-08-06": "/covers/moments/hoi-an-an-bang.jpg",
+  "2026-08-08": "/covers/moments/whale-island-ponton.jpg",
+  "2026-08-12": "/covers/moments/whale-island-ponton.jpg",
+  "2026-08-15": "/covers/moments/hcmc-central-post-office.jpg",
+  "2026-08-17": "/covers/moments/hanoi-lan-ong.jpg",
+};
+
+// Specific scene photo per activity id (falls back to city cover)
+const ACT_COVERS: Record<string, string> = {
+  "ACT-HAN-001": "/covers/moments/hanoi-hoan-kiem.jpg",
+  "ACT-HAN-002": "/covers/moments/museum.jpg",
+  "ACT-NB-001": "/covers/moments/ninh-binh-trang-an.jpg",
+  "ACT-NB-002": "/covers/moments/ninhbinh-hang-mua.jpg",
+  "ACT-HA-001": "/covers/moments/hoi-an-old-town-night.jpg",
+  "ACT-HA-002": "/covers/moments/boat.jpg",
+  "ACT-HA-003": "/covers/moments/temple.jpg",
+  "ACT-HA-004": "/covers/moments/hoi-an-old-town-night.jpg",
+  "ACT-DAD-001": "/covers/moments/pont-dragon-da-nang.jpg",
+  "ACT-SGN-001": "/covers/moments/boat.jpg",
+  "ACT-SGN-002": "/covers/moments/hcmc-war-museum.jpg",
 };
 
 // ============================================================
@@ -306,6 +367,7 @@ const momentCoverFromText = (text: string) => {
 };
 
 const dayCoverFromDay = (day: ItineraryDay) => {
+  if (DAY_COVERS[day.date]) return P(DAY_COVERS[day.date]);
   const text = (day.theme?.join(" ") ?? "") + " " + (day.blocks?.map((b) => b.plan).join(" ") ?? "");
   const cityCover = cityCoverFromLabel(day.city);
   if (day.city.includes("→")) {
@@ -324,8 +386,53 @@ const badgeForStatus = (s: StatusTag) => {
 // UI ATOMS
 // ============================================================
 const Glass = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={`backdrop-blur-xl bg-white/70 border border-white/40 shadow-xl overflow-hidden ${className}`}>{children}</div>
+  <div className={`backdrop-blur-xl bg-white/75 border border-white/60 shadow-card overflow-hidden ${className}`}>{children}</div>
 );
+
+const Card = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
+  <div className={`bg-white rounded-card border border-ink-100 shadow-card overflow-hidden ${className}`}>{children}</div>
+);
+
+// One funnel for every image: skeleton shimmer + lazy + async decode + fade-in + graceful fallback.
+const SmartImage = ({
+  src,
+  alt = "",
+  fallback,
+  className = "",
+  imgClassName = "",
+  eager = false,
+  overlay,
+}: {
+  src: string;
+  alt?: string;
+  fallback?: string;
+  className?: string;
+  imgClassName?: string;
+  eager?: boolean;
+  overlay?: ReactNode;
+}) => {
+  const [loaded, setLoaded] = useState(false);
+  const [err, setErr] = useState(false);
+  return (
+    <div className={`relative overflow-hidden bg-ink-200 ${className}`}>
+      {!loaded && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-ink-200 to-ink-100" />}
+      <img
+        src={err && fallback ? fallback : src}
+        alt={alt}
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+        {...(eager ? ({ fetchPriority: "high" } as any) : {})}
+        onLoad={() => setLoaded(true)}
+        onError={() => {
+          if (fallback && !err) setErr(true);
+          setLoaded(true);
+        }}
+        className={`w-full h-full object-cover transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"} ${imgClassName}`}
+      />
+      {overlay}
+    </div>
+  );
+};
 
 const Toggle = ({
   label,
@@ -409,19 +516,18 @@ const StatChip = ({
 };
 
 const FamilyStrip = ({ members }: { members: typeof FAMILY_MEMBERS }) => (
-  <div className="flex -space-x-3 overflow-hidden p-2">
+  <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
     {members.map((m) => (
-      <div key={m.name} className="group relative">
-        <img
-          src={P(m.src)}
-          alt={m.name}
-          className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md transition-transform group-hover:scale-110"
-          onError={(e) => {
-            e.currentTarget.src = m.fallback;
-          }}
-        />
-        <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white flex items-center justify-center shadow-sm">
-          <div className={`w-2.5 h-2.5 rounded-full ${m.color.split(" ")[0]}`} />
+      <div key={m.name} className="flex flex-col items-center gap-1.5 shrink-0 w-[68px]">
+        <div className="relative">
+          <SmartImage src={P(m.src)} alt={m.name} fallback={m.fallback} className="w-16 h-16 rounded-full ring-2 ring-white shadow-card" />
+          <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-white flex items-center justify-center shadow-sm">
+            <div className={`w-2.5 h-2.5 rounded-full ${m.color.split(" ")[0]}`} />
+          </div>
+        </div>
+        <div className="text-center leading-tight">
+          <p className="text-[11px] font-bold text-ink-900 truncate w-full">{m.name}</p>
+          <p className="text-[9px] font-semibold text-ink-400 truncate w-full">{m.desc}</p>
         </div>
       </div>
     ))}
@@ -432,43 +538,76 @@ const CinemaHero = ({
   onOpenQuick,
   activeCity,
   coverSrc,
-  subtitle,
+  daysTo,
+  dayNo,
+  tripLen,
+  isWithinTrip,
 }: {
   onOpenQuick: () => void;
   activeCity: string;
   coverSrc?: string;
-  subtitle?: string;
+  daysTo: number;
+  dayNo: number;
+  tripLen: number;
+  isWithinTrip: boolean;
 }) => {
   const src = coverSrc || ASSETS.covers.sections.home;
+  const accent = accentForCity(activeCity);
   return (
-    <div className="relative h-[78vh] w-full bg-slate-900">
-      <img src={src} alt="Hero" className="absolute inset-0 w-full h-full object-cover opacity-60" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/20 to-slate-900" />
+    <div className="relative h-[80vh] w-full bg-ink-950">
+      <SmartImage
+        src={src}
+        alt={`Vietnam — ${activeCity}`}
+        fallback={ASSETS.covers.sections.home}
+        eager
+        className="absolute inset-0 h-full w-full"
+        overlay={
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/40 to-ink-950/10" />
+            <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-ink-950/60 to-transparent" />
+          </>
+        }
+      />
 
-      <div className="absolute top-12 left-0 right-0 px-6 flex justify-between items-start pointer-events-none">
-        <div className="pointer-events-auto">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-1">24 juil → 18 août</p>
-          <h1 className="text-4xl font-black text-white leading-none">
-            Vietnam <span className="text-emerald-400">2026</span>
-          </h1>
-          {subtitle && <p className="mt-2 text-xs font-bold text-white/60">{subtitle}</p>}
-        </div>
-        <button
-          onClick={onOpenQuick}
-          className="pointer-events-auto w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white"
-        >
-          <Search size={20} />
-        </button>
-      </div>
-
-      <div className="absolute bottom-10 left-0 right-0 px-6">
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400 mb-2">Family Trip</p>
-        <h2 className="text-6xl font-black text-white leading-none mb-6">VIETNAM</h2>
-
-        <div className="flex items-end justify-between">
+      <div className="absolute inset-0 flex flex-col justify-between px-6 pt-14 pb-10">
+        <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs font-bold text-white/60 mb-1">Focus :</p>
-            <p className="text-2xl font-black text-white tracking-tight italic">{activeCity}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55 mb-2">24 juil → 18 août 2026</p>
+            <div className="inline-flex items-baseline gap-2 px-4 py-2 rounded-full bg-jade-500/15 ring-1 ring-jade-400/30 backdrop-blur-md">
+              {isWithinTrip ? (
+                <>
+                  <span className="font-display text-2xl text-jade-300 tabular-nums leading-none">Jour {dayNo}</span>
+                  <span className="text-[11px] font-semibold text-white/60 uppercase tracking-widest">/ {tripLen}</span>
+                </>
+              ) : daysTo > 0 ? (
+                <>
+                  <span className="font-display text-[28px] text-jade-300 tabular-nums leading-none">J−{daysTo}</span>
+                  <span className="text-[11px] font-semibold text-white/60 uppercase tracking-widest">avant le départ</span>
+                </>
+              ) : (
+                <span className="font-display text-xl text-jade-300 leading-none">De retour ✨</span>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onOpenQuick}
+            aria-label="Recherche et accès rapide"
+            className="shrink-0 w-11 h-11 rounded-full bg-white/15 backdrop-blur-md ring-1 ring-white/25 flex items-center justify-center text-white active:scale-90 transition-transform"
+          >
+            <Search size={20} />
+          </button>
+        </div>
+
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70 mb-2">Carnet de voyage famille</p>
+          <h1 className="font-display text-[clamp(3.5rem,18vw,5rem)] leading-[0.82] text-white tracking-tight mb-5">Vietnam</h1>
+          <div className="flex items-center gap-2">
+            <Compass size={15} className="text-white/50" />
+            <p className="text-[11px] font-semibold text-white/55 uppercase tracking-widest">Focus</p>
+            <span className={`inline-flex px-3 py-1.5 rounded-full text-sm font-semibold backdrop-blur-md bg-white/15 ring-1 ring-white/25 ${accent.text}`}>
+              {activeCity}
+            </span>
           </div>
         </div>
       </div>
@@ -599,34 +738,32 @@ const DayCardMobile = ({
 
   return (
     <div className="group relative w-full mb-8 last:mb-0">
-      <div className="relative h-64 rounded-[40px] overflow-hidden shadow-2xl">
-        <img
-          src={coverSrc}
-          alt={day.city}
-          className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110 duration-700"
-          onError={(e) => {
-            e.currentTarget.src = ASSETS.covers.sections.itinerary;
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent" />
-        <div className="absolute bottom-8 left-8 right-8">
-          <div className="flex items-center gap-2 mb-2">
-            <Calendar size={12} className="text-emerald-400" />
-            <p className="text-[10px] font-black text-white/80 uppercase tracking-widest">{safeDateLabel(day.date)}</p>
-          </div>
-          <h4 className="text-2xl font-black text-white tracking-tighter mb-4 leading-none">{day.city}</h4>
-          <div className="flex flex-wrap gap-1.5">
-            {day.theme.map((t) => (
-              <span
-                key={t}
-                className="px-2 py-0.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[8px] font-black text-white uppercase tracking-wider"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      <SmartImage
+        src={coverSrc}
+        alt={day.city}
+        fallback={ASSETS.covers.sections.itinerary}
+        className="h-64 rounded-hero shadow-float"
+        imgClassName="motion-safe:transition-transform motion-safe:group-hover:scale-110 duration-700"
+        overlay={
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/25 to-transparent" />
+            <div className="absolute bottom-7 left-7 right-7">
+              <div className="flex items-center gap-2 mb-2">
+                <Calendar size={12} className={accentForCity(day.city).text} />
+                <p className="text-[11px] font-semibold text-white/85 uppercase tracking-widest">{safeDateLabel(day.date)}</p>
+              </div>
+              <h4 className="font-display text-3xl text-white leading-none mb-3">{day.city}</h4>
+              <div className="flex flex-wrap gap-1.5">
+                {day.theme.map((t) => (
+                  <span key={t} className="px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/15 text-[10px] font-semibold text-white tracking-wide">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      />
 
       <div className="mt-6 px-4 space-y-4">
         {day.blocks.map((b, idx) => {
@@ -694,31 +831,31 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
   const link = hotel.booking_url || hotel.official_url;
 
   return (
-    <div className="group bg-white rounded-[40px] border border-slate-100 shadow-xl overflow-hidden mb-8">
-      <div className="relative h-48 overflow-hidden">
-        {hotel.cover ? (
-          <img
-            src={P(hotel.cover)}
-            alt={hotel.name}
-            className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-700"
-            onError={(e) => {
-              e.currentTarget.src = ASSETS.covers.sections.hotels;
-            }}
-          />
-        ) : (
-          <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
-            <Hotel size={48} />
-          </div>
-        )}
-        <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-[10px] font-black text-white uppercase tracking-widest">
-            {hotel.city}
-          </span>
+    <div className="group bg-white rounded-card border border-ink-100 shadow-card overflow-hidden mb-8">
+      {hotel.cover ? (
+        <SmartImage
+          src={P(hotel.cover)}
+          alt={hotel.name}
+          fallback={ASSETS.covers.sections.hotels}
+          className="h-48"
+          imgClassName="motion-safe:transition-transform motion-safe:group-hover:scale-105 duration-700"
+          overlay={
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-ink-900/45 via-transparent to-transparent" />
+              <div className="absolute top-4 left-4">
+                <span className="px-3 py-1 rounded-full bg-ink-900/70 backdrop-blur-md text-[11px] font-semibold text-white tracking-wide">{hotel.city}</span>
+              </div>
+            </>
+          }
+        />
+      ) : (
+        <div className="h-48 bg-ink-100 flex items-center justify-center text-ink-400">
+          <Hotel size={48} />
         </div>
-      </div>
+      )}
 
       <div className="p-8">
-        <h4 className="text-2xl font-black text-slate-900 tracking-tighter mb-1">{hotel.name}</h4>
+        <h4 className="font-display text-[26px] text-ink-900 leading-tight mb-1">{hotel.name}</h4>
         <div className="flex items-center gap-2 text-indigo-600 mb-3">
           <Calendar size={14} />
           <p className="text-xs font-black">{hotel.dates}</p>
@@ -867,35 +1004,35 @@ const FAMILY_MEMBERS = [
     name: "Marilyne",
     desc: "La Boss",
     color: "bg-pink-100 text-pink-700",
-    src: "/family/public:family:marilyne.jpg",
+    src: "/family/marilyne.jpg",
     fallback: "https://ui-avatars.com/api/?name=Marilyne&background=fce7f3&color=be185d&size=200",
   },
   {
     name: "Claudine",
     desc: "La Sage",
     color: "bg-indigo-100 text-indigo-700",
-    src: "/family/public:family:claudine.jpg",
+    src: "/family/claudine.jpg",
     fallback: "https://ui-avatars.com/api/?name=Claudine&background=e0e7ff&color=4338ca&size=200",
   },
   {
     name: "Nizzar",
     desc: "Le Pilote",
     color: "bg-slate-100 text-slate-700",
-    src: "/family/public:family:nizzar.jpg",
+    src: "/family/nizzar.jpg",
     fallback: "https://ui-avatars.com/api/?name=Nizzar&background=f1f5f9&color=334155&size=200",
   },
   {
     name: "Aydann",
     desc: "L’Ado",
     color: "bg-blue-100 text-blue-700",
-    src: "/family/public:family:aydann.jpg",
+    src: "/family/aydann.jpg",
     fallback: "https://ui-avatars.com/api/?name=Aydann&background=dbeafe&color=1d4ed8&size=200",
   },
   {
     name: "Milann",
     desc: "La Mascotte",
     color: "bg-orange-100 text-orange-700",
-    src: "/family/public:family:milann.jpg",
+    src: "/family/milann.jpg",
     fallback: "https://ui-avatars.com/api/?name=Milann&background=ffedd5&color=c2410c&size=200",
   },
 ] as const;
@@ -979,7 +1116,7 @@ const TRIP_DATA: TripData = {
       booking_url: "https://www.booking.com/hotel/vn/renea-cruises-halong-ha-long.html",
       note: "Port : Halong International Cruise Port",
       why: "Le cœur ‘cinéma’ du voyage : karsts, baie, expérience famille.",
-      cover: "/covers/hotels/ha-long-rc-cruise.jpg (Renea).jpg",
+      cover: "/covers/hotels/ha-long-renea-cruise.jpg",
     },
     {
       city: "Hoi An (Cua Dai Beach)",
@@ -987,7 +1124,7 @@ const TRIP_DATA: TripData = {
       dates: "01 août → 08 août",
       budget: { us: 1008, claudine: 924, currency: "USD" },      booking_url: "https://www.booking.com/hotel/vn/palm-garden-beach-resort-spa-510.html",
       why: "Grand resort avec plage et immense piscine. Le top pour se poser en famille.",
-      cover: "/covers/hotels/hoi-an-palm-garden.png",
+      cover: "/covers/hotels/hoi-an-palm-garden.jpg",
       note: "+2 nuits ajoutées (06 → 08 août) : on remplace l’étape Da Nang par 2 nuits de plus au Palm Garden. Da Nang reste faisable en excursion à la journée.",
       paidBy: "Nous",
       paidNote: "Nuits 01→06 août réglées · +2 nuits (06→08) à régler",
@@ -2049,75 +2186,323 @@ const ActivityCard = ({ a }: { a: PlannedActivity }) => {
   })();
 
   return (
-    <div className="bg-white rounded-[36px] border border-slate-100 shadow-xl p-7">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">{a.city}{a.window ? ` • ${a.window}` : ""}</p>
-          <h4 className="text-xl font-black text-slate-900 tracking-tighter leading-tight">{a.name}</h4>
-
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
-              <p className="text-[9px] font-black text-emerald-700 uppercase tracking-widest mb-1">Prix</p>
-              <p className="text-sm font-black text-slate-900">{priceLine}</p>
-              <p className="text-[10px] font-bold text-emerald-700/80 mt-1">{rawLine}</p>
+    <div className="bg-white rounded-card border border-ink-100 shadow-card overflow-hidden">
+      <SmartImage
+        src={ACT_COVERS[a.id] ? P(ACT_COVERS[a.id]) : cityCoverFromLabel(a.city)}
+        alt={a.name}
+        fallback={cityCoverFromLabel(a.city)}
+        className="h-36"
+        imgClassName="motion-safe:transition-transform motion-safe:hover:scale-105 duration-700"
+        overlay={
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-900/70 via-ink-900/10 to-transparent" />
+            <div className="absolute bottom-4 left-5 right-5">
+              <p className="text-[10px] font-semibold text-white/80 uppercase tracking-widest mb-0.5">
+                {a.city}
+                {a.window ? ` • ${a.window}` : ""}
+              </p>
+              <h4 className="font-display text-[22px] text-white leading-tight">{a.name}</h4>
             </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Cadre</p>
-              <div className="flex items-center gap-2 text-slate-700">
-                <Clock size={14} />
-                <p className="text-xs font-bold">{a.duration ?? "—"}</p>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700 mt-2">
-                <Users size={14} />
-                <p className="text-xs font-bold">{a.kidsRule ?? "—"}</p>
-              </div>
+          </>
+        }
+      />
+      <div className="p-6">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-4 rounded-2xl bg-jade-50 border border-jade-100">
+            <p className="text-[10px] font-bold text-jade-700 uppercase tracking-widest mb-1">Prix</p>
+            <p className="text-sm font-extrabold text-ink-900">{priceLine}</p>
+            <p className="text-[11px] font-semibold text-jade-700/80 mt-1">{rawLine}</p>
+          </div>
+          <div className="p-4 rounded-2xl bg-ink-50 border border-ink-100">
+            <p className="text-[10px] font-bold text-ink-500 uppercase tracking-widest mb-1">Cadre</p>
+            <div className="flex items-center gap-2 text-ink-600">
+              <Clock size={14} />
+              <p className="text-xs font-semibold">{a.duration ?? "—"}</p>
+            </div>
+            <div className="flex items-start gap-2 text-ink-600 mt-2">
+              <Users size={14} className="mt-0.5 shrink-0" />
+              <p className="text-[11px] font-semibold leading-snug">{a.kidsRule ?? "—"}</p>
             </div>
           </div>
+        </div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-[10px] font-black text-indigo-700 uppercase tracking-widest">
-              <Ticket size={14} /> {a.category}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-100 text-[11px] font-semibold text-brand-700 uppercase tracking-wide">
+            <Ticket size={13} /> {a.category}
+          </span>
+          {a.payMode && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink-50 border border-ink-100 text-[11px] font-semibold text-ink-600 uppercase tracking-wide">
+              {a.payMode}
             </span>
-            {a.payMode && (
-              <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-black text-slate-700 uppercase tracking-widest">
-                {a.payMode}
-              </span>
-            )}
-            <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-black text-slate-700">
-              <Tag size={14} /> {a.provider}
-            </span>
-          </div>
+          )}
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink-50 border border-ink-100 text-[11px] font-semibold text-ink-600">
+            <Tag size={13} /> {a.provider}
+          </span>
+        </div>
 
-          {a.notes && <p className="mt-4 text-[12px] font-semibold text-slate-600 leading-relaxed">{a.notes}</p>}
+        {a.notes && <p className="mt-4 text-[13px] font-medium text-ink-600 leading-relaxed">{a.notes}</p>}
 
-          <div className="mt-4 flex gap-2">
-            {a.sourceUrl ? (
-              <a
-                href={a.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black"
-              >
-                <Info size={16} />
-                Source
-              </a>
-            ) : (
-              <div className="px-4 py-3 rounded-2xl bg-slate-100 text-slate-400 text-xs font-black italic">Pas de source</div>
-            )}
-
+        <div className="mt-5 flex gap-2">
+          {a.sourceUrl ? (
             <a
-              href={googleMapsSearchUrl(a.name + " " + a.city)}
+              href={a.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-100 text-slate-700"
-              aria-label="Maps"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-ink-900 text-white text-xs font-bold"
             >
-              <MapPin size={18} />
+              <Info size={16} />
+              Source
             </a>
-          </div>
+          ) : (
+            <div className="px-4 py-3 rounded-2xl bg-ink-100 text-ink-400 text-xs font-bold italic">Pas de source</div>
+          )}
+
+          <a
+            href={googleMapsSearchUrl(a.name + " " + a.city)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-ink-100 text-ink-600"
+            aria-label={`Voir ${a.name} sur Google Maps`}
+          >
+            <MapPin size={18} />
+          </a>
         </div>
       </div>
     </div>
+  );
+};
+
+// ============================================================
+// Mr. Tang — floating family concierge (trip-aware + live web search)
+// ============================================================
+const buildTripContext = (today: string) => {
+  const d = TRIP_DATA;
+  const flights =
+    "Vols internationaux (Qatar Airways, réf X6CPNI) : Marrakech 24/07 18:15 → escale 14h à Doha (hôtel offert par Qatar Airways) → arrivée Hanoi 26/07 07:15 (vol QR982). Retour : Hanoi 17/08 19:30 (QR977) → Doha → Casablanca → Marrakech 18/08 09:20.";
+  const internal = d.expenses_usd
+    .filter((e) => e.mode === "flight_domestic")
+    .map((e) => `${e.title} (${e.date}) ${e.notes ?? ""}`)
+    .join(" ; ");
+  const hotels = d.hotels.map((h) => `${h.city} — ${h.name} (${h.dates})${h.paidBy ? `, payé par ${h.paidBy}` : ""}`).join("\n");
+  const days = d.itinerary_days
+    .map((x) => `${x.date} ${x.city} [${x.theme.join(", ")}] : ${x.blocks.map((b) => `${b.label}: ${b.plan}`).join(" | ")}`)
+    .join("\n");
+  const acts = d.planned_activities.map((a) => `${a.city} — ${a.name} (${a.duration ?? ""}, ${a.bestTime ?? ""})`).join(" ; ");
+  const transfers = d.expenses_usd
+    .filter((e) => e.category === "transport" && e.mode !== "flight_domestic")
+    .map((e) => `${e.date ?? "?"} ${e.from}→${e.to}`)
+    .join(" ; ");
+  return [
+    `Voyageurs : ${d.meta.travelers}.`,
+    `Date du jour : ${today}.`,
+    flights,
+    `Vols internes (VietJet) : ${internal}.`,
+    `Hôtels :\n${hotels}`,
+    `Itinéraire jour par jour :\n${days}`,
+    `Transferts privés : ${transfers}.`,
+    `Activités prévues : ${acts}.`,
+    "Budget : transports répartis Claudine 20% / le reste de la famille 80% ; activités en USD (1 $ ≈ 25 970 VND).",
+  ].join("\n\n");
+};
+
+const TangAvatar = ({ size = 48, className = "" }: { size?: number; className?: string }) => (
+  <svg viewBox="0 0 48 48" width={size} height={size} className={className} aria-hidden="true">
+    <defs>
+      <linearGradient id="tang-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#10b981" />
+        <stop offset="1" stopColor="#0ea5e9" />
+      </linearGradient>
+    </defs>
+    <circle cx="24" cy="24" r="24" fill="url(#tang-grad)" />
+    <circle cx="24" cy="27" r="10.5" fill="#fde9c8" />
+    <path d="M24 7 L35 21 Q24 24.5 13 21 Z" fill="#f3cd86" stroke="#e0a948" strokeWidth="1" strokeLinejoin="round" />
+    <ellipse cx="24" cy="21" rx="11.5" ry="2.2" fill="#e7b75f" />
+    <circle cx="20.3" cy="27" r="1.5" fill="#3b2f2f" />
+    <circle cx="27.7" cy="27" r="1.5" fill="#3b2f2f" />
+    <path d="M20.5 31 Q24 33.6 27.5 31" fill="none" stroke="#3b2f2f" strokeWidth="1.6" strokeLinecap="round" />
+  </svg>
+);
+
+type TangMsg = { role: "user" | "assistant"; content: string; sources?: { title: string; url: string }[] };
+
+const TANG_SUGGESTIONS = [
+  "Quel est le programme aujourd'hui ?",
+  "Une expo ou un événement cette semaine au Vietnam ?",
+  "Idées de restos près de notre hôtel à Hanoi",
+  "Que faire avec les enfants à Hoi An ?",
+];
+
+const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) => {
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<TangMsg[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("trip_tang_chat");
+    if (saved) {
+      try {
+        setMessages(JSON.parse(saved));
+      } catch {
+        /* ignore */
+      }
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("trip_tang_chat", JSON.stringify(messages.slice(-20)));
+  }, [messages]);
+  useEffect(() => {
+    if (open) requestAnimationFrame(() => scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }));
+  }, [messages, open, loading]);
+
+  const send = async (text: string) => {
+    const q = text.trim();
+    if (!q || loading) return;
+    const next: TangMsg[] = [...messages, { role: "user", content: q }];
+    setMessages(next);
+    setInput("");
+    setLoading(true);
+    try {
+      const r = await fetch("/api/tang", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: next.map((m) => ({ role: m.role, content: m.content })), tripContext, today }),
+      });
+      const data = await r.json();
+      setMessages((m) => [...m, { role: "assistant", content: data.reply || "…", sources: data.sources }]);
+    } catch {
+      setMessages((m) => [
+        ...m,
+        { role: "assistant", content: "Je n'arrive pas à me connecter pour l'instant 😅. Réessaie dans un moment — il faut une connexion internet (et que Mr. Tang soit activé sur le serveur)." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {!open && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Ouvrir Mr. Tang, votre concierge"
+          className="fixed right-4 bottom-[104px] z-[95] flex items-center gap-2.5 pl-2 pr-4 py-2 rounded-full bg-white shadow-float ring-1 ring-ink-100 active:scale-95 transition-transform motion-safe:animate-pop"
+        >
+          <span className="relative">
+            <TangAvatar size={40} />
+            <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-jade-500 ring-2 ring-white" />
+          </span>
+          <span className="text-left leading-tight">
+            <span className="block text-[13px] font-bold text-ink-900">Mr. Tang</span>
+            <span className="block text-[10px] font-semibold text-jade-600">Concierge · en ligne</span>
+          </span>
+        </button>
+      )}
+
+      {open && (
+        <div className="fixed inset-0 z-[100] flex flex-col justify-end">
+          <button type="button" aria-label="Fermer le concierge" onClick={() => setOpen(false)} className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm" />
+          <div className="relative w-full max-h-[82vh] bg-white rounded-t-[2rem] shadow-float flex flex-col motion-safe:animate-fade-up">
+            <div className="flex items-center gap-3 p-4 border-b border-ink-100">
+              <TangAvatar size={44} />
+              <div className="flex-1 min-w-0">
+                <p className="font-display text-xl text-ink-900 leading-none">Mr. Tang</p>
+                <p className="text-[11px] font-semibold text-jade-600 flex items-center gap-1.5 mt-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-jade-500" /> Votre concierge Vietnam
+                </p>
+              </div>
+              <button type="button" aria-label="Fermer" onClick={() => setOpen(false)} className="w-9 h-9 rounded-full bg-ink-100 text-ink-500 flex items-center justify-center active:scale-90 transition-transform">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+              {messages.length === 0 && (
+                <div className="flex gap-2.5">
+                  <TangAvatar size={32} className="shrink-0 mt-0.5" />
+                  <div className="rounded-2xl rounded-tl-md bg-ink-50 border border-ink-100 p-3 text-sm text-ink-700 leading-relaxed">
+                    Xin chào ! 👋 Je suis <b>Mr. Tang</b>, votre concierge pour le Vietnam. Je connais tout votre voyage — itinéraire, hôtels, transferts, budget — et je peux aussi chercher en direct des idées : expos, restos, événements, météo… Posez-moi votre question !
+                  </div>
+                </div>
+              )}
+              {messages.map((m, i) =>
+                m.role === "user" ? (
+                  <div key={i} className="flex justify-end">
+                    <div className="max-w-[82%] rounded-2xl rounded-tr-md bg-brand-600 text-white p-3 text-sm leading-relaxed whitespace-pre-wrap">{m.content}</div>
+                  </div>
+                ) : (
+                  <div key={i} className="flex gap-2.5">
+                    <TangAvatar size={32} className="shrink-0 mt-0.5" />
+                    <div className="max-w-[82%]">
+                      <div className="rounded-2xl rounded-tl-md bg-ink-50 border border-ink-100 p-3 text-sm text-ink-700 leading-relaxed whitespace-pre-wrap">{m.content}</div>
+                      {m.sources && m.sources.length > 0 && (
+                        <div className="mt-1.5 flex flex-wrap gap-1.5">
+                          {m.sources.map((s, j) => (
+                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[10px] font-semibold text-brand-700 max-w-[170px] truncate">
+                              <Compass size={11} className="shrink-0" /> {s.title}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              )}
+              {loading && (
+                <div className="flex gap-2.5">
+                  <TangAvatar size={32} className="shrink-0 mt-0.5" />
+                  <div className="rounded-2xl rounded-tl-md bg-ink-50 border border-ink-100 p-3 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-ink-300 motion-safe:animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-2 h-2 rounded-full bg-ink-300 motion-safe:animate-bounce" style={{ animationDelay: "120ms" }} />
+                    <span className="w-2 h-2 rounded-full bg-ink-300 motion-safe:animate-bounce" style={{ animationDelay: "240ms" }} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {messages.length === 0 && (
+              <div className="px-4 pb-2 flex flex-wrap gap-2">
+                {TANG_SUGGESTIONS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => send(s)}
+                    className="px-3 py-2 rounded-full bg-jade-50 border border-jade-100 text-[11px] font-semibold text-jade-700 active:scale-95 transition-transform text-left"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                send(input);
+              }}
+              className="p-3 border-t border-ink-100 flex items-center gap-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+            >
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Demandez à Mr. Tang…"
+                className="flex-1 bg-ink-50 border border-ink-100 rounded-full px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400"
+              />
+              <button
+                type="submit"
+                disabled={loading || !input.trim()}
+                aria-label="Envoyer"
+                className="w-11 h-11 rounded-full bg-brand-600 text-white flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shrink-0"
+              >
+                {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -2163,8 +2548,15 @@ export default function App() {
     const savedCity = localStorage.getItem("trip_active_city");
     if (savedCity) setActiveCity(savedCity);
 
-    const savedFocus = localStorage.getItem("trip_focus_day");
-    if (savedFocus) setFocusDayIndex(Number(savedFocus));
+    const savedMood = localStorage.getItem("trip_mood");
+    if (savedMood) setMood(savedMood as Mood);
+
+    if (isWithinTrip) {
+      setFocusDayIndex(todayIndex);
+    } else {
+      const savedFocus = localStorage.getItem("trip_focus_day");
+      if (savedFocus) setFocusDayIndex(Number(savedFocus));
+    }
 
     const savedBudgetFilters = localStorage.getItem("trip_budget_filters_v3");
     if (savedBudgetFilters) setFilters(JSON.parse(savedBudgetFilters));
@@ -2178,6 +2570,7 @@ export default function App() {
   useEffect(() => localStorage.setItem("trip_focus_day", String(focusDayIndex)), [focusDayIndex]);
   useEffect(() => localStorage.setItem("trip_budget_filters_v3", JSON.stringify(filters)), [filters]);
   useEffect(() => localStorage.setItem("trip_budget_tab_v3", budgetTab), [budgetTab]);
+  useEffect(() => localStorage.setItem("trip_mood", mood), [mood]);
 
   const setCityFromFocus = () => {
     const base = focusDay.city.split("→").map((s) => s.trim())[0];
@@ -2186,14 +2579,34 @@ export default function App() {
 
   const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd, filters), [filters]);
 
+  // Live countdown / trip-day + glanceable "today" derivations
+  const MS_DAY = 86400000;
+  const daysTo = Math.max(0, Math.ceil((+new Date(tripStart!) - +new Date(todayISO)) / MS_DAY));
+  const tripLen = Math.round((+new Date(tripEnd!) - +new Date(tripStart!)) / MS_DAY) + 1;
+  const dayNo = clamp(Math.floor((+new Date(todayISO) - +new Date(tripStart!)) / MS_DAY) + 1, 1, tripLen);
+  const todayDay = TRIP_DATA.itinerary_days[todayIndex];
+  const nextTransfer = useMemo(
+    () =>
+      TRIP_DATA.expenses_usd
+        .filter((e) => e.category === "transport" && e.date && e.date >= todayISO)
+        .sort((a, b) => (a.date! < b.date! ? -1 : 1))[0] ?? null,
+    [todayISO]
+  );
+  const lastDay = TRIP_DATA.itinerary_days.length - 1;
+  const goView = (v: View) => {
+    setView(v);
+    requestAnimationFrame(() => window.scrollTo({ top: 0 }));
+  };
+  const tripContext = useMemo(() => buildTripContext(todayISO), [todayISO]);
+
   const TabsList = [
-    { id: "home", icon: Star },
-    { id: "itinerary", icon: Calendar },
-    { id: "hotels", icon: Hotel },
-    { id: "activities", icon: Sparkles },
-    { id: "guide", icon: Utensils },
-    { id: "tips", icon: Lightbulb },
-    { id: "budget", icon: Wallet },
+    { id: "home", icon: Star, label: "Accueil" },
+    { id: "itinerary", icon: Calendar, label: "Jours" },
+    { id: "hotels", icon: Hotel, label: "Hôtels" },
+    { id: "activities", icon: Sparkles, label: "Activités" },
+    { id: "guide", icon: Utensils, label: "Guide" },
+    { id: "tips", icon: Lightbulb, label: "Conseils" },
+    { id: "budget", icon: Wallet, label: "Budget" },
   ] as const;
 
   // Activities filtered by city & kids mode
@@ -2219,79 +2632,199 @@ export default function App() {
   }, [kidsMode]);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-32 overflow-x-hidden select-none">
+    <div className="min-h-screen bg-[radial-gradient(120%_80%_at_50%_-10%,#eef2ff_0%,#f8fafc_45%,#f1f5f9_100%)] font-sans text-ink-900 pb-36 overflow-x-hidden">
       <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
       {/* HOME */}
       {view === "home" && (
-        <div className="animate-in fade-in duration-500">
+        <div key="home" className="motion-safe:animate-fade-up">
           <CinemaHero
             onOpenQuick={() => setQuickOpen(true)}
             activeCity={activeCity}
             coverSrc={cityCoverFromLabel(activeCity)}
-            subtitle="HQ Mobile — Itinéraire • Budget • Activités"
+            daysTo={daysTo}
+            dayNo={dayNo}
+            tripLen={tripLen}
+            isWithinTrip={isWithinTrip}
           />
 
-          <div className="relative -mt-10 px-6 space-y-8">
-            <Glass className="rounded-[40px] p-8 flex items-center justify-between">
-              <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Statut</p>
-                <p className="text-sm font-black text-slate-900 leading-none">{isWithinTrip ? "Voyage en cours 🇻🇳" : "Préparation 📝"}</p>
+          <div className="relative -mt-12 px-5 space-y-7">
+            {/* Aujourd'hui / Prochainement — the daily command card */}
+            <Glass className="rounded-hero p-6 ring-1 ring-white/60">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-jade-500/60 motion-safe:animate-ping" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-jade-500" />
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-jade-600">
+                    {isWithinTrip ? "Aujourd'hui" : "Prochainement"}
+                  </p>
+                </div>
+                <p className="text-[11px] font-semibold text-ink-400">
+                  {isWithinTrip ? `Jour ${dayNo} / ${tripLen}` : daysTo > 0 ? `J−${daysTo}` : "Terminé"}
+                </p>
               </div>
-              <button onClick={() => setView("itinerary")} className="w-12 h-12 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg">
-                <ChevronRight size={24} />
+
+              <button
+                type="button"
+                onClick={() => {
+                  setFocusDayIndex(todayIndex);
+                  setCityFromFocus();
+                  goView("itinerary");
+                }}
+                className="group w-full flex items-center gap-4 text-left mb-3"
+              >
+                <SmartImage src={dayCoverFromDay(todayDay)} alt={todayDay.city} className="w-16 h-16 rounded-2xl shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{safeDateLabel(todayDay.date)}</p>
+                  <p className="font-display text-xl text-ink-900 leading-tight truncate">{todayDay.city}</p>
+                  <p className="text-[11px] font-medium text-ink-500 truncate">{todayDay.blocks[0]?.plan}</p>
+                </div>
+                <ArrowRight size={18} className="text-ink-300 shrink-0 group-active:translate-x-0.5 transition-transform" />
               </button>
+
+              {nextTransfer && (
+                <button
+                  type="button"
+                  onClick={() => goView("budget")}
+                  className="w-full flex items-center gap-3 text-left p-3 rounded-2xl bg-ink-50/80 border border-ink-100"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-brand-600 shadow-soft shrink-0">
+                    {nextTransfer.mode === "flight_domestic" ? <Plane size={16} /> : <Car size={16} />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
+                      Prochain transfert{nextTransfer.date ? ` · ${safeDateLabel(nextTransfer.date)}` : ""}
+                    </p>
+                    <p className="text-xs font-semibold text-ink-700 truncate">
+                      {nextTransfer.from} → {nextTransfer.to}
+                    </p>
+                  </div>
+                  <ChevronRight size={16} className="text-ink-300 shrink-0" />
+                </button>
+              )}
             </Glass>
 
-            <div className="grid grid-cols-1 gap-4">
-              <Toggle
-                label="Mode kids"
-                icon={<Smartphone size={20} />}
-                value={kidsMode}
-                onChange={setKidsMode}
-                hint="Masque les activités ‘impact’."
+            {/* Énergie / mood */}
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400 mb-3 ml-1">Énergie du jour</p>
+              <Segmented
+                value={mood}
+                onChange={(id) => setMood(id as Mood)}
+                items={[
+                  { id: "fatigue", label: "Doux", icon: <Moon size={15} /> },
+                  { id: "normal", label: "Normal", icon: <Star size={15} /> },
+                  { id: "energy", label: "À fond", icon: <Sparkles size={15} /> },
+                ]}
               />
             </div>
 
+            <Toggle
+              label="Mode enfants"
+              icon={<Smartphone size={20} />}
+              value={kidsMode}
+              onChange={setKidsMode}
+              hint="Masque les contenus sensibles (mode kids)."
+            />
+
+            {/* Équipage */}
             <div>
-              <div className="flex justify-between items-end mb-6">
-                <div>
-                  <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Équipage</h3>
-                  <p className="text-xs font-bold text-slate-400 tracking-tight italic">Les aventuriers</p>
-                </div>
+              <div className="mb-4">
+                <h3 className="font-display text-3xl text-ink-900 leading-none">Équipage</h3>
+                <p className="text-xs font-semibold text-ink-400 italic">Les aventuriers</p>
               </div>
               <FamilyStrip members={FAMILY_MEMBERS as any} />
             </div>
 
+            {/* Jour focus */}
             <div>
-              <div className="flex justify-between items-end mb-6">
+              <div className="flex justify-between items-end mb-4">
                 <div>
-                  <h3 className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-1">Jour focus</h3>
-                  <p className="text-xs font-bold text-slate-400 italic">Carte du jour</p>
+                  <h3 className="font-display text-3xl text-ink-900 leading-none mb-0.5">Jour focus</h3>
+                  <p className="text-xs font-semibold text-ink-400 italic">Glisse pour explorer</p>
                 </div>
-                              </div>               <div                 onTouchStart={(e) => { (e.currentTarget as any)._swipeX = e.touches[0].clientX; }}                 onTouchEnd={(e) => {                   const startX = (e.currentTarget as any)._swipeX ?? null;                   if (startX === null) return;                   const delta = e.changedTouches[0].clientX - startX;                   if (Math.abs(delta) > 50) {                     setFocusDayIndex((i) => clamp(i + (delta < 0 ? 1 : -1), 0, TRIP_DATA.itinerary_days.length - 1));                   }                 }}               >                 <DayCardMobile day={focusDay} coverSrc={dayCoverFromDay(focusDay)} mood={mood} kidsMode={kidsMode} />               </div>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    aria-label="Jour précédent"
+                    onClick={() => setFocusDayIndex((i) => clamp(i - 1, 0, lastDay))}
+                    className="w-10 h-10 rounded-full bg-ink-100 text-ink-600 flex items-center justify-center active:scale-90 transition-transform"
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Jour suivant"
+                    onClick={() => setFocusDayIndex((i) => clamp(i + 1, 0, lastDay))}
+                    className="w-10 h-10 rounded-full bg-ink-100 text-ink-600 flex items-center justify-center active:scale-90 transition-transform"
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              </div>
+
+              <div
+                onTouchStart={(e) => {
+                  (e.currentTarget as any)._swipeX = e.touches[0].clientX;
+                }}
+                onTouchEnd={(e) => {
+                  const startX = (e.currentTarget as any)._swipeX ?? null;
+                  if (startX === null) return;
+                  const delta = e.changedTouches[0].clientX - startX;
+                  if (Math.abs(delta) > 50) {
+                    setFocusDayIndex((i) => clamp(i + (delta < 0 ? 1 : -1), 0, lastDay));
+                  }
+                }}
+              >
+                <div key={focusDayIndex} className="motion-safe:animate-fade-up">
+                  <DayCardMobile day={focusDay} coverSrc={dayCoverFromDay(focusDay)} mood={mood} kidsMode={kidsMode} />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center gap-1.5 mt-1 flex-wrap px-4">
+                {TRIP_DATA.itinerary_days.map((d, i) => (
+                  <button
+                    key={d.date}
+                    type="button"
+                    aria-label={`Aller au jour ${i + 1}`}
+                    onClick={() => setFocusDayIndex(i)}
+                    className={`h-1.5 rounded-full transition-all ${i === focusDayIndex ? "w-6 bg-brand-600" : "w-1.5 bg-ink-200"}`}
+                  />
+                ))}
+              </div>
 
               <button
+                type="button"
                 onClick={() => {
                   setCityFromFocus();
-                  setView("itinerary");
+                  goView("itinerary");
                 }}
-                className="w-full py-5 rounded-[32px] bg-slate-100 text-slate-600 text-xs font-black uppercase tracking-widest mt-4"
+                className="w-full py-4 rounded-card bg-ink-100 text-ink-600 text-xs font-bold uppercase tracking-widest mt-4 active:scale-[.99] transition-transform"
               >
-                Voir l’itinéraire
+                Voir tout l'itinéraire
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pb-12">
-              <button onClick={() => setView("activities")} className="p-6 rounded-[40px] bg-emerald-50 border border-emerald-100 text-left">
-                <Sparkles size={24} className="text-emerald-600 mb-4" />
-                <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Activités</p>
-                <p className="text-[10px] font-bold text-emerald-500">Par ville</p>
+            {/* Quick tiles */}
+            <div className="grid grid-cols-2 gap-4 pb-10">
+              <button
+                type="button"
+                onClick={() => goView("activities")}
+                className="p-6 rounded-card bg-jade-50 border border-jade-100 text-left active:scale-[.98] transition-transform"
+              >
+                <Sparkles size={24} className="text-jade-600 mb-4" />
+                <p className="text-sm font-bold text-ink-900">Activités</p>
+                <p className="text-[11px] font-semibold text-jade-600">Par ville</p>
               </button>
-              <button onClick={() => setView("budget")} className="p-6 rounded-[40px] bg-amber-50 border border-amber-100 text-left">
-                <Wallet size={24} className="text-amber-600 mb-4" />
-                <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Budget</p>
-                <p className="text-[10px] font-bold text-amber-500">USD uniquement</p>
+              <button
+                type="button"
+                onClick={() => goView("budget")}
+                className="p-6 rounded-card bg-sun-50 border border-sun-100 text-left active:scale-[.98] transition-transform"
+              >
+                <Wallet size={24} className="text-sun-600 mb-4" />
+                <p className="text-sm font-bold text-ink-900">Budget</p>
+                <p className="text-[11px] font-semibold text-sun-600">USD</p>
               </button>
             </div>
           </div>
@@ -2300,13 +2833,13 @@ export default function App() {
 
       {/* ITINERARY */}
       {view === "itinerary" && (
-        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+        <div className="motion-safe:animate-fade-up px-6 pt-12">
           <div className="flex justify-between items-center mb-10">
             <div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Itinéraire</h2>
+              <h2 className="font-display text-[2.5rem] text-ink-900 leading-none mb-1">Itinéraire</h2>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Carte par carte</p>
             </div>
-            <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <button type="button" onClick={() => goView("home")} aria-label="Retour à l'accueil" className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-500 active:scale-90 transition-transform">
               <X size={20} />
             </button>
           </div>
@@ -2328,13 +2861,13 @@ export default function App() {
 
       {/* HOTELS */}
       {view === "hotels" && (
-        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+        <div className="motion-safe:animate-fade-up px-6 pt-12">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Hôtels</h2>
+              <h2 className="font-display text-[2.5rem] text-ink-900 leading-none mb-1">Hôtels</h2>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Repos & logistique</p>
             </div>
-            <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <button type="button" onClick={() => goView("home")} aria-label="Retour à l'accueil" className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-500 active:scale-90 transition-transform">
               <X size={20} />
             </button>
           </div>
@@ -2345,15 +2878,15 @@ export default function App() {
 
       {/* ACTIVITIES (UPDATED) */}
       {view === "activities" && (
-        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+        <div className="motion-safe:animate-fade-up px-6 pt-12">
           <div className="flex justify-between items-center mb-10">
             <div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Activités</h2>
+              <h2 className="font-display text-[2.5rem] text-ink-900 leading-none mb-1">Activités</h2>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
                 Prix arrondis • USD via 1$ ≈ {VND_PER_USD.toLocaleString("fr-FR")} VND
               </p>
             </div>
-            <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <button type="button" onClick={() => goView("home")} aria-label="Retour à l'accueil" className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-500 active:scale-90 transition-transform">
               <X size={20} />
             </button>
           </div>
@@ -2405,13 +2938,13 @@ export default function App() {
 
       {/* GUIDE */}
       {view === "guide" && (
-        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+        <div className="motion-safe:animate-fade-up px-6 pt-12">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Guide</h2>
+              <h2 className="font-display text-[2.5rem] text-ink-900 leading-none mb-1">Guide</h2>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Food + aéroports</p>
             </div>
-            <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <button type="button" onClick={() => goView("home")} aria-label="Retour à l'accueil" className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-500 active:scale-90 transition-transform">
               <X size={20} />
             </button>
           </div>
@@ -2424,13 +2957,13 @@ export default function App() {
 
       {/* TIPS */}
       {view === "tips" && (
-        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+        <div className="motion-safe:animate-fade-up px-6 pt-12">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Conseils</h2>
+              <h2 className="font-display text-[2.5rem] text-ink-900 leading-none mb-1">Conseils</h2>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Pratique</p>
             </div>
-            <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <button type="button" onClick={() => goView("home")} aria-label="Retour à l'accueil" className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-500 active:scale-90 transition-transform">
               <X size={20} />
             </button>
           </div>
@@ -2444,13 +2977,13 @@ export default function App() {
 
       {/* BUDGET (FR, no “Copy JSON”) */}
       {view === "budget" && (
-        <div className="animate-in slide-in-from-bottom duration-500 px-6 pt-12">
+        <div className="motion-safe:animate-fade-up px-6 pt-12">
           <div className="flex justify-between items-center mb-10">
             <div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-1">Budget</h2>
+              <h2 className="font-display text-[2.5rem] text-ink-900 leading-none mb-1">Budget</h2>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">USD uniquement • sans hôtels • sans food</p>
             </div>
-            <button onClick={() => setView("home")} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <button type="button" onClick={() => goView("home")} aria-label="Retour à l'accueil" className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-500 active:scale-90 transition-transform">
               <X size={20} />
             </button>
           </div>
@@ -2568,11 +3101,24 @@ export default function App() {
                 </p>
               </Glass>
 
-              <div className="space-y-4">
-                {budget.transport.items.map((item) => (
-                  <ExpenseRow key={item.id} item={item} showAlloc />
-                ))}
-              </div>
+              {budget.transport.items.length === 0 ? (
+                <div className="rounded-card border border-dashed border-ink-200 p-8 text-center">
+                  <p className="text-sm font-semibold text-ink-500">Aucun transport pour ces filtres.</p>
+                  <button
+                    type="button"
+                    onClick={() => setFilters((f) => ({ ...f, recherche: "", inclureConfirmes: true, inclureEstimes: true, seulementJaCosmo: false }))}
+                    className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink-100 text-ink-700 text-xs font-bold active:scale-95 transition-transform"
+                  >
+                    <RotateCcw size={14} /> Réinitialiser les filtres
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {budget.transport.items.map((item) => (
+                    <ExpenseRow key={item.id} item={item} showAlloc />
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -2587,37 +3133,55 @@ export default function App() {
                 </p>
               </Glass>
 
-              <div className="space-y-4">
-                {budget.activities.items.map((item) => (
-                  <ExpenseRow key={item.id} item={item} showAlloc />
-                ))}
-              </div>
+              {budget.activities.items.length === 0 ? (
+                <div className="rounded-card border border-dashed border-ink-200 p-8 text-center">
+                  <p className="text-sm font-semibold text-ink-500">Aucune activité pour ces filtres.</p>
+                  <button
+                    type="button"
+                    onClick={() => setFilters((f) => ({ ...f, recherche: "", inclureConfirmes: true, inclureEstimes: true, seulementJaCosmo: false }))}
+                    className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink-100 text-ink-700 text-xs font-bold active:scale-95 transition-transform"
+                  >
+                    <RotateCcw size={14} /> Réinitialiser les filtres
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {budget.activities.items.map((item) => (
+                    <ExpenseRow key={item.id} item={item} showAlloc />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
       )}
 
       {/* MOBILE NAV */}
-      <div className="fixed bottom-6 left-6 right-6 z-[90]">
-        <div className="backdrop-blur-2xl bg-slate-900/90 rounded-[40px] border border-white/10 p-2 flex items-center justify-between shadow-2xl">
+      <nav aria-label="Navigation principale" className="fixed bottom-4 left-3 right-3 z-[90] pb-[env(safe-area-inset-bottom)]">
+        <div className="backdrop-blur-2xl bg-ink-900/90 rounded-[2rem] border border-white/10 p-1.5 flex items-stretch justify-between gap-0.5 shadow-float">
           {TabsList.map((tab) => {
             const Icon = tab.icon;
             const active = view === tab.id;
             return (
               <button
                 key={tab.id}
-                onClick={() => setView(tab.id as View)}
-                className={`flex-1 flex flex-col items-center justify-center py-4 rounded-3xl transition-all ${
-                  active ? "bg-white text-slate-900 scale-105 shadow-xl" : "text-white/40"
+                type="button"
+                onClick={() => goView(tab.id as View)}
+                aria-label={tab.label}
+                aria-current={active ? "page" : undefined}
+                className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl transition-all duration-300 ${
+                  active ? "bg-white text-ink-900 shadow-float" : "text-white/55 active:scale-90"
                 }`}
-                aria-label={tab.id}
               >
-                <Icon size={18} />
+                <Icon size={17} aria-hidden="true" />
+                <span className="text-[9px] font-bold tracking-tight leading-none">{tab.label}</span>
               </button>
             );
           })}
         </div>
-      </div>
+      </nav>
+
+      <MrTang tripContext={tripContext} today={todayISO} />
     </div>
   );
 }
