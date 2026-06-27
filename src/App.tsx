@@ -186,7 +186,7 @@ const ACT_COVERS: Record<string, string> = {
 // TYPES
 // ============================================================
 type Mood = "fatigue" | "normal" | "energy";
-type View = "home" | "itinerary" | "hotels" | "activities" | "guide" | "tips" | "budget";
+type View = "home" | "itinerary" | "hotels" | "flights" | "activities" | "guide" | "tips" | "budget";
 type StatusTag = "CONFIRMED" | "ESTIMATE";
 
 type Money = { us: number; claudine: number; currency: "USD" };
@@ -452,7 +452,7 @@ const Toggle = ({
       <div className="p-2 rounded-2xl bg-white shadow-sm text-slate-600">{icon}</div>
       <div>
         <p className="text-sm font-extrabold text-slate-900">{label}</p>
-        {hint && <p className="text-[10px] text-slate-500 font-medium">{hint}</p>}
+        {hint && <p className="text-[13px] text-slate-500 font-medium">{hint}</p>}
       </div>
     </div>
     <button
@@ -509,7 +509,7 @@ const StatChip = ({
       : "bg-indigo-50 border-indigo-100 text-indigo-700";
   return (
     <div className={`p-4 rounded-3xl border ${cls}`}>
-      <p className="text-[9px] font-black uppercase tracking-widest opacity-70 mb-1">{label}</p>
+      <p className="text-[12px] font-black uppercase tracking-widest opacity-70 mb-1">{label}</p>
       <p className="text-lg font-black">{value}</p>
     </div>
   );
@@ -526,8 +526,8 @@ const FamilyStrip = ({ members }: { members: typeof FAMILY_MEMBERS }) => (
           </div>
         </div>
         <div className="text-center leading-tight">
-          <p className="text-[11px] font-bold text-ink-900 truncate w-full">{m.name}</p>
-          <p className="text-[9px] font-semibold text-ink-400 truncate w-full">{m.desc}</p>
+          <p className="text-[13px] font-bold text-ink-900 truncate w-full">{m.name}</p>
+          <p className="text-[12px] font-semibold text-ink-400 truncate w-full">{m.desc}</p>
         </div>
       </div>
     ))}
@@ -572,17 +572,17 @@ const CinemaHero = ({
       <div className="absolute inset-0 flex flex-col justify-between px-6 pt-14 pb-10">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55 mb-2">24 juil → 18 août 2026</p>
+            <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-white/55 mb-2">24 juil → 18 août 2026</p>
             <div className="inline-flex items-baseline gap-2 px-4 py-2 rounded-full bg-jade-500/15 ring-1 ring-jade-400/30 backdrop-blur-md">
               {isWithinTrip ? (
                 <>
                   <span className="font-display text-2xl text-jade-300 tabular-nums leading-none">Jour {dayNo}</span>
-                  <span className="text-[11px] font-semibold text-white/60 uppercase tracking-widest">/ {tripLen}</span>
+                  <span className="text-[13px] font-semibold text-white/60 uppercase tracking-widest">/ {tripLen}</span>
                 </>
               ) : daysTo > 0 ? (
                 <>
                   <span className="font-display text-[28px] text-jade-300 tabular-nums leading-none">J−{daysTo}</span>
-                  <span className="text-[11px] font-semibold text-white/60 uppercase tracking-widest">avant le départ</span>
+                  <span className="text-[13px] font-semibold text-white/60 uppercase tracking-widest">avant le départ</span>
                 </>
               ) : (
                 <span className="font-display text-xl text-jade-300 leading-none">De retour ✨</span>
@@ -600,11 +600,11 @@ const CinemaHero = ({
         </div>
 
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70 mb-2">Carnet de voyage famille</p>
+          <p className="text-[13px] font-semibold uppercase tracking-[0.3em] text-white/70 mb-2">Carnet de voyage famille</p>
           <h1 className="font-display text-[clamp(3.5rem,18vw,5rem)] leading-[0.82] text-white tracking-tight mb-5">Vietnam</h1>
           <div className="flex items-center gap-2">
             <Compass size={15} className="text-white/50" />
-            <p className="text-[11px] font-semibold text-white/55 uppercase tracking-widest">Focus</p>
+            <p className="text-[13px] font-semibold text-white/55 uppercase tracking-widest">Focus</p>
             <span className={`inline-flex px-3 py-1.5 rounded-full text-sm font-semibold backdrop-blur-md bg-white/15 ring-1 ring-white/25 ${accent.text}`}>
               {activeCity}
             </span>
@@ -694,7 +694,7 @@ const QuickSheet = ({
       </div>
 
       <div className="mt-auto">
-        <p className="text-center text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">
+        <p className="text-center text-white/40 text-[13px] font-bold uppercase tracking-[0.2em]">
           Vietnam Trip 2026 — Hub Mobile
         </p>
       </div>
@@ -722,19 +722,12 @@ const DayCardMobile = ({
   day,
   coverSrc,
   mood,
-  kidsMode,
 }: {
   day: ItineraryDay;
   coverSrc: string;
   mood: Mood;
-  kidsMode: boolean;
 }) => {
   const isFatigue = mood === "fatigue";
-
-  const shouldHideImpact = (text: string) => {
-    const t = text.toLowerCase();
-    return t.includes("prison") || t.includes("war") || t.includes("remnants") || t.includes("impact") || t.includes("fort");
-  };
 
   return (
     <div className="group relative w-full mb-8 last:mb-0">
@@ -750,12 +743,12 @@ const DayCardMobile = ({
             <div className="absolute bottom-7 left-7 right-7">
               <div className="flex items-center gap-2 mb-2">
                 <Calendar size={12} className={accentForCity(day.city).text} />
-                <p className="text-[11px] font-semibold text-white/85 uppercase tracking-widest">{safeDateLabel(day.date)}</p>
+                <p className="text-[13px] font-semibold text-white/85 uppercase tracking-widest">{safeDateLabel(day.date)}</p>
               </div>
               <h4 className="font-display text-3xl text-white leading-none mb-3">{day.city}</h4>
               <div className="flex flex-wrap gap-1.5">
                 {day.theme.map((t) => (
-                  <span key={t} className="px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/15 text-[10px] font-semibold text-white tracking-wide">
+                  <span key={t} className="px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/15 text-[13px] font-semibold text-white tracking-wide">
                     {t}
                   </span>
                 ))}
@@ -778,21 +771,10 @@ const DayCardMobile = ({
             );
           }
 
-          if (kidsMode && shouldHideImpact(b.plan)) {
-            return (
-              <div key={idx} className="p-4 rounded-3xl bg-slate-50 border border-slate-100 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
-                  <Shield size={16} />
-                </div>
-                <p className="text-xs font-bold text-slate-500 italic">Contenu masqué (mode kids)</p>
-              </div>
-            );
-          }
-
           return (
             <div key={idx} className="relative pl-6 border-l-2 border-slate-100">
               <div className="absolute top-0 left-[-5px] w-2 h-2 rounded-full bg-slate-200" />
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{b.label}</p>
+              <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">{b.label}</p>
               <p className="text-sm font-bold text-slate-800 leading-relaxed">{b.plan}</p>
               {b.links?.length ? (
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -802,7 +784,7 @@ const DayCardMobile = ({
                       href={l}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-[10px] font-extrabold text-slate-600"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-[13px] font-extrabold text-slate-600"
                     >
                       <Info size={10} />
                       Lien
@@ -843,7 +825,7 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
             <>
               <div className="absolute inset-0 bg-gradient-to-t from-ink-900/45 via-transparent to-transparent" />
               <div className="absolute top-4 left-4">
-                <span className="px-3 py-1 rounded-full bg-ink-900/70 backdrop-blur-md text-[11px] font-semibold text-white tracking-wide">{hotel.city}</span>
+                <span className="px-3 py-1 rounded-full bg-ink-900/70 backdrop-blur-md text-[13px] font-semibold text-white tracking-wide">{hotel.city}</span>
               </div>
             </>
           }
@@ -864,20 +846,20 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
         <div className="mb-6">
           {hotel.paidBy ? (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-600 text-white text-[13px] font-black uppercase tracking-widest">
                 <BadgeCheck size={12} /> Payé · {hotel.paidBy}
               </span>
-              {hotel.paidNote && <span className="text-[10px] font-bold text-slate-500">{hotel.paidNote}</span>}
+              {hotel.paidNote && <span className="text-[13px] font-bold text-slate-500">{hotel.paidNote}</span>}
             </div>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[13px] font-black uppercase tracking-widest">
               <BadgeHelp size={12} /> À régler
             </span>
           )}
         </div>
 
         {hotel.note && (
-          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 text-[10px] font-bold text-amber-800 mb-6 leading-relaxed">
+          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 text-[13px] font-bold text-amber-800 mb-6 leading-relaxed">
             {hotel.note}
           </div>
         )}
@@ -886,11 +868,11 @@ const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
 
         <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="p-4 rounded-3xl bg-slate-50 border border-slate-100">
-            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Nous</p>
+            <p className="text-[12px] font-black text-slate-400 uppercase mb-1">Nous</p>
             <p className="text-lg font-black text-slate-900 leading-none">{formatUSD0(hotel.budget.us)}</p>
           </div>
           <div className="p-4 rounded-3xl bg-slate-50 border border-slate-100">
-            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Claudine</p>
+            <p className="text-[12px] font-black text-slate-400 uppercase mb-1">Claudine</p>
             <p className="text-lg font-black text-slate-900 leading-none">{formatUSD0(hotel.budget.claudine)}</p>
           </div>
         </div>
@@ -951,7 +933,7 @@ const PhrasebookCard = ({ items }: { items: PhraseItem[] }) => (
     <div className="space-y-6">
       {items.map((p) => (
         <div key={p.fr}>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{p.fr}</p>
+          <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest mb-1">{p.fr}</p>
           <div className="flex items-baseline gap-2">
             <p className="text-lg font-black text-slate-900">{p.vi}</p>
             <p className="text-xs font-bold text-emerald-500 italic">• {p.phon}</p>
@@ -970,7 +952,7 @@ const AirportGlossaryCard = ({ items }: { items: AirportGlossaryItem[] }) => (
       </div>
       <h4 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">Aéroports</h4>
     </div>
-    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">Codes + trajets estimés</p>
+    <p className="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-8">Codes + trajets estimés</p>
 
     <div className="space-y-8">
       {items.map((a, i) => (
@@ -982,13 +964,13 @@ const AirportGlossaryCard = ({ items }: { items: AirportGlossaryItem[] }) => (
           </div>
           <p className="text-xs font-bold text-slate-600 mb-2">{a.airport}</p>
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-            <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Depuis l’hôtel</p>
-            <p className="text-[10px] font-bold text-slate-700 leading-tight">{a.fromHotel}</p>
+            <p className="text-[12px] font-black text-slate-400 uppercase mb-1">Depuis l’hôtel</p>
+            <p className="text-[13px] font-bold text-slate-700 leading-tight">{a.fromHotel}</p>
             <div className="mt-3 flex items-center justify-between">
-              <p className="text-[9px] font-black text-slate-400 uppercase">Trajet</p>
+              <p className="text-[12px] font-black text-slate-400 uppercase">Trajet</p>
               <p className="text-xs font-black text-emerald-600 uppercase tracking-tighter">{a.eta}</p>
             </div>
-            {a.note && <p className="mt-2 text-[9px] font-bold text-amber-600 italic">! {a.note}</p>}
+            {a.note && <p className="mt-2 text-[12px] font-bold text-amber-600 italic">! {a.note}</p>}
           </div>
         </div>
       ))}
@@ -1164,7 +1146,7 @@ const TRIP_DATA: TripData = {
       theme: ["arrivée", "culture", "street-life"],
       blocks: [
         { label: "Escale", plan: "Escale 14h à Doha prise en charge par Qatar Airways (hôtel + repos). Vol QR982 Doha→Hanoi décollage 20:05 (25 juil) → arrivée Noi Bai le 26 à 07:15." },
-        { label: "Matin", plan: "Arrivée 07:15, transfert privé, check-in / dépôt bagages au Ja Cosmo, petit-déj + repos après le vol." },
+        { label: "Matin", plan: "Arrivée 07:15 (terminal T2). Récupérer les bagages, traverser le hall → PILIER N°10 : chauffeur Ja Cosmo avec pancarte au nom (voiture 16 places). Transfert privé, check-in / dépôt bagages, petit-déj + repos. Contact Michael : +84 812 738 866." },
         { label: "Aprem", plan: "Old Quarter + lac Hoan Kiem + cafés (rythme doux, jet-lag)." },
         { label: "Soir", plan: "Street food + spectacle marionnettes sur l’eau (kids-friendly).", links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"] },
       ],
@@ -1270,11 +1252,11 @@ const TRIP_DATA: TripData = {
       date: "2026-07-26",
       from: "Hanoi Airport (HAN)",
       to: "Ja Cosmo Hotel (Hanoi)",
-      title: "Transfert privé (7 places) — Aéroport → Hôtel",
-      price_total_usd: 20.02,
+      title: "Transfert privé (16 places) — Aéroport → Hôtel",
+      price_total_usd: 30.0,
       payer_rule: "claudine_20pct_transport",
-      notes: "Confirmé par Ja Cosmo. Arrivée le 26 juil 07:15 (vol QR982).",
-      tags: ["ja_cosmo", "privé", "HAN"],
+      notes: "Confirmé par Ja Cosmo (Michael). Vol QR982, arrivée 26 juil 07:15, terminal T2 · 5 passagers · voiture 16 places. RDV : après les bagages, traverser le hall d'arrivée → PILIER N°10, panneau « Ja Cosmo Hotel and Spa / Welcome / Nizzar Ben Chekroune ». Le chauffeur parle peu anglais → contacter Michael : +84 243 926 2222 / +84 812 738 866 (WhatsApp · KakaoTalk · Line · Viber · Zalo). Frais déjà ajoutés à la note d'hôtel : rien à payer au chauffeur.",
+      tags: ["ja_cosmo", "privé", "HAN", "pilier 10"],
     },
     {
       id: "T-JC-002",
@@ -1373,6 +1355,22 @@ const TRIP_DATA: TripData = {
       payer_rule: "claudine_20pct_transport",
       notes: "Estimation.",
       tags: ["estimation"],
+    },
+    {
+      id: "T-JC-006",
+      category: "transport",
+      mode: "limousine_or_private_van",
+      operator: "Ja Cosmo",
+      operated_by_ja_cosmo: true,
+      status: "ESTIMATE",
+      date: "2026-08-08",
+      from: "Palm Garden (Hoi An)",
+      to: "Da Nang Airport (DAD)",
+      title: "Transfert privé — Palm Garden → DAD",
+      price_total_usd: 25.0,
+      payer_rule: "claudine_20pct_transport",
+      notes: "Organisé par Ja Cosmo. Remplace l'ancien transfert depuis l'hôtel Da Nang (annulé). Départ très tôt pour le vol VJ581 06:20 — heure de pickup à confirmer par Ja Cosmo.",
+      tags: ["ja_cosmo", "hoi-an", "DAD", "TBC"],
     },
         {
       id: "T-OT-105",
@@ -2092,13 +2090,13 @@ const ExpenseRow = ({
             <div className="flex items-center gap-2 flex-wrap">
               <p className="text-sm font-black text-slate-900 tracking-tight">{item.title}</p>
               {item.operated_by_ja_cosmo && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest">
+                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-600 text-white text-[13px] font-black uppercase tracking-widest">
                   <BadgeCheck size={12} /> Ja Cosmo
                 </span>
               )}
             </div>
 
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+            <p className="text-[13px] font-bold text-slate-400 uppercase tracking-widest mt-1">
               {item.id} • {item.operator} • {item.mode.replaceAll("_", " ")}
             </p>
 
@@ -2108,12 +2106,12 @@ const ExpenseRow = ({
               </p>
             )}
 
-            {item.notes && <p className="mt-2 text-[11px] font-semibold text-slate-500 leading-relaxed">{item.notes}</p>}
+            {item.notes && <p className="mt-2 text-[13px] font-semibold text-slate-500 leading-relaxed">{item.notes}</p>}
 
             {item.tags?.length ? (
               <div className="mt-3 flex flex-wrap gap-2">
                 {item.tags.slice(0, 4).map((t) => (
-                  <span key={t} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-[10px] font-black text-slate-600">
+                  <span key={t} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-[13px] font-black text-slate-600">
                     <Tag size={12} /> {t}
                   </span>
                 ))}
@@ -2123,22 +2121,22 @@ const ExpenseRow = ({
         </div>
 
         <div className="shrink-0 text-right">
-          <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-black ${badge.cls}`}>
+          <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[13px] font-black ${badge.cls}`}>
             {badge.icon} {badge.label}
           </div>
           <p className="mt-2 text-xl font-black text-slate-900">{formatUSD0(item.price_total_usd)}</p>
-          {item.date && <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">{item.date}</p>}
+          {item.date && <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest mt-1">{item.date}</p>}
         </div>
       </div>
 
       {showAlloc && (
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Claudine</p>
+            <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Claudine</p>
             <p className="text-sm font-black text-slate-900">{formatUSD0(item.alloc_claudine)}</p>
           </div>
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Nous</p>
+            <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Nous</p>
             <p className="text-sm font-black text-slate-900">{formatUSD0(item.alloc_nous)}</p>
           </div>
         </div>
@@ -2197,7 +2195,7 @@ const ActivityCard = ({ a }: { a: PlannedActivity }) => {
           <>
             <div className="absolute inset-0 bg-gradient-to-t from-ink-900/70 via-ink-900/10 to-transparent" />
             <div className="absolute bottom-4 left-5 right-5">
-              <p className="text-[10px] font-semibold text-white/80 uppercase tracking-widest mb-0.5">
+              <p className="text-[13px] font-semibold text-white/80 uppercase tracking-widest mb-0.5">
                 {a.city}
                 {a.window ? ` • ${a.window}` : ""}
               </p>
@@ -2209,33 +2207,33 @@ const ActivityCard = ({ a }: { a: PlannedActivity }) => {
       <div className="p-6">
         <div className="grid grid-cols-2 gap-3">
           <div className="p-4 rounded-2xl bg-jade-50 border border-jade-100">
-            <p className="text-[10px] font-bold text-jade-700 uppercase tracking-widest mb-1">Prix</p>
+            <p className="text-[13px] font-bold text-jade-700 uppercase tracking-widest mb-1">Prix</p>
             <p className="text-sm font-extrabold text-ink-900">{priceLine}</p>
-            <p className="text-[11px] font-semibold text-jade-700/80 mt-1">{rawLine}</p>
+            <p className="text-[13px] font-semibold text-jade-700/80 mt-1">{rawLine}</p>
           </div>
           <div className="p-4 rounded-2xl bg-ink-50 border border-ink-100">
-            <p className="text-[10px] font-bold text-ink-500 uppercase tracking-widest mb-1">Cadre</p>
+            <p className="text-[13px] font-bold text-ink-500 uppercase tracking-widest mb-1">Cadre</p>
             <div className="flex items-center gap-2 text-ink-600">
               <Clock size={14} />
               <p className="text-xs font-semibold">{a.duration ?? "—"}</p>
             </div>
             <div className="flex items-start gap-2 text-ink-600 mt-2">
               <Users size={14} className="mt-0.5 shrink-0" />
-              <p className="text-[11px] font-semibold leading-snug">{a.kidsRule ?? "—"}</p>
+              <p className="text-[13px] font-semibold leading-snug">{a.kidsRule ?? "—"}</p>
             </div>
           </div>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-100 text-[11px] font-semibold text-brand-700 uppercase tracking-wide">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-100 text-[13px] font-semibold text-brand-700 uppercase tracking-wide">
             <Ticket size={13} /> {a.category}
           </span>
           {a.payMode && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink-50 border border-ink-100 text-[11px] font-semibold text-ink-600 uppercase tracking-wide">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink-50 border border-ink-100 text-[13px] font-semibold text-ink-600 uppercase tracking-wide">
               {a.payMode}
             </span>
           )}
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink-50 border border-ink-100 text-[11px] font-semibold text-ink-600">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink-50 border border-ink-100 text-[13px] font-semibold text-ink-600">
             <Tag size={13} /> {a.provider}
           </span>
         </div>
@@ -2271,6 +2269,178 @@ const ActivityCard = ({ a }: { a: PlannedActivity }) => {
     </div>
   );
 };
+
+// ============================================================
+// FLIGHTS — clear, complete view (intl + internal), all confirmed & paid
+// ============================================================
+type FlightSeg = {
+  code: string;
+  carrier: string;
+  fromCode: string;
+  fromCity: string;
+  toCode: string;
+  toCity: string;
+  dep: string;
+  arr: string;
+  resa?: string;
+  note?: string;
+};
+type FlightLeg = { title: string; sub: string; paid: boolean; segs: FlightSeg[] };
+
+const FLIGHTS: FlightLeg[] = [
+  {
+    title: "Aller · Marrakech → Hanoi",
+    sub: "Qatar Airways · réf X6CPNI",
+    paid: true,
+    segs: [
+      { code: "QR1396", carrier: "Qatar Airways", fromCode: "RAK", fromCity: "Marrakech", toCode: "DOH", toCity: "Doha", dep: "24 juil · 18:15", arr: "25 juil · 06:00", note: "Vol de nuit (9h45). 2 PC bagages." },
+      { code: "QR982", carrier: "Qatar Airways", fromCode: "DOH", fromCity: "Doha", toCode: "HAN", toCity: "Hanoi", dep: "25 juil · 20:05", arr: "26 juil · 07:15", note: "Escale 14h à Doha — hôtel offert par Qatar Airways. Arrivée terminal T2." },
+    ],
+  },
+  {
+    title: "Vols internes · Vietnam",
+    sub: "VietJet · 4 vols · confirmés & payés ✓",
+    paid: true,
+    segs: [
+      { code: "VJ723", carrier: "VietJet", fromCode: "HPH", fromCity: "Hai Phong", toCode: "DAD", toCity: "Da Nang", dep: "01 août · 19:10", arr: "01 août · 20:25", resa: "7BYD6X" },
+      { code: "VJ581", carrier: "VietJet", fromCode: "DAD", fromCity: "Da Nang", toCode: "CXR", toCity: "Cam Ranh", dep: "08 août · 06:20", arr: "08 août · 07:25", resa: "GPXYYA", note: "Tôt — départ Palm Garden vers DAD avant l'aube." },
+      { code: "VJ601", carrier: "VietJet", fromCode: "CXR", fromCity: "Cam Ranh", toCode: "SGN", toCity: "Ho Chi Minh", dep: "12 août · 16:05", arr: "12 août · 17:10", resa: "E9UN3Z", note: "Arrivée terminal T1." },
+      { code: "VJ136", carrier: "VietJet", fromCode: "SGN", fromCity: "Ho Chi Minh", toCode: "HAN", toCity: "Hanoi", dep: "15 août · 12:00", arr: "15 août · 14:10", resa: "FCRQ6G", note: "Départ terminal T1." },
+    ],
+  },
+  {
+    title: "Retour · Hanoi → Marrakech",
+    sub: "Qatar Airways · réf X6CPNI",
+    paid: true,
+    segs: [
+      { code: "QR977", carrier: "Qatar Airways", fromCode: "HAN", fromCity: "Hanoi", toCode: "DOH", toCity: "Doha", dep: "17 août · 19:30", arr: "17 août · 22:20", note: "Départ aéroport conseillé ~16:00." },
+      { code: "QR4567", carrier: "Royal Air Maroc", fromCode: "DOH", fromCity: "Doha", toCode: "CMN", toCity: "Casablanca", dep: "18 août · 01:35", arr: "18 août · 07:30" },
+      { code: "QR4573", carrier: "Royal Air Maroc", fromCode: "CMN", fromCity: "Casablanca", toCode: "RAK", toCity: "Marrakech", dep: "18 août · 08:30", arr: "18 août · 09:20" },
+    ],
+  },
+];
+
+const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
+  <Card className="p-6 mb-6">
+    <div className="flex items-start justify-between gap-3 mb-5">
+      <div className="min-w-0">
+        <h4 className="font-display text-[22px] text-ink-900 leading-tight">{leg.title}</h4>
+        <p className="text-[13px] font-semibold text-ink-400 mt-0.5">{leg.sub}</p>
+      </div>
+      <span className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-jade-600 text-white text-[12px] font-bold uppercase tracking-wide">
+        <BadgeCheck size={13} /> {leg.paid ? "Payé" : "Confirmé"}
+      </span>
+    </div>
+    <div className="space-y-5">
+      {leg.segs.map((s, i) => (
+        <div key={i} className="relative pl-7">
+          <div className="absolute left-[5px] top-2 bottom-2 w-px bg-ink-200" />
+          <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full bg-brand-600 ring-4 ring-brand-50" />
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-ink-900 text-white text-[12px] font-bold">
+              <Plane size={12} /> {s.code}
+            </span>
+            <span className="text-[12px] font-semibold text-ink-400">{s.carrier}</span>
+            {s.resa && <span className="text-[12px] font-bold text-brand-700">Réf {s.resa}</span>}
+          </div>
+          <div className="flex items-start gap-3">
+            <div>
+              <p className="font-display text-xl text-ink-900 leading-none">{s.fromCode}</p>
+              <p className="text-[12px] font-semibold text-ink-500">{s.fromCity}</p>
+              <p className="text-[13px] font-bold text-ink-700 mt-1">{s.dep}</p>
+            </div>
+            <ArrowRight size={18} className="text-ink-300 mt-1.5 shrink-0" />
+            <div>
+              <p className="font-display text-xl text-ink-900 leading-none">{s.toCode}</p>
+              <p className="text-[12px] font-semibold text-ink-500">{s.toCity}</p>
+              <p className="text-[13px] font-bold text-ink-700 mt-1">{s.arr}</p>
+            </div>
+          </div>
+          {s.note && <p className="mt-2 text-[13px] font-medium text-ink-500 leading-snug">{s.note}</p>}
+        </div>
+      ))}
+    </div>
+  </Card>
+);
+
+// ============================================================
+// FOOD GUIDE — richer, by region (dish + VN name + description + où)
+// ============================================================
+type Dish = { name: string; vi: string; desc: string; where?: string };
+type FoodCity = { city: string; emoji: string; dishes: Dish[] };
+
+const FOOD_GUIDE: FoodCity[] = [
+  {
+    city: "Hanoi & Nord",
+    emoji: "🍜",
+    dishes: [
+      { name: "Phở bò", vi: "Phở", desc: "La soupe-emblème du Vietnam : bouillon de bœuf mijoté des heures, nouilles de riz, herbes fraîches. Le petit-déj des Hanoïens.", where: "Phở Gia Truyền (Bát Đàn) · Phở Thìn" },
+      { name: "Bún chả", vi: "Bún chả", desc: "Porc grillé au charbon dans un bouillon sucré-salé, vermicelles et herbes à tremper. LE plat de Hanoi.", where: "Bún Chả Hương Liên (« Bún Chả Obama »)" },
+      { name: "Café à l'œuf", vi: "Cà phê trứng", desc: "Invention hanoïenne : café surmonté d'une crème de jaune d'œuf battu, onctueux comme un tiramisu.", where: "Giảng Café · Café Đinh" },
+      { name: "Bánh cuốn", vi: "Bánh cuốn", desc: "Fines crêpes de riz vapeur farcies de porc et champignons noirs, nuoc-cham parfumé.", where: "Bánh Cuốn Bà Hoành" },
+      { name: "Chả cá", vi: "Chả cá Lã Vọng", desc: "Poisson mariné au curcuma et à l'aneth, grillé à votre table. Une institution centenaire.", where: "Chả Cá Thăng Long" },
+    ],
+  },
+  {
+    city: "Ninh Binh",
+    emoji: "🐐",
+    dishes: [
+      { name: "Riz croustillant", vi: "Cơm cháy", desc: "Galette de riz frite et croustillante, nappée d'un ragoût de chèvre ou de bœuf. La spécialité locale par excellence." },
+      { name: "Chèvre de montagne", vi: "Dê núi", desc: "Chèvre élevée sur les karsts, servie grillée (dê nướng) ou en salade citronnée (dê tái chanh)." },
+      { name: "Escargots", vi: "Ốc", desc: "Escargots d'eau douce sautés citronnelle-piment — l'apéro local au bord des rizières." },
+    ],
+  },
+  {
+    city: "Hoi An & Da Nang",
+    emoji: "🏮",
+    dishes: [
+      { name: "Cao lầu", vi: "Cao lầu", desc: "Nouilles épaisses uniques à Hoi An (préparées avec l'eau de l'ancien puits Bá Lễ), porc, croûtons, herbes. Introuvable ailleurs.", where: "Vieille ville de Hoi An" },
+      { name: "Bánh mì", vi: "Bánh mì", desc: "Le « meilleur sandwich du monde » selon A. Bourdain : baguette croustillante, pâtés, herbes, sauces maison.", where: "Bánh Mì Phượng · Madam Khánh" },
+      { name: "White Rose", vi: "Bánh vạc", desc: "Délicats raviolis de riz translucides en forme de rose, garnis de crevettes. Spécialité de Hoi An." },
+      { name: "Mì Quảng", vi: "Mì Quảng", desc: "Nouilles jaunes au curcuma, peu de bouillon, crevettes/porc, cacahuètes et galette de riz grillée. La star de Da Nang.", where: "Da Nang" },
+      { name: "Bún chả cá", vi: "Bún chả cá", desc: "Soupe de nouilles au gâteau de poisson, légère et parfumée — typique de Da Nang.", where: "Da Nang" },
+    ],
+  },
+  {
+    city: "Ho Chi Minh (Saigon)",
+    emoji: "🛵",
+    dishes: [
+      { name: "Cơm tấm", vi: "Cơm tấm", desc: "Riz brisé + côte de porc grillée, œuf au plat, peau de porc, nuoc-cham. Le déjeuner saïgonnais par excellence." },
+      { name: "Bánh xèo", vi: "Bánh xèo", desc: "Grande crêpe croustillante au curcuma, crevettes et germes de soja, à rouler dans des feuilles de salade et herbes." },
+      { name: "Hủ tiếu", vi: "Hủ tiếu", desc: "Soupe de nouilles du Sud (sèche ou en bouillon), aux influences chinoise et khmère." },
+      { name: "Bánh mì Sài Gòn", vi: "Bánh mì", desc: "La version du Sud, plus généreuse et légèrement plus sucrée que celle du Nord.", where: "Bánh Mì Huỳnh Hoa" },
+    ],
+  },
+];
+
+const FoodGuide = ({ groups }: { groups: typeof FOOD_GUIDE }) => (
+  <div className="space-y-6 mb-8">
+    {groups.map((g) => (
+      <Card key={g.city} className="p-6">
+        <div className="flex items-center gap-2.5 mb-4">
+          <span className="text-2xl">{g.emoji}</span>
+          <h4 className="font-display text-[22px] text-ink-900 leading-none">{g.city}</h4>
+        </div>
+        <div className="space-y-4">
+          {g.dishes.map((d) => (
+            <div key={d.name} className="pb-4 border-b border-ink-100 last:border-0 last:pb-0">
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <p className="text-base font-bold text-ink-900">{d.name}</p>
+                <p className="text-[13px] font-semibold text-jade-600 italic">{d.vi}</p>
+              </div>
+              <p className="mt-1 text-[14px] font-medium text-ink-600 leading-relaxed">{d.desc}</p>
+              {d.where && (
+                <p className="mt-1.5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand-700">
+                  <MapPin size={13} className="shrink-0" /> {d.where}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </Card>
+    ))}
+  </div>
+);
 
 // ============================================================
 // Mr. Tang — floating family concierge (trip-aware + live web search)
@@ -2396,7 +2566,7 @@ const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) 
           </span>
           <span className="text-left leading-tight">
             <span className="block text-[13px] font-bold text-ink-900">Mr. Tang</span>
-            <span className="block text-[10px] font-semibold text-jade-600">Concierge · en ligne</span>
+            <span className="block text-[13px] font-semibold text-jade-600">Concierge · en ligne</span>
           </span>
         </button>
       )}
@@ -2409,7 +2579,7 @@ const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) 
               <TangAvatar size={44} />
               <div className="flex-1 min-w-0">
                 <p className="font-display text-xl text-ink-900 leading-none">Mr. Tang</p>
-                <p className="text-[11px] font-semibold text-jade-600 flex items-center gap-1.5 mt-1">
+                <p className="text-[13px] font-semibold text-jade-600 flex items-center gap-1.5 mt-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-jade-500" /> Votre concierge Vietnam
                 </p>
               </div>
@@ -2440,7 +2610,7 @@ const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) 
                       {m.sources && m.sources.length > 0 && (
                         <div className="mt-1.5 flex flex-wrap gap-1.5">
                           {m.sources.map((s, j) => (
-                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[10px] font-semibold text-brand-700 max-w-[170px] truncate">
+                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[13px] font-semibold text-brand-700 max-w-[170px] truncate">
                               <Compass size={11} className="shrink-0" /> {s.title}
                             </a>
                           ))}
@@ -2469,7 +2639,7 @@ const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) 
                     key={s}
                     type="button"
                     onClick={() => send(s)}
-                    className="px-3 py-2 rounded-full bg-jade-50 border border-jade-100 text-[11px] font-semibold text-jade-700 active:scale-95 transition-transform text-left"
+                    className="px-3 py-2 rounded-full bg-jade-50 border border-jade-100 text-[13px] font-semibold text-jade-700 active:scale-95 transition-transform text-left"
                   >
                     {s}
                   </button>
@@ -2512,7 +2682,6 @@ const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) 
 export default function App() {
   const [view, setView] = useState<View>("home");
   const [mood, setMood] = useState<Mood>("normal");
-  const [kidsMode, setKidsMode] = useState(false);
   const [quickOpen, setQuickOpen] = useState(false);
 
   // Budget filters (FR)
@@ -2542,9 +2711,6 @@ export default function App() {
 
   // Persist
   useEffect(() => {
-    const savedKids = localStorage.getItem("trip_kids_mode");
-    if (savedKids) setKidsMode(savedKids === "1");
-
     const savedCity = localStorage.getItem("trip_active_city");
     if (savedCity) setActiveCity(savedCity);
 
@@ -2565,7 +2731,6 @@ export default function App() {
     if (savedBudgetTab) setBudgetTab(savedBudgetTab as any);
   }, []);
 
-  useEffect(() => localStorage.setItem("trip_kids_mode", kidsMode ? "1" : "0"), [kidsMode]);
   useEffect(() => localStorage.setItem("trip_active_city", activeCity), [activeCity]);
   useEffect(() => localStorage.setItem("trip_focus_day", String(focusDayIndex)), [focusDayIndex]);
   useEffect(() => localStorage.setItem("trip_budget_filters_v3", JSON.stringify(filters)), [filters]);
@@ -2611,7 +2776,7 @@ export default function App() {
 
   // Activities filtered by city & kids mode
   const activitiesByCity = useMemo(() => {
-    const list = TRIP_DATA.planned_activities.filter((a) => !(kidsMode && a.impact));
+    const list = TRIP_DATA.planned_activities;
     const map = new Map<string, PlannedActivity[]>();
     for (const a of list) {
       const k = a.city;
@@ -2629,7 +2794,7 @@ export default function App() {
       if (!order.includes(c)) out.push({ city: c, items });
     }
     return out;
-  }, [kidsMode]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[radial-gradient(120%_80%_at_50%_-10%,#eef2ff_0%,#f8fafc_45%,#f1f5f9_100%)] font-sans text-ink-900 pb-36 overflow-x-clip">
@@ -2657,11 +2822,11 @@ export default function App() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-jade-500/60 motion-safe:animate-ping" />
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-jade-500" />
                   </span>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-jade-600">
+                  <p className="text-[13px] font-bold uppercase tracking-widest text-jade-600">
                     {isWithinTrip ? "Aujourd'hui" : "Prochainement"}
                   </p>
                 </div>
-                <p className="text-[11px] font-semibold text-ink-400">
+                <p className="text-[13px] font-semibold text-ink-400">
                   {isWithinTrip ? `Jour ${dayNo} / ${tripLen}` : daysTo > 0 ? `J−${daysTo}` : "Terminé"}
                 </p>
               </div>
@@ -2677,9 +2842,9 @@ export default function App() {
               >
                 <SmartImage src={dayCoverFromDay(todayDay)} alt={todayDay.city} className="w-16 h-16 rounded-2xl shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{safeDateLabel(todayDay.date)}</p>
+                  <p className="text-[13px] font-bold uppercase tracking-widest text-ink-400">{safeDateLabel(todayDay.date)}</p>
                   <p className="font-display text-xl text-ink-900 leading-tight truncate">{todayDay.city}</p>
-                  <p className="text-[11px] font-medium text-ink-500 truncate">{todayDay.blocks[0]?.plan}</p>
+                  <p className="text-[13px] font-medium text-ink-500 truncate">{todayDay.blocks[0]?.plan}</p>
                 </div>
                 <ArrowRight size={18} className="text-ink-300 shrink-0 group-active:translate-x-0.5 transition-transform" />
               </button>
@@ -2694,7 +2859,7 @@ export default function App() {
                     {nextTransfer.mode === "flight_domestic" ? <Plane size={16} /> : <Car size={16} />}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
+                    <p className="text-[13px] font-bold uppercase tracking-widest text-ink-400">
                       Prochain transfert{nextTransfer.date ? ` · ${safeDateLabel(nextTransfer.date)}` : ""}
                     </p>
                     <p className="text-xs font-semibold text-ink-700 truncate">
@@ -2706,9 +2871,26 @@ export default function App() {
               )}
             </Glass>
 
+            {/* Vos vols */}
+            <button
+              type="button"
+              onClick={() => goView("flights")}
+              className="w-full text-left bg-white rounded-card border border-ink-100 shadow-card p-5 flex items-center gap-4 active:scale-[.99] transition-transform"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                <Plane size={22} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[12px] font-bold uppercase tracking-widest text-ink-400">Vos vols</p>
+                <p className="text-base font-bold text-ink-900 leading-tight">Marrakech → Hanoi · retour le 17 août</p>
+                <p className="text-[13px] font-semibold text-jade-600">+ 4 vols internes · confirmés &amp; payés ✓</p>
+              </div>
+              <ChevronRight size={18} className="text-ink-300 shrink-0" />
+            </button>
+
             {/* Énergie / mood */}
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400 mb-3 ml-1">Énergie du jour</p>
+              <p className="text-[13px] font-bold uppercase tracking-widest text-ink-400 mb-3 ml-1">Énergie du jour</p>
               <Segmented
                 value={mood}
                 onChange={(id) => setMood(id as Mood)}
@@ -2719,14 +2901,6 @@ export default function App() {
                 ]}
               />
             </div>
-
-            <Toggle
-              label="Mode enfants"
-              icon={<Smartphone size={20} />}
-              value={kidsMode}
-              onChange={setKidsMode}
-              hint="Masque les contenus sensibles (mode kids)."
-            />
 
             {/* Équipage */}
             <div>
@@ -2778,7 +2952,7 @@ export default function App() {
                 }}
               >
                 <div key={focusDayIndex} className="motion-safe:animate-fade-up">
-                  <DayCardMobile day={focusDay} coverSrc={dayCoverFromDay(focusDay)} mood={mood} kidsMode={kidsMode} />
+                  <DayCardMobile day={focusDay} coverSrc={dayCoverFromDay(focusDay)} mood={mood} />
                 </div>
               </div>
 
@@ -2815,7 +2989,7 @@ export default function App() {
               >
                 <Sparkles size={24} className="text-jade-600 mb-4" />
                 <p className="text-sm font-bold text-ink-900">Activités</p>
-                <p className="text-[11px] font-semibold text-jade-600">Par ville</p>
+                <p className="text-[13px] font-semibold text-jade-600">Par ville</p>
               </button>
               <button
                 type="button"
@@ -2824,7 +2998,7 @@ export default function App() {
               >
                 <Wallet size={24} className="text-sun-600 mb-4" />
                 <p className="text-sm font-bold text-ink-900">Budget</p>
-                <p className="text-[11px] font-semibold text-sun-600">USD</p>
+                <p className="text-[13px] font-semibold text-sun-600">USD</p>
               </button>
             </div>
           </div>
@@ -2845,7 +3019,7 @@ export default function App() {
           </div>
 
           <div className="mb-10">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-2">Filtrer par ville</p>
+            <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-2">Filtrer par ville</p>
             <CityTimeline cities={cities} activeCity={activeCity} onSelect={setActiveCity} />
           </div>
 
@@ -2853,7 +3027,7 @@ export default function App() {
             {TRIP_DATA.itinerary_days
               .filter((d) => d.city.toLowerCase().includes(activeCity.toLowerCase()))
               .map((day) => (
-                <DayCardMobile key={day.date} day={day} coverSrc={dayCoverFromDay(day)} mood={mood} kidsMode={kidsMode} />
+                <DayCardMobile key={day.date} day={day} coverSrc={dayCoverFromDay(day)} mood={mood} />
               ))}
           </div>
         </div>
@@ -2876,6 +3050,32 @@ export default function App() {
         </div>
       )}
 
+      {/* FLIGHTS */}
+      {view === "flights" && (
+        <div key={view} className="motion-safe:animate-fade-up px-6 pt-12">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="font-display text-[2.5rem] text-ink-900 leading-none mb-1">Vols</h2>
+              <p className="text-[13px] font-bold text-ink-400 uppercase tracking-widest">Aller · internes · retour</p>
+            </div>
+            <button type="button" onClick={() => goView("home")} aria-label="Retour à l'accueil" className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-500 active:scale-90 transition-transform">
+              <X size={20} />
+            </button>
+          </div>
+          <div className="pb-20">
+            {FLIGHTS.map((leg, i) => (
+              <FlightLegCard key={i} leg={leg} />
+            ))}
+            <div className="rounded-card bg-jade-50 border border-jade-100 p-5 flex items-start gap-3">
+              <BadgeCheck className="text-jade-600 shrink-0 mt-0.5" size={20} />
+              <p className="text-[14px] font-semibold text-jade-800 leading-relaxed">
+                Tous les vols sont confirmés et payés : billet Qatar Airways émis (réf X6CPNI) et les 4 vols VietJet internes réglés.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ACTIVITIES (UPDATED) */}
       {view === "activities" && (
         <div className="motion-safe:animate-fade-up px-6 pt-12">
@@ -2891,27 +3091,12 @@ export default function App() {
             </button>
           </div>
 
-          <Glass className="rounded-[40px] p-7 mb-8">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode d’affichage</p>
-                <p className="text-xl font-black text-slate-900 tracking-tighter">Liste complète, par ville</p>
-                <p className="mt-2 text-xs font-bold text-slate-500">
-                  Les activités ‘impact’ sont masquées si le mode kids est activé.
-                </p>
-              </div>
-              <div className="w-44">
-                <Toggle label="Mode kids" icon={<Smartphone size={18} />} value={kidsMode} onChange={setKidsMode} hint="Masque ‘impact’" />
-              </div>
-            </div>
-          </Glass>
-
           <div className="space-y-10 pb-20">
             {activitiesByCity.map((group) => (
               <div key={group.city} className="space-y-4">
                 <div className="flex items-center justify-between px-1">
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ville</p>
+                    <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest">Ville</p>
                     <h3 className="text-2xl font-black text-slate-900 tracking-tighter">{group.city}</h3>
                   </div>
                   <a
@@ -2949,7 +3134,32 @@ export default function App() {
             </button>
           </div>
 
-          <SimpleListCard title="Food" icon={<Utensils size={24} />} items={Object.entries(TRIP_DATA.food).map(([r, f]) => `${r}: ${f.join(", ")}`)} />
+          <div className="mb-4 flex items-center gap-2.5">
+            <div className="p-3 rounded-2xl bg-jade-50 text-jade-600">
+              <Utensils size={22} />
+            </div>
+            <div>
+              <h3 className="font-display text-2xl text-ink-900 leading-none">Cuisine</h3>
+              <p className="text-[13px] font-semibold text-ink-400">Les incontournables, région par région</p>
+            </div>
+          </div>
+          <FoodGuide groups={FOOD_GUIDE} />
+
+          <button
+            type="button"
+            onClick={() => goView("flights")}
+            className="w-full mb-8 bg-white rounded-card border border-ink-100 shadow-card p-5 flex items-center gap-4 active:scale-[.99] transition-transform"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+              <Plane size={20} />
+            </div>
+            <div className="min-w-0 flex-1 text-left">
+              <p className="text-base font-bold text-ink-900 leading-tight">Tous les vols</p>
+              <p className="text-[13px] font-semibold text-ink-400">Aller, internes &amp; retour — détaillés</p>
+            </div>
+            <ChevronRight size={18} className="text-ink-300 shrink-0" />
+          </button>
+
           <AirportGlossaryCard items={TRIP_DATA.airport_glossary} />
           <PhrasebookCard items={TRIP_DATA.phrasebook} />
         </div>
@@ -3009,14 +3219,14 @@ export default function App() {
                 </div>
                 <div>
                   <p className="text-sm font-black text-slate-900">Filtres</p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Affecte les totaux</p>
+                  <p className="text-[13px] font-bold text-slate-400 uppercase tracking-widest">Affecte les totaux</p>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-3">
               <div className="p-4 rounded-3xl bg-slate-50 border border-slate-100">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Recherche</p>
+                <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest mb-2">Recherche</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-500">
                     <Search size={18} />
@@ -3052,13 +3262,6 @@ export default function App() {
                   onChange={(v) => setFilters((f) => ({ ...f, seulementJaCosmo: v }))}
                   hint="Transferts opérés"
                 />
-                <Toggle
-                  label="Mode kids"
-                  icon={<Smartphone size={18} />}
-                  value={kidsMode}
-                  onChange={setKidsMode}
-                  hint="Masque ‘impact’"
-                />
               </div>
             </div>
           </div>
@@ -3067,7 +3270,7 @@ export default function App() {
           {budgetTab === "overview" && (
             <div className="space-y-6 pb-20">
               <Glass className="rounded-[40px] p-8">
-                <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-4">Total (scope)</p>
+                <p className="text-[13px] font-black text-amber-500 uppercase tracking-widest mb-4">Total (scope)</p>
                 <p className="text-5xl font-black text-slate-900 tracking-tighter mb-3">{formatUSD0(budget.grand.total)}</p>
                 <p className="text-xs font-bold text-slate-500">Transports + activités (USD uniquement). Hôtels/food exclus.</p>
 
@@ -3079,7 +3282,7 @@ export default function App() {
                 </div>
 
                 <div className="mt-6 p-5 rounded-[28px] bg-slate-50 border border-slate-100">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Règles</p>
+                  <p className="text-[13px] font-black uppercase tracking-widest text-slate-400 mb-2">Règles</p>
                   <div className="space-y-2">
                     <p className="text-xs font-bold text-slate-700">1) Transports : Claudine 20% • Nous 80%</p>
                     <p className="text-xs font-bold text-slate-700">2) Activités : répartition explicite si disponible</p>
@@ -3094,7 +3297,7 @@ export default function App() {
           {budgetTab === "transport" && (
             <div className="space-y-5 pb-20">
               <Glass className="rounded-[40px] p-8">
-                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Transports (filtrés)</p>
+                <p className="text-[13px] font-black text-emerald-600 uppercase tracking-widest mb-3">Transports (filtrés)</p>
                 <p className="text-4xl font-black text-slate-900 tracking-tighter">{formatUSD0(budget.transport.total)}</p>
                 <p className="mt-2 text-xs font-bold text-slate-500">
                   Répartition : Claudine {formatUSD0(budget.transport.claudine_total)} • Nous {formatUSD0(budget.transport.nous_total)}
@@ -3126,7 +3329,7 @@ export default function App() {
           {budgetTab === "activities" && (
             <div className="space-y-5 pb-20">
               <Glass className="rounded-[40px] p-8">
-                <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-3">Activités (filtrées)</p>
+                <p className="text-[13px] font-black text-amber-600 uppercase tracking-widest mb-3">Activités (filtrées)</p>
                 <p className="text-4xl font-black text-slate-900 tracking-tighter">{formatUSD0(budget.activities.total)}</p>
                 <p className="mt-2 text-xs font-bold text-slate-500">
                   Répartition : Claudine {formatUSD0(budget.activities.claudine_total)} • Nous {formatUSD0(budget.activities.nous_total)}
@@ -3173,8 +3376,8 @@ export default function App() {
                   active ? "bg-white text-ink-900 shadow-float" : "text-white/55 active:scale-90"
                 }`}
               >
-                <Icon size={17} aria-hidden="true" />
-                <span className="text-[9px] font-bold tracking-tight leading-none">{tab.label}</span>
+                <Icon size={18} aria-hidden="true" />
+                <span className="text-[10px] font-bold tracking-tight leading-none">{tab.label}</span>
               </button>
             );
           })}
