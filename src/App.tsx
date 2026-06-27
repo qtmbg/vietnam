@@ -2632,7 +2632,7 @@ export default function App() {
   }, [kidsMode]);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(120%_80%_at_50%_-10%,#eef2ff_0%,#f8fafc_45%,#f1f5f9_100%)] font-sans text-ink-900 pb-36 overflow-x-hidden">
+    <div className="min-h-screen bg-[radial-gradient(120%_80%_at_50%_-10%,#eef2ff_0%,#f8fafc_45%,#f1f5f9_100%)] font-sans text-ink-900 pb-36 overflow-x-clip">
       <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
       {/* HOME */}
