@@ -15,7 +15,7 @@
     text-rendering: optimizeLegibility;
   }
   :where(a, button, input, textarea, [tabindex]):focus-visible {
-    outline: 2px solid #6366f1;
+    outline: 2px solid theme("colors.brand.500"); /* brand-500 (#6366f1) */
     outline-offset: 2px;
     border-radius: 0.65rem;
   }

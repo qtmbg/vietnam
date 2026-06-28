@@ -19,7 +19,12 @@ Date du jour : ${today}.
 === CONTEXTE DU VOYAGE ===
 ${tripContext}`;
 
-export default async function handler(req: any, res: any) {
+// Minimal shapes for the Vercel serverless handler (type-only; no runtime effect).
+type TangReq = { method?: string; body?: unknown };
+type TangRes = { status: (code: number) => { json: (body: unknown) => void } };
+type InMsg = { role?: string; content?: string };
+
+export default async function handler(req: TangReq, res: TangRes) {
   if (req.method !== "POST") {
     res.status(405).json({ reply: "Méthode non autorisée.", sources: [] });
     return;
@@ -37,13 +42,17 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
+    const body = (typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {}) as {
+      messages?: InMsg[];
+      tripContext?: string;
+      today?: string;
+    };
     const { messages = [], tripContext = "", today = "" } = body;
 
     const contents = (Array.isArray(messages) ? messages : [])
-      .filter((m: any) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim())
+      .filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim())
       .slice(-12)
-      .map((m: any) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] }));
+      .map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] }));
 
     if (contents.length === 0) {
       res.status(200).json({ reply: "Pose-moi ta question 🙂", sources: [] });
@@ -64,7 +73,7 @@ export default async function handler(req: any, res: any) {
       }),
     });
 
-    const data: any = await r.json();
+    const data = await r.json();
     if (!r.ok) {
       res.status(200).json({
         reply: "Aïe, petit souci côté serveur 😅. Réessaie dans un instant.",
@@ -75,7 +84,7 @@ export default async function handler(req: any, res: any) {
     }
 
     const cand = data?.candidates?.[0] || {};
-    const text = (cand.content?.parts || []).map((p: any) => p?.text || "").join("").trim();
+    const text = (cand.content?.parts || []).map((p) => p?.text || "").join("").trim();
 
     const sources: { title: string; url: string }[] = [];
     const seen = new Set<string>();
@@ -89,10 +98,10 @@ export default async function handler(req: any, res: any) {
     }
 
     res.status(200).json({ reply: text || "Hmm, je n'ai rien à ajouter là 🙂", sources: sources.slice(0, 5) });
-  } catch (e: any) {
+  } catch (e) {
     res.status(200).json({
       reply: "Aïe, j'ai eu un petit souci pour répondre 😅. Réessaie dans un instant.",
-      error: String(e?.message || e),
+      error: String((e as { message?: string })?.message || e),
       sources: [],
     });
   }

@@ -1,0 +1,197 @@
+import { useEffect, useRef, useState } from "react";
+import { X, Send, Loader2, Compass } from "lucide-react";
+import { TANG_SUGGESTIONS } from "../data/trip";
+
+const TangAvatar = ({ size = 48, className = "" }: { size?: number; className?: string }) => (
+  <svg viewBox="0 0 48 48" width={size} height={size} className={className} aria-hidden="true">
+    <defs>
+      <linearGradient id="tang-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#10b981" />
+        <stop offset="1" stopColor="#0ea5e9" />
+      </linearGradient>
+    </defs>
+    <circle cx="24" cy="24" r="24" fill="url(#tang-grad)" />
+    <circle cx="24" cy="27" r="10.5" fill="#fde9c8" />
+    <path d="M24 7 L35 21 Q24 24.5 13 21 Z" fill="#f3cd86" stroke="#e0a948" strokeWidth="1" strokeLinejoin="round" />
+    <ellipse cx="24" cy="21" rx="11.5" ry="2.2" fill="#e7b75f" />
+    <circle cx="20.3" cy="27" r="1.5" fill="#3b2f2f" />
+    <circle cx="27.7" cy="27" r="1.5" fill="#3b2f2f" />
+    <path d="M20.5 31 Q24 33.6 27.5 31" fill="none" stroke="#3b2f2f" strokeWidth="1.6" strokeLinecap="round" />
+  </svg>
+);
+
+type TangMsg = { role: "user" | "assistant"; content: string; sources?: { title: string; url: string }[] };
+
+export const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) => {
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<TangMsg[]>(() => {
+    const saved = localStorage.getItem("trip_tang_chat");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        /* ignore */
+      }
+    }
+    return [];
+  });
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    localStorage.setItem("trip_tang_chat", JSON.stringify(messages.slice(-20)));
+  }, [messages]);
+  useEffect(() => {
+    if (open) requestAnimationFrame(() => scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }));
+  }, [messages, open, loading]);
+
+  const send = async (text: string) => {
+    const q = text.trim();
+    if (!q || loading) return;
+    const next: TangMsg[] = [...messages, { role: "user", content: q }];
+    setMessages(next);
+    setInput("");
+    setLoading(true);
+    try {
+      const r = await fetch("/api/tang", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: next.map((m) => ({ role: m.role, content: m.content })), tripContext, today }),
+      });
+      const data = await r.json();
+      setMessages((m) => [...m, { role: "assistant", content: data.reply || "…", sources: data.sources }]);
+    } catch {
+      setMessages((m) => [
+        ...m,
+        { role: "assistant", content: "Je n'arrive pas à me connecter pour l'instant 😅. Réessaie dans un moment — il faut une connexion internet (et que Mr. Tang soit activé sur le serveur)." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {!open && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Ouvrir Mr. Tang, votre concierge"
+          className="fixed right-4 bottom-[104px] z-[95] flex items-center gap-2.5 pl-2 pr-4 py-2 rounded-full bg-white shadow-float ring-1 ring-ink-100 active:scale-95 transition-transform motion-safe:animate-pop"
+        >
+          <span className="relative">
+            <TangAvatar size={40} />
+            <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-jade-500 ring-2 ring-white" />
+          </span>
+          <span className="text-left leading-tight">
+            <span className="block text-[13px] font-bold text-ink-900">Mr. Tang</span>
+            <span className="block text-[13px] font-semibold text-jade-600">Concierge · en ligne</span>
+          </span>
+        </button>
+      )}
+
+      {open && (
+        <div className="fixed inset-0 z-[100] flex flex-col justify-end">
+          <button type="button" aria-label="Fermer le concierge" onClick={() => setOpen(false)} className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm" />
+          <div className="relative w-full max-h-[82vh] bg-white rounded-t-[2rem] shadow-float flex flex-col motion-safe:animate-fade-up">
+            <div className="flex items-center gap-3 p-4 border-b border-ink-100">
+              <TangAvatar size={44} />
+              <div className="flex-1 min-w-0">
+                <p className="font-display text-xl text-ink-900 leading-none">Mr. Tang</p>
+                <p className="text-[13px] font-semibold text-jade-600 flex items-center gap-1.5 mt-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-jade-500" /> Votre concierge Vietnam
+                </p>
+              </div>
+              <button type="button" aria-label="Fermer" onClick={() => setOpen(false)} className="w-9 h-9 rounded-full bg-ink-100 text-ink-500 flex items-center justify-center active:scale-90 transition-transform">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+              {messages.length === 0 && (
+                <div className="flex gap-2.5">
+                  <TangAvatar size={32} className="shrink-0 mt-0.5" />
+                  <div className="rounded-2xl rounded-tl-md bg-ink-50 border border-ink-100 p-3 text-sm text-ink-700 leading-relaxed">
+                    Xin chào ! 👋 Je suis <b>Mr. Tang</b>, votre concierge pour le Vietnam. Je connais tout votre voyage — itinéraire, hôtels, transferts, budget — et je peux aussi chercher en direct des idées : expos, restos, événements, météo… Posez-moi votre question !
+                  </div>
+                </div>
+              )}
+              {messages.map((m, i) =>
+                m.role === "user" ? (
+                  <div key={i} className="flex justify-end">
+                    <div className="max-w-[82%] rounded-2xl rounded-tr-md bg-brand-600 text-white p-3 text-sm leading-relaxed whitespace-pre-wrap">{m.content}</div>
+                  </div>
+                ) : (
+                  <div key={i} className="flex gap-2.5">
+                    <TangAvatar size={32} className="shrink-0 mt-0.5" />
+                    <div className="max-w-[82%]">
+                      <div className="rounded-2xl rounded-tl-md bg-ink-50 border border-ink-100 p-3 text-sm text-ink-700 leading-relaxed whitespace-pre-wrap">{m.content}</div>
+                      {m.sources && m.sources.length > 0 && (
+                        <div className="mt-1.5 flex flex-wrap gap-1.5">
+                          {m.sources.map((s, j) => (
+                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[13px] font-semibold text-brand-700 max-w-[170px] truncate">
+                              <Compass size={11} className="shrink-0" /> {s.title}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              )}
+              {loading && (
+                <div className="flex gap-2.5">
+                  <TangAvatar size={32} className="shrink-0 mt-0.5" />
+                  <div className="rounded-2xl rounded-tl-md bg-ink-50 border border-ink-100 p-3 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-ink-300 motion-safe:animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-2 h-2 rounded-full bg-ink-300 motion-safe:animate-bounce" style={{ animationDelay: "120ms" }} />
+                    <span className="w-2 h-2 rounded-full bg-ink-300 motion-safe:animate-bounce" style={{ animationDelay: "240ms" }} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {messages.length === 0 && (
+              <div className="px-4 pb-2 flex flex-wrap gap-2">
+                {TANG_SUGGESTIONS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => send(s)}
+                    className="px-3 py-2 rounded-full bg-jade-50 border border-jade-100 text-[13px] font-semibold text-jade-700 active:scale-95 transition-transform text-left"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                send(input);
+              }}
+              className="p-3 border-t border-ink-100 flex items-center gap-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+            >
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Demandez à Mr. Tang…"
+                className="flex-1 bg-ink-50 border border-ink-100 rounded-full px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400"
+              />
+              <button
+                type="submit"
+                disabled={loading || !input.trim()}
+                aria-label="Envoyer"
+                className="w-11 h-11 rounded-full bg-brand-600 text-white flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shrink-0"
+              >
+                {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
