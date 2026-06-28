@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { X, Moon, Star, Sparkles } from "lucide-react";
 import { Segmented } from "../components/Segmented";
 import { DayCardMobile } from "../components/DayCardMobile";
 import { DayContext } from "../components/DayContext";
@@ -9,8 +8,8 @@ import { selectDay } from "../lib/day";
 import { dayCoverFromDay } from "../lib/assets";
 import type { Mood, View } from "../data/types";
 
-// The "Voyage" tab: one column, day by day, each day showing everything in
-// context via selectDay. Taps open the detail of the touched element.
+// The "Voyage" tab: one editorial column, day by day, each day in context via
+// selectDay. Taps open the detail of the touched element.
 export const VoyageView = ({
   mood,
   setMood,
@@ -23,37 +22,42 @@ export const VoyageView = ({
   const [detail, setDetail] = useState<DayDetailState | null>(null);
 
   return (
-    <div className="motion-safe:animate-fade-up px-6 pt-12">
-      <div className="flex justify-between items-center mb-8">
+    <div className="motion-safe:animate-fade-up px-7 pt-12">
+      <div className="flex items-start justify-between gap-4 mb-9">
         <div>
-          <h2 className="font-display text-[2.5rem] text-ink-900 leading-none mb-1">Voyage</h2>
-          <p className="text-xs font-bold text-ink-400 uppercase tracking-widest">Jour par jour, en contexte</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">Jour par jour</p>
+          <h2 className="mt-1.5 font-display font-light text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Voyage</h2>
         </div>
-        <button type="button" onClick={() => goView("home")} aria-label="Retour à l'accueil" className="w-10 h-10 rounded-full bg-ink-100 flex items-center justify-center text-ink-500 active:scale-90 transition-transform">
-          <X size={20} />
+        <button
+          type="button"
+          onClick={() => goView("home")}
+          aria-label="Retour à l'accueil"
+          className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500 active:text-ink-900 transition-colors"
+        >
+          ← Accueil
         </button>
       </div>
 
-      <div className="mb-10">
-        <p className="text-[13px] font-black text-ink-400 uppercase tracking-widest mb-3 ml-1">Énergie du jour</p>
+      <div className="mb-12">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500 mb-3">Énergie du jour</p>
         <Segmented
           value={mood}
           onChange={(id) => setMood(id as Mood)}
           items={[
-            { id: "fatigue", label: "Doux", icon: <Moon size={15} /> },
-            { id: "normal", label: "Normal", icon: <Star size={15} /> },
-            { id: "energy", label: "À fond", icon: <Sparkles size={15} /> },
+            { id: "fatigue", label: "Doux" },
+            { id: "normal", label: "Normal" },
+            { id: "energy", label: "À fond" },
           ]}
         />
       </div>
 
       <div className="pb-20">
-        {TRIP_DATA.itinerary_days.map((day) => {
+        {TRIP_DATA.itinerary_days.map((day, i) => {
           const sel = selectDay(day.date);
           return (
-            <div key={day.date} className="mb-12">
-              <DayCardMobile day={day} coverSrc={dayCoverFromDay(day)} mood={mood} />
-              <div className="mt-5 px-1">
+            <div key={day.date} className="mb-16">
+              <DayCardMobile day={day} coverSrc={dayCoverFromDay(day)} mood={mood} dayNumber={i + 1} />
+              <div className="mt-6">
                 <DayContext
                   day={sel}
                   onHotel={(hotel) => setDetail({ kind: "hotel", hotel })}
