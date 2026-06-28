@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { CheckSquare } from "lucide-react";
 import { ESSENTIALS_CHECKLIST } from "../data/trip";
 
 export const TipsChecklist = () => {
@@ -18,29 +17,33 @@ export const TipsChecklist = () => {
   const progress = Math.round((checked.length / ESSENTIALS_CHECKLIST.length) * 100);
 
   return (
-    <div className="bg-white rounded-[40px] border border-ink-100 shadow-xl p-8">
-      <div className="flex justify-between items-end mb-8">
-        <h4 className="text-2xl font-black text-ink-900 tracking-tighter leading-none">Essentiels</h4>
-        <p className="text-xs font-black text-jade-500 uppercase tracking-widest">{progress}% prêt</p>
+    <section>
+      <div className="flex items-baseline justify-between mb-4">
+        <h3 className="font-display text-[1.7rem] text-ink-900 leading-none tracking-[-0.01em]">Essentiels</h3>
+        <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-ink-500 tabular-nums">{progress}% prêt</p>
       </div>
-      <div className="space-y-3">
-        {ESSENTIALS_CHECKLIST.map((item) => (
-          <button
-            key={item}
-            onClick={() => toggle(item)}
-            className="w-full flex items-center gap-4 p-4 rounded-3xl border border-ink-50 bg-ink-50/50 transition-all active:scale-95"
-          >
-            <div
-              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                checked.includes(item) ? "bg-jade-500 border-jade-500" : "border-ink-200"
-              }`}
+      <div className="border-t border-ink-200">
+        {ESSENTIALS_CHECKLIST.map((item) => {
+          const on = checked.includes(item);
+          return (
+            <button
+              key={item}
+              type="button"
+              onClick={() => toggle(item)}
+              className="w-full flex items-center gap-3.5 py-3 border-b border-ink-200 text-left"
             >
-              {checked.includes(item) && <CheckSquare size={14} className="text-white" />}
-            </div>
-            <p className={`text-sm font-bold ${checked.includes(item) ? "text-ink-400 line-through" : "text-ink-700"}`}>{item}</p>
-          </button>
-        ))}
+              <span
+                className={`w-[18px] h-[18px] shrink-0 flex items-center justify-center border text-[11px] leading-none transition-colors ${
+                  on ? "bg-clay-600 border-clay-600 text-sand-50" : "border-ink-300 text-transparent"
+                }`}
+              >
+                ✓
+              </span>
+              <span className={`text-[15px] font-medium transition-colors ${on ? "text-ink-400 line-through" : "text-ink-800"}`}>{item}</span>
+            </button>
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 };

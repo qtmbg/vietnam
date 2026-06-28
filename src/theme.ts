@@ -1,74 +1,66 @@
 // ============================================================
-// THEME — the single home for design tokens (TS side).
+// THEME — single home for design tokens (TS side), "Carnet éditorial".
 //
-// The PRIMARY palette (ink / brand / jade / sun) is generated as
-// Tailwind utility classes from tailwind.config.js — that file and
-// this one are kept in sync (same hex). Everything in JSX goes
-// through those four families.
+// The PRIMARY palette (ink / sand / jade / clay + demoted brand/sun) is
+// generated as Tailwind utility classes from tailwind.config.js — kept in
+// sync (same hex). Everything in JSX goes through tokens; zero raw colour.
 //
-// The colours below are ROLE-NAMED accents that don't fold into the
-// four families. They keep their exact current hex so the rendering
-// is unchanged, and they're applied via inline `style` at their (few)
-// usage sites. To re-map an accent later, edit it HERE only — no
-// component renaming required.
+// Role-named accents below don't fold into the families and are applied via
+// inline `style` at their few usage sites. Earthy, muted — no rainbow.
 // ============================================================
 
 // ---- Primary palette reference (mirror of tailwind.config.js) ----
-// Exposed for any TS code that needs a raw hex; classes remain the
-// normal way to use these in JSX.
 export const palette = {
   ink: {
-    50: "#f8fafc", 100: "#f1f5f9", 200: "#e2e8f0", 300: "#cbd5e1", 400: "#94a3b8",
-    500: "#64748b", 600: "#475569", 700: "#334155", 800: "#1e293b", 900: "#0f172a", 950: "#020617",
+    50: "#f7f3ec", 100: "#efe9dd", 200: "#e4dccd", 300: "#cdc3b2", 400: "#a99e8a",
+    500: "#847a68", 600: "#635a4b", 700: "#4a4236", 800: "#332d24", 900: "#221d16", 950: "#14110c",
   },
-  brand: {
-    50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc", 400: "#818cf8",
-    500: "#6366f1", 600: "#4f46e5", 700: "#4338ca", 800: "#3730a3", 900: "#312e81", 950: "#1e1b4b",
+  sand: {
+    50: "#faf7f1", 100: "#f3ecdf", 200: "#eadeca", 300: "#dccdb0", 400: "#cab68f",
+    500: "#b59e74", 600: "#9c835a", 700: "#7e6948", 800: "#65543c", 900: "#534633", 950: "#2f2619",
   },
   jade: {
-    50: "#ecfdf5", 100: "#d1fae5", 200: "#a7f3d0", 300: "#6ee7b7", 400: "#34d399",
-    500: "#10b981", 600: "#059669", 700: "#047857", 800: "#065f46", 900: "#064e3b", 950: "#022c22",
+    50: "#eef1ec", 100: "#dae2d4", 200: "#bccdb1", 300: "#97ad88", 400: "#6f8a5e",
+    500: "#526e43", 600: "#405737", 700: "#344629", 800: "#2b3a23", 900: "#1f2b1a", 950: "#111a0f",
   },
-  sun: {
-    50: "#fffbeb", 100: "#fef3c7", 200: "#fde68a", 300: "#fcd34d", 400: "#fbbf24",
-    500: "#f59e0b", 600: "#d97706", 700: "#b45309", 800: "#92400e", 900: "#78350f", 950: "#451a03",
+  clay: {
+    50: "#fbf0e9", 100: "#f5ddd0", 200: "#e9bda4", 300: "#db9876", 400: "#cd744d",
+    500: "#bd5a34", 600: "#a4472a", 700: "#863824", 800: "#6d3022", 900: "#5a2a20", 950: "#311510",
   },
 } as const;
 
-// ---- Per-city chapter accent (used on the hero "Focus" chip + day
-// calendar icon). Role-named: each entry keeps its current hue. ----
+// ---- Per-city chapter accent (used on day chapters). Earthy & muted. ----
 export const accentCity = {
-  hanoi: "#a5b4fc", // (was indigo-300)
-  ninhBinh: "#6ee7b7", // (was emerald-300)
-  haLong: "#5eead4", // (was teal-300)
-  hoiAn: "#fcd34d", // (was amber-300)
-  hcmc: "#fda4af", // (was rose-300)
-  whaleIsland: "#7dd3fc", // (was sky-300)
+  hanoi: "#9c835a", // sand-600
+  ninhBinh: "#6f8a5e", // jade-400
+  haLong: "#3f6f63", // muted pine-teal (water)
+  hoiAn: "#cd744d", // clay-400 (lanterns)
+  hcmc: "#a4472a", // clay-600
+  whaleIsland: "#6f8a8f", // muted slate-teal (sea)
 } as const;
 export type CityAccentKey = keyof typeof accentCity;
 
-// ---- Per-crew-member dot colour (family strip). Role-named by the
-// member's id. Keeps the current hue for each person. ----
+// ---- Per-crew-member marker. Earthy tints, keyed by member id. ----
 export const crew = {
-  marilyne: "#fce7f3", // (was pink-100)
-  claudine: "#e0e7ff", // (was indigo-100)
-  nizzar: "#f1f5f9", // (was slate-100)
-  aydann: "#dbeafe", // (was blue-100)
-  milann: "#ffedd5", // (was orange-100)
+  marilyne: "#cd744d", // clay-400
+  claudine: "#9c835a", // sand-600
+  nizzar: "#635a4b", // ink-600
+  aydann: "#3f6f63", // pine-teal
+  milann: "#b07c3e", // warm ochre
 } as const;
 export type CrewId = keyof typeof crew;
 
 // ---- Non-colour tokens (mirror of tailwind.config.js) ----
-export const radius = { card: "1.75rem", hero: "2.5rem" } as const;
+export const radius = { card: "0.5rem", hero: "0.75rem" } as const;
 export const shadow = {
-  soft: "0 1px 2px rgba(15,23,42,.04),0 2px 8px rgba(15,23,42,.05)",
-  card: "0 8px 24px -8px rgba(15,23,42,.12)",
-  float: "0 20px 50px -16px rgba(15,23,42,.28)",
+  soft: "0 1px 2px rgba(47,38,25,.04),0 1px 3px rgba(47,38,25,.05)",
+  card: "0 12px 34px -18px rgba(47,38,25,.20)",
+  float: "0 26px 60px -24px rgba(47,38,25,.30)",
 } as const;
 export const font = {
   sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
   display: ["Fraunces", "Georgia", "serif"],
 } as const;
 
-// App page background gradient (token-equivalent to brand-50 / ink-50 / ink-100).
-export const pageGradient = "radial-gradient(120% 80% at 50% -10%,#eef2ff 0%,#f8fafc 45%,#f1f5f9 100%)";
+// Warm paper page ground (token-equivalent to sand-100 → sand-50).
+export const pageGradient = "radial-gradient(130% 90% at 50% 0%,#f3ecdf 0%,#faf7f1 42%)";

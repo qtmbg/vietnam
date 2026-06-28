@@ -1,8 +1,9 @@
-import { Search, Compass } from "lucide-react";
 import { SmartImage } from "./SmartImage";
 import { ASSETS } from "../lib/assets";
-import { accentColorForCity } from "../lib/city";
 
+// Editorial cover: full-bleed graded photo, sober warm reading gradients,
+// masthead + "Index" text link, asymmetric title block with the countdown /
+// day treated as display typography. No glass pill, no accent chip, no icons.
 export const CinemaHero = ({
   onOpenQuick,
   activeCity,
@@ -21,9 +22,9 @@ export const CinemaHero = ({
   isWithinTrip: boolean;
 }) => {
   const src = coverSrc || ASSETS.covers.sections.home;
-  const accentColor = accentColorForCity(activeCity);
+
   return (
-    <div className="relative h-[80vh] w-full bg-ink-950">
+    <section className="relative h-[88vh] w-full bg-ink-950 overflow-hidden">
       <SmartImage
         src={src}
         alt={`Vietnam — ${activeCity}`}
@@ -32,57 +33,65 @@ export const CinemaHero = ({
         className="absolute inset-0 h-full w-full"
         overlay={
           <>
-            <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/40 to-ink-950/10" />
-            <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-ink-950/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/25 to-ink-950/10" />
+            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink-950/55 to-transparent" />
           </>
         }
       />
 
-      <div className="absolute inset-0 flex flex-col justify-between px-6 pt-14 pb-10">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-white/55 mb-2">24 juil → 18 août 2026</p>
-            <div className="inline-flex items-baseline gap-2 px-4 py-2 rounded-full bg-jade-500/15 ring-1 ring-jade-400/30 backdrop-blur-md">
-              {isWithinTrip ? (
-                <>
-                  <span className="font-display text-2xl text-jade-300 tabular-nums leading-none">Jour {dayNo}</span>
-                  <span className="text-[13px] font-semibold text-white/60 uppercase tracking-widest">/ {tripLen}</span>
-                </>
-              ) : daysTo > 0 ? (
-                <>
-                  <span className="font-display text-[28px] text-jade-300 tabular-nums leading-none">J−{daysTo}</span>
-                  <span className="text-[13px] font-semibold text-white/60 uppercase tracking-widest">avant le départ</span>
-                </>
-              ) : (
-                <span className="font-display text-xl text-jade-300 leading-none">De retour ✨</span>
-              )}
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onOpenQuick}
-            aria-label="Recherche et accès rapide"
-            className="shrink-0 w-11 h-11 rounded-full bg-white/15 backdrop-blur-md ring-1 ring-white/25 flex items-center justify-center text-white active:scale-90 transition-transform"
-          >
-            <Search size={20} />
-          </button>
+      {/* Masthead */}
+      <div className="absolute inset-x-0 top-0 px-7 pt-14 flex items-start justify-between">
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-[0.34em] text-sand-50/75">Carnet de voyage</p>
+          <div className="mt-2.5 h-px w-10 bg-sand-50/40" />
+        </div>
+        <button
+          type="button"
+          onClick={onOpenQuick}
+          aria-label="Index — accès rapide"
+          className="text-[12px] font-medium uppercase tracking-[0.22em] text-sand-50/85 underline underline-offset-4 decoration-sand-50/40 decoration-1 active:opacity-70 transition-opacity"
+        >
+          Index
+        </button>
+      </div>
+
+      {/* Title block */}
+      <div className="absolute inset-x-0 bottom-0 px-7 pb-12">
+        {/* Countdown / day as a display figure with a magazine caption */}
+        <div className="mb-5 flex items-baseline gap-3">
+          {isWithinTrip ? (
+            <>
+              <span className="font-display text-sand-50 text-[clamp(2.4rem,12vw,3.4rem)] leading-none tabular-nums">
+                {String(dayNo).padStart(2, "0")}
+              </span>
+              <span className="pb-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-sand-50/65 leading-tight">
+                Jour
+                <br />/ {tripLen}
+              </span>
+            </>
+          ) : daysTo > 0 ? (
+            <>
+              <span className="font-display text-sand-50 text-[clamp(2.4rem,12vw,3.4rem)] leading-none tabular-nums">{daysTo}</span>
+              <span className="pb-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-sand-50/65 leading-tight">
+                jours avant
+                <br />le départ
+              </span>
+            </>
+          ) : (
+            <span className="font-display italic text-sand-50/90 text-2xl leading-none">De retour</span>
+          )}
         </div>
 
-        <div>
-          <p className="text-[13px] font-semibold uppercase tracking-[0.3em] text-white/70 mb-2">Carnet de voyage famille</p>
-          <h1 className="font-display text-[clamp(3.5rem,18vw,5rem)] leading-[0.82] text-white tracking-tight mb-5">Vietnam</h1>
-          <div className="flex items-center gap-2">
-            <Compass size={15} className="text-white/50" />
-            <p className="text-[13px] font-semibold text-white/55 uppercase tracking-widest">Focus</p>
-            <span
-              className="inline-flex px-3 py-1.5 rounded-full text-sm font-semibold backdrop-blur-md bg-white/15 ring-1 ring-white/25"
-              style={{ color: accentColor }}
-            >
-              {activeCity}
-            </span>
-          </div>
+        <h1 className="font-display font-light text-sand-50 text-[clamp(3.6rem,19vw,5.6rem)] leading-[0.82] tracking-[-0.02em]">
+          Vietnam
+        </h1>
+
+        <div className="mt-6 h-px w-full bg-sand-50/25" />
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <p className="text-[12px] font-medium uppercase tracking-[0.2em] text-sand-50/75">24 juillet – 18 août 2026</p>
+          <p className="shrink-0 text-[12px] font-medium uppercase tracking-[0.2em] text-sand-50/55">{activeCity}</p>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

@@ -34,7 +34,7 @@ export const SmartImage = ({
           if (fallback && !err) setErr(true);
           setLoaded(true);
         }}
-        className={`w-full h-full object-cover transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"} ${imgClassName}`}
+        className={`w-full h-full object-cover photo-grade transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"} ${imgClassName}`}
       />
       {overlay}
     </div>

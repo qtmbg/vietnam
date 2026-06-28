@@ -78,15 +78,15 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Ouvrir Mr. Tang, votre concierge"
-          className="fixed right-4 bottom-[104px] z-[95] flex items-center gap-2.5 pl-2 pr-4 py-2 rounded-full bg-white shadow-float ring-1 ring-ink-100 active:scale-95 transition-transform motion-safe:animate-pop"
+          className="fixed right-4 bottom-[104px] z-[95] flex items-center gap-2 pl-2 pr-3.5 py-1.5 rounded-full bg-ink-900/95 backdrop-blur-sm shadow-float ring-1 ring-sand-50/15 active:scale-95 transition-transform motion-safe:animate-pop"
         >
           <span className="relative">
-            <TangAvatar size={40} />
-            <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-jade-500 ring-2 ring-white" />
+            <TangAvatar size={30} />
+            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-jade-400 ring-2 ring-ink-900" />
           </span>
           <span className="text-left leading-tight">
-            <span className="block text-[13px] font-bold text-ink-900">Mr. Tang</span>
-            <span className="block text-[13px] font-semibold text-jade-600">Concierge · en ligne</span>
+            <span className="block text-[12px] font-semibold text-sand-50">Mr. Tang</span>
+            <span className="block text-[11px] font-medium text-jade-300">Concierge</span>
           </span>
         </button>
       )}
@@ -120,7 +120,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
               {messages.map((m, i) =>
                 m.role === "user" ? (
                   <div key={i} className="flex justify-end">
-                    <div className="max-w-[82%] rounded-2xl rounded-tr-md bg-brand-600 text-white p-3 text-sm leading-relaxed whitespace-pre-wrap">{m.content}</div>
+                    <div className="max-w-[82%] rounded-2xl rounded-tr-md bg-clay-600 text-white p-3 text-sm leading-relaxed whitespace-pre-wrap">{m.content}</div>
                   </div>
                 ) : (
                   <div key={i} className="flex gap-2.5">
@@ -130,7 +130,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                       {m.sources && m.sources.length > 0 && (
                         <div className="mt-1.5 flex flex-wrap gap-1.5">
                           {m.sources.map((s, j) => (
-                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[13px] font-semibold text-brand-700 max-w-[170px] truncate">
+                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[13px] font-semibold text-clay-700 max-w-[170px] truncate">
                               <Compass size={11} className="shrink-0" /> {s.title}
                             </a>
                           ))}
@@ -184,7 +184,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                 type="submit"
                 disabled={loading || !input.trim()}
                 aria-label="Envoyer"
-                className="w-11 h-11 rounded-full bg-brand-600 text-white flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shrink-0"
+                className="w-11 h-11 rounded-full bg-clay-600 text-white flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shrink-0"
               >
                 {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
               </button>
