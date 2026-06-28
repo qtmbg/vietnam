@@ -1,32 +1,27 @@
-import type { ReactNode } from "react";
-
+// Editorial toggle: a clean labelled row with a slim terracotta switch.
 export const Toggle = ({
   label,
-  icon,
   value,
   onChange,
   hint,
 }: {
   label: string;
-  icon?: ReactNode;
   value: boolean;
   onChange: (v: boolean) => void;
   hint?: string;
 }) => (
-  <div className="flex items-center justify-between p-4 rounded-3xl bg-ink-50 border border-ink-100 shadow-sm">
-    <div className="flex items-center gap-3">
-      <div className="p-2 rounded-2xl bg-white shadow-sm text-ink-600">{icon}</div>
-      <div>
-        <p className="text-sm font-extrabold text-ink-900">{label}</p>
-        {hint && <p className="text-[13px] text-ink-500 font-medium">{hint}</p>}
-      </div>
+  <div className="flex items-center justify-between gap-4 py-3.5">
+    <div className="min-w-0">
+      <p className="text-[14px] font-semibold text-ink-900 leading-tight">{label}</p>
+      {hint && <p className="mt-0.5 text-[12px] text-ink-500">{hint}</p>}
     </div>
     <button
+      type="button"
       onClick={() => onChange(!value)}
-      className={`w-12 h-7 rounded-full p-1 transition-colors ${value ? "bg-jade-500" : "bg-ink-200"}`}
       aria-label={label}
+      className={`shrink-0 w-11 h-6 rounded-full p-0.5 transition-colors ${value ? "bg-clay-600" : "bg-ink-300"}`}
     >
-      <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${value ? "translate-x-5" : "translate-x-0"}`} />
+      <div className={`w-5 h-5 bg-sand-50 rounded-full shadow-sm transition-transform ${value ? "translate-x-5" : "translate-x-0"}`} />
     </button>
   </div>
 );
