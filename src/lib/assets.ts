@@ -109,7 +109,6 @@ export const ACT_COVERS: Record<string, string> = {
   "ACT-HA-001": "/covers/moments/hoi-an-old-town-night.jpg",
   "ACT-HA-002": "/covers/moments/boat.jpg",
   "ACT-HA-003": "/covers/moments/temple.jpg",
-  "ACT-HA-004": "/covers/moments/hoi-an-old-town-night.jpg",
   "ACT-DAD-001": "/covers/moments/pont-dragon-da-nang.jpg",
   "ACT-SGN-001": "/covers/moments/boat.jpg",
   "ACT-SGN-002": "/covers/moments/hcmc-war-museum.jpg",

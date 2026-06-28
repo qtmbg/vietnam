@@ -1,6 +1,7 @@
 import { SmartImage } from "./SmartImage";
 import { ASSETS } from "../lib/assets";
 import { safeDateLabel } from "../lib/dates";
+import { MOOD_THEME } from "../lib/mood";
 import type { ItineraryDay, Mood } from "../data/types";
 
 // Day spread: graded photo with a glass info panel (clear "Jour x / total" +
@@ -19,6 +20,7 @@ export const DayCardMobile = ({
   dayTotal?: number;
 }) => {
   const isFatigue = mood === "fatigue";
+  const mt = MOOD_THEME[mood];
 
   return (
     <article className="motion-safe:animate-rise-in">
@@ -53,6 +55,14 @@ export const DayCardMobile = ({
 
       {/* Schedule */}
       <div className="mt-4 rounded-card border border-ink-200 bg-sand-50 shadow-soft px-5 py-1.5">
+        <div className="pt-3 pb-1">
+          <span
+            className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-[0.1em]"
+            style={{ color: mt.tint, backgroundColor: mt.soft }}
+          >
+            {mt.label}
+          </span>
+        </div>
         {day.blocks.map((b, idx) => {
           const rest = isFatigue && b.label === "Soir" && !b.plan.toLowerCase().includes("repos");
           const last = idx === day.blocks.length - 1;
@@ -60,7 +70,7 @@ export const DayCardMobile = ({
             <div key={idx} className={`py-4 flex gap-4 ${last ? "" : "border-b border-ink-200"}`}>
               <span className="w-[4.5rem] shrink-0 pt-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-500">{b.label}</span>
               {rest ? (
-                <p className="flex-1 italic text-[16px] text-ink-500 leading-relaxed">Repos suggéré ce soir.</p>
+                <p className="flex-1 font-semibold text-[16px] leading-relaxed" style={{ color: mt.tint }}>Repos suggéré ce soir.</p>
               ) : (
                 <div className="flex-1">
                   <p className="text-[16px] text-ink-800 leading-relaxed">{b.plan}</p>
@@ -87,9 +97,10 @@ export const DayCardMobile = ({
       </div>
 
       {mood === "energy" && (
-        <p className="mt-4 pl-3.5 border-l-2 border-clay-300 italic text-[16px] text-ink-600 leading-relaxed">
-          Énergie au max : un café caché, puis une balade.
-        </p>
+        <div className="mt-4 rounded-card px-4 py-3" style={{ backgroundColor: mt.soft }}>
+          <p className="font-semibold text-[15px] leading-snug" style={{ color: mt.tint }}>Énergie au max</p>
+          <p className="mt-0.5 text-[14px] text-ink-700 leading-relaxed">On en ajoute : un café caché, une balade de plus, une découverte spontanée.</p>
+        </div>
       )}
     </article>
   );

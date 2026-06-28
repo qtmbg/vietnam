@@ -8,6 +8,7 @@ import { TRIP_DATA } from "../data/trip";
 import { selectDay } from "../lib/day";
 import { longDateLabel } from "../lib/dates";
 import { dayCoverFromDay } from "../lib/assets";
+import { MOOD_THEME } from "../lib/mood";
 import type { Mood, View } from "../data/types";
 
 // Destination city of a day label ("Hanoi → Ninh Binh" → "Ninh Binh") — where
@@ -26,9 +27,17 @@ export const VoyageView = ({
   goView: (v: View) => void;
 }) => {
   const [detail, setDetail] = useState<DayDetailState | null>(null);
+  const moodTheme = MOOD_THEME[mood];
 
   return (
-    <div className="motion-safe:animate-fade-up px-7 pt-12">
+    <div className="relative motion-safe:animate-fade-up px-7 pt-12">
+      {/* Mood ambiance — a soft colour wash that changes with the energy level. */}
+      <div
+        key={mood}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[480px] -z-10 motion-safe:animate-fade-up"
+        style={{ background: `radial-gradient(95% 100% at 50% 0%, ${moodTheme.wash} 0%, transparent 72%)` }}
+      />
       <div className="flex items-start justify-between gap-4 mb-9">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Jour par jour</p>
@@ -49,12 +58,17 @@ export const VoyageView = ({
         <Segmented
           value={mood}
           onChange={(id) => setMood(id as Mood)}
+          accent={moodTheme.tint}
           items={[
             { id: "fatigue", label: "Doux" },
             { id: "normal", label: "Normal" },
             { id: "energy", label: "À fond" },
           ]}
         />
+        <p className="mt-3 text-[14px] leading-snug">
+          <span className="font-semibold" style={{ color: moodTheme.tint }}>{moodTheme.label}.</span>{" "}
+          <span className="text-ink-600">{moodTheme.tagline}</span>
+        </p>
       </div>
 
       <div className="pb-20">

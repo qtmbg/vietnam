@@ -94,9 +94,14 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0 }));
   };
 
-  // Budget now lives inside Guide — this jumps straight to its section.
+  // Budget + flights live inside Guide — these jump straight to their section.
   const openBudget = useCallback(() => {
     setGuideTab("budget");
+    setView("guide");
+    requestAnimationFrame(() => window.scrollTo({ top: 0 }));
+  }, []);
+  const openFlights = useCallback(() => {
+    setGuideTab("vols");
     setView("guide");
     requestAnimationFrame(() => window.scrollTo({ top: 0 }));
   }, []);
@@ -137,6 +142,7 @@ export default function App() {
           nextTransfer={nextTransfer}
           goView={goView}
           openBudget={openBudget}
+          openFlights={openFlights}
         />
       )}
 

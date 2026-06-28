@@ -18,26 +18,45 @@ const Kicker = ({ children }: { children: string }) => (
   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">{children}</p>
 );
 
-// Discreet override to preview the other mode (handy before the trip).
-const ModePreview = ({ value, onChange }: { value: ModeOverride; onChange: (o: ModeOverride) => void }) => (
-  <div className="flex items-center justify-end gap-3 text-[11px] font-medium uppercase tracking-[0.18em]">
-    <span className="text-ink-500">Aperçu</span>
-    {([["auto", "Auto"], ["prep", "Prép"], ["travel", "Voyage"]] as const).map(([v, l]) => (
-      <button
-        key={v}
-        type="button"
-        onClick={() => onChange(v)}
-        className={
-          value === v
-            ? "text-ink-900 underline underline-offset-4 decoration-clay-500 decoration-1"
-            : "text-ink-500 active:text-ink-600 transition-colors"
-        }
-      >
-        {l}
-      </button>
-    ))}
-  </div>
-);
+// Home preview switcher — clear glass buttons so it's obvious what's tappable.
+// Auto / Prép / Voyage change how the home reads; Vols jumps to the flights.
+const ModePreview = ({
+  value,
+  onChange,
+  onFlights,
+}: {
+  value: ModeOverride;
+  onChange: (o: ModeOverride) => void;
+  onFlights: () => void;
+}) => {
+  const modeCls = (active: boolean) =>
+    `flex-1 rounded-full px-3 py-2.5 text-[13px] font-semibold transition-all duration-300 ${
+      active ? "bg-white text-clay-600 shadow-soft" : "text-ink-500 active:scale-95"
+    }`;
+  return (
+    <div>
+      <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">Aperçu de l'accueil</p>
+      <div className="glass rounded-full p-1 flex items-stretch gap-1">
+        <button type="button" onClick={() => onChange("auto")} className={modeCls(value === "auto")}>
+          Auto
+        </button>
+        <button type="button" onClick={() => onChange("prep")} className={modeCls(value === "prep")}>
+          Prép
+        </button>
+        <button
+          type="button"
+          onClick={onFlights}
+          className="flex-1 rounded-full px-3 py-2.5 text-[13px] font-semibold bg-clay-600 text-white shadow-soft inline-flex items-center justify-center gap-1 active:scale-95 transition-transform"
+        >
+          Vols <span aria-hidden="true">↗</span>
+        </button>
+        <button type="button" onClick={() => onChange("travel")} className={modeCls(value === "travel")}>
+          Voyage
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export const HomeView = ({
   mode,
@@ -53,6 +72,7 @@ export const HomeView = ({
   nextTransfer,
   goView,
   openBudget,
+  openFlights,
 }: {
   mode: TripMode;
   override: ModeOverride;
@@ -67,6 +87,7 @@ export const HomeView = ({
   nextTransfer: DaySelection["transfers"][number] | null;
   goView: (v: View) => void;
   openBudget: () => void;
+  openFlights: () => void;
 }) => {
   const [detail, setDetail] = useState<DayDetailState | null>(null);
   const travel = mode === "travel";
@@ -91,7 +112,7 @@ export const HomeView = ({
       />
 
       <div className="px-7 pt-11 space-y-12">
-        <ModePreview value={override} onChange={setOverride} />
+        <ModePreview value={override} onChange={setOverride} onFlights={openFlights} />
 
         {!travel && (
           <>

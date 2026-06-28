@@ -686,20 +686,6 @@ export const TRIP_DATA: TripData = {
           notes: "4 payants × 150 000 VND = $23.10.",
           tags: ["hoi-an", "histoire", "UNESCO"],
         },
-        {
-          id: "A-HA-004",
-          category: "activity",
-          mode: "stay_or_package",
-          operator: "Other",
-          operated_by_ja_cosmo: false,
-          status: "CONFIRMED",
-          date: null,
-          title: "Hoi An Memories Show — Hoi An",
-          price_total_usd: 104,
-          payer_rule: "adult_equal_split",
-          notes: "5 × 540 000 VND = $103.97. Sièges Row ECO.",
-          tags: ["hoi-an", "show"],
-        },
         // DA NANG
         {
           id: "A-DAD-001",
@@ -942,31 +928,6 @@ export const TRIP_DATA: TripData = {
       sourceUrl: "https://hoiandaytrip.com/my-son-sanctuary-travel-guide/",
       notes: "Total : 600 000 VND = $23.10 (4 payants). À caler tôt le matin (chaleur).",
       tags: ["UNESCO", "histoire"],
-    },
-    {
-      id: "ACT-HA-004",
-      driver: {
-        nameVi: "Công viên Ấn tượng Hội An",
-        address: "200 Nguyễn Tri Phương, Cẩm Nam, Hội An, Quảng Nam",
-        note: "Sur l'îlot de Cẩm Nam ; accès par le pont de Cẩm Nam (cầu Cẩm Nam).",
-      },
-      city: "Hoi An",
-      window: "1–6 août",
-      name: "Hoi An Memories Show",
-      category: "show",
-      duration: "1–2 h",
-      bestTime: "Soir",
-      pricing: {
-        currency: "VND",
-        vnd_adult: 540_000,
-        estimatedUSD_adult: vndToUsdRounded(540_000),
-      },
-      kidsRule: "OK kids (selon énergie)",
-      payMode: "réservation",
-      provider: "Site officiel + plateformes",
-      sourceUrl: "https://hoianmemoriesshow.com/",
-      notes: "Total : 2 700 000 VND = $103.97 pour 5 pers. Siège Row ECO online.",
-      tags: ["soir", "show"],
     },
 
     // DA NANG
