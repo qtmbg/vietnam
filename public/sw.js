@@ -59,8 +59,13 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put("/index.html", copy)).catch(() => {});
+          // Ne mémoriser comme coquille QUE une réponse saine same-origin : une page
+          // d'erreur HTTP (500/502/page d'erreur de l'hôte) renvoyée alors qu'on est
+          // encore en ligne ne doit pas écraser l'index.html hors-ligne.
+          if (res.ok && res.type === "basic") {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put("/index.html", copy)).catch(() => {});
+          }
           return res;
         })
         .catch(() => caches.match(request).then((r) => r || caches.match("/index.html")))
