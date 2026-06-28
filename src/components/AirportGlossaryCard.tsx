@@ -2,8 +2,8 @@ import type { AirportGlossaryItem } from "../data/types";
 
 // Editorial airports: code in display type, details as a ruled list. No icons.
 export const AirportGlossaryCard = ({ items }: { items: AirportGlossaryItem[] }) => (
-  <section>
-    <h3 className="font-display text-[1.7rem] text-ink-900 leading-none tracking-[-0.01em]">Aéroports</h3>
+  <section className="glass rounded-card px-5 py-4">
+    <h3 className="font-display text-[1.7rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">Aéroports</h3>
     <p className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-ink-500">Codes + trajets estimés</p>
     <div className="mt-4 border-t border-ink-200">
       {items.map((a, i) => (

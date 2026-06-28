@@ -57,14 +57,6 @@
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95), 0 -10px 50px -16px rgba(0, 0, 0, 0.18);
   }
-  /* Frosted dark — for chrome that needs to read over bright/white content. */
-  .glass-dark {
-    background-color: rgba(28, 28, 30, 0.7);
-    -webkit-backdrop-filter: blur(22px) saturate(180%);
-    backdrop-filter: blur(22px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), 0 18px 44px -20px rgba(0, 0, 0, 0.45);
-  }
   /* Glass over a photo (light text on top) — subtle so the image still reads. */
   .glass-on-photo {
     background-color: rgba(28, 28, 30, 0.26);

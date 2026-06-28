@@ -6,7 +6,6 @@ export const SmartImage = ({
   alt = "",
   fallback,
   className = "",
-  imgClassName = "",
   eager = false,
   overlay,
 }: {
@@ -14,7 +13,6 @@ export const SmartImage = ({
   alt?: string;
   fallback?: string;
   className?: string;
-  imgClassName?: string;
   eager?: boolean;
   overlay?: ReactNode;
 }) => {
@@ -34,7 +32,7 @@ export const SmartImage = ({
           if (fallback && !err) setErr(true);
           setLoaded(true);
         }}
-        className={`w-full h-full object-cover photo-grade transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"} ${imgClassName}`}
+        className={`w-full h-full object-cover photo-grade transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
       />
       {overlay}
     </div>

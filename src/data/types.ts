@@ -9,7 +9,6 @@ export type StatusTag = "CONFIRMED" | "ESTIMATE";
 
 // Home behaviour switches on where "today" sits vs the trip window.
 export type TripMode = "prep" | "travel";
-export type ModeOverride = "auto" | "prep" | "travel";
 
 export type Money = { us: number; claudine: number; currency: "USD" };
 

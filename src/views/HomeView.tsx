@@ -7,10 +7,8 @@ import { TipsChecklist } from "../components/TipsChecklist";
 import { FAMILY_MEMBERS, FLIGHTS } from "../data/trip";
 import { cityCoverFromLabel, dayCoverFromDay } from "../lib/assets";
 import { safeDateLabel } from "../lib/dates";
-import { formatUSD0 } from "../lib/money";
 import type { DaySelection } from "../lib/day";
-import type { ToSettle } from "../lib/prep";
-import type { TripMode, ModeOverride, View } from "../data/types";
+import type { TripMode, View } from "../data/types";
 
 const baseCity = (label: string) => label.split("→").map((s) => s.trim())[0];
 
@@ -18,75 +16,38 @@ const Kicker = ({ children }: { children: string }) => (
   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">{children}</p>
 );
 
-// Home preview switcher — clear glass buttons so it's obvious what's tappable.
-// Auto / Prép / Voyage change how the home reads; Vols jumps to the flights.
-const ModePreview = ({
-  value,
-  onChange,
-  onFlights,
-}: {
-  value: ModeOverride;
-  onChange: (o: ModeOverride) => void;
-  onFlights: () => void;
-}) => {
-  const modeCls = (active: boolean) =>
-    `flex-1 rounded-full px-3 py-2.5 text-[13px] font-semibold transition-all duration-300 ${
-      active ? "bg-white text-clay-600 shadow-soft" : "text-ink-500 active:scale-95"
-    }`;
-  return (
-    <div>
-      <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">Aperçu de l'accueil</p>
-      <div className="glass rounded-full p-1 flex items-stretch gap-1">
-        <button type="button" onClick={() => onChange("auto")} className={modeCls(value === "auto")}>
-          Auto
-        </button>
-        <button type="button" onClick={() => onChange("prep")} className={modeCls(value === "prep")}>
-          Prép
-        </button>
-        <button
-          type="button"
-          onClick={onFlights}
-          className="flex-1 rounded-full px-3 py-2.5 text-[13px] font-semibold bg-clay-600 text-white shadow-soft inline-flex items-center justify-center gap-1 active:scale-95 transition-transform"
-        >
-          Vols <span aria-hidden="true">↗</span>
-        </button>
-        <button type="button" onClick={() => onChange("travel")} className={modeCls(value === "travel")}>
-          Voyage
-        </button>
-      </div>
-    </div>
-  );
-};
+// One clean quick-access to the flights — white glass, accent text (no locked fill).
+const FlightsLink = ({ onFlights }: { onFlights: () => void }) => (
+  <div className="flex justify-end">
+    <button
+      type="button"
+      onClick={onFlights}
+      className="glass rounded-full px-4 py-2 text-[13px] font-semibold text-clay-600 inline-flex items-center gap-1.5 active:scale-95 transition-transform"
+    >
+      Vols <span aria-hidden="true">↗</span>
+    </button>
+  </div>
+);
 
 export const HomeView = ({
   mode,
-  override,
-  setOverride,
-  onOpenQuick,
   daysToDeparture,
   dayNo,
   tripLen,
   currentDay,
   firstCity,
-  toSettle,
   nextTransfer,
   goView,
-  openBudget,
   openFlights,
 }: {
   mode: TripMode;
-  override: ModeOverride;
-  setOverride: (o: ModeOverride) => void;
-  onOpenQuick: () => void;
   daysToDeparture: number;
   dayNo: number;
   tripLen: number;
   currentDay: DaySelection;
   firstCity: string;
-  toSettle: ToSettle;
   nextTransfer: DaySelection["transfers"][number] | null;
   goView: (v: View) => void;
-  openBudget: () => void;
   openFlights: () => void;
 }) => {
   const [detail, setDetail] = useState<DayDetailState | null>(null);
@@ -102,7 +63,6 @@ export const HomeView = ({
   return (
     <div key="home" className="motion-safe:animate-fade-up">
       <CinemaHero
-        onOpenQuick={onOpenQuick}
         activeCity={heroCity}
         coverSrc={heroCover}
         daysTo={daysToDeparture}
@@ -111,16 +71,15 @@ export const HomeView = ({
         isWithinTrip={travel}
       />
 
-      <div className="px-7 pt-11 space-y-12">
-        <ModePreview value={override} onChange={setOverride} onFlights={openFlights} />
+      <div className="px-7 pt-11 space-y-4">
+        <FlightsLink onFlights={openFlights} />
 
         {!travel && (
           <>
-            {/* Prochain jalon — le grand départ */}
-            <button type="button" onClick={() => goView("guide")} className="w-full text-left group">
+            {/* Prochain jalon — le grand départ (ouvre les vols) */}
+            <button type="button" onClick={openFlights} className="glass rounded-card px-5 py-4 w-full text-left group">
               <Kicker>Prochain jalon</Kicker>
-              <div className="h-px w-full bg-ink-200 my-3.5" />
-              <div className="flex items-end justify-between gap-5">
+              <div className="mt-3 flex items-end justify-between gap-5">
                 <div className="min-w-0">
                   <h2 className="font-display text-[2.1rem] text-ink-900 leading-[1.0] tracking-[-0.015em]">Le grand départ</h2>
                   <p className="mt-2 text-[15px] font-medium text-ink-600">Marrakech → Hanoi · {aller.segs[0]?.dep}</p>
@@ -128,35 +87,6 @@ export const HomeView = ({
                 <span className="shrink-0 text-ink-300 text-xl leading-none group-active:translate-x-0.5 transition-transform">›</span>
               </div>
             </button>
-
-            {/* Reste à régler */}
-            <section>
-              <Kicker>À régler avant le départ</Kicker>
-              <div className="mt-3 border-y border-ink-200 divide-y divide-ink-200">
-                <button type="button" onClick={openBudget} className="w-full py-3.5 flex items-baseline gap-4 text-left group">
-                  <span className="flex-1 text-[16px] font-medium text-ink-900">Transferts privés · reste à payer</span>
-                  <span className="shrink-0 text-[15px] font-semibold text-clay-600 tabular-nums">{formatUSD0(toSettle.transportToPay)}</span>
-                  <span className="shrink-0 text-ink-300 text-lg leading-none group-active:translate-x-0.5 transition-transform">›</span>
-                </button>
-                {toSettle.hotels.map(({ hotel, reason }) => (
-                  <button
-                    key={hotel.name}
-                    type="button"
-                    onClick={() => setDetail({ kind: "hotel", hotel })}
-                    className="w-full py-3.5 flex items-baseline gap-4 text-left group"
-                  >
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-[16px] font-medium text-ink-900 leading-snug">{hotel.name}</span>
-                      <span className="block mt-0.5 text-[12.5px] text-ink-600 leading-snug">{reason}</span>
-                    </span>
-                    <span className="shrink-0 text-ink-300 text-lg leading-none group-active:translate-x-0.5 transition-transform">›</span>
-                  </button>
-                ))}
-              </div>
-              <p className="mt-2.5 text-[12px] text-ink-500">
-                {toSettle.transferCount} transferts · {toSettle.hotels.length} hôtels · activités à payer sur place
-              </p>
-            </section>
 
             {/* Essentiels */}
             <TipsChecklist />
@@ -166,7 +96,7 @@ export const HomeView = ({
         {travel && (
           <>
             {/* Aujourd'hui — le jour courant via selectDay */}
-            <section>
+            <section className="glass rounded-card px-5 py-4">
               <div className="flex items-baseline justify-between mb-1.5">
                 <Kicker>Aujourd'hui</Kicker>
                 <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-ink-600 tabular-nums">
@@ -187,10 +117,9 @@ export const HomeView = ({
 
             {/* Prochain transfert avec adresse */}
             {nextTransfer && (
-              <button type="button" onClick={() => setDetail({ kind: "transfer", expense: nextTransfer })} className="w-full text-left group">
+              <button type="button" onClick={() => setDetail({ kind: "transfer", expense: nextTransfer })} className="glass rounded-card px-5 py-4 w-full text-left group">
                 <Kicker>Prochain transfert</Kicker>
-                <div className="h-px w-full bg-ink-200 my-3.5" />
-                <div className="flex items-end justify-between gap-5">
+                <div className="mt-3 flex items-end justify-between gap-5">
                   <div className="min-w-0">
                     <p className="text-[16px] font-medium text-ink-900 leading-snug">
                       {nextTransfer.from} <span className="text-ink-500">→</span> {nextTransfer.to}
@@ -208,18 +137,15 @@ export const HomeView = ({
         <button
           type="button"
           onClick={() => goView("voyage")}
-          className="w-full flex items-baseline justify-between gap-4 border-t border-ink-300 pt-4 text-left group"
+          className="glass rounded-card px-5 py-4 w-full flex items-baseline justify-between gap-4 text-left group"
         >
-          <span className="font-display text-[1.6rem] text-ink-900 leading-none tracking-[-0.01em]">Le voyage, jour par jour</span>
+          <span className="font-display text-[1.6rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">Le voyage, jour par jour</span>
           <span className="shrink-0 text-ink-500 text-xl leading-none group-active:translate-x-0.5 transition-transform">→</span>
         </button>
 
         {/* Équipage */}
-        <section className="pb-4">
-          <div className="flex items-baseline justify-between mb-4 border-t border-ink-200 pt-4">
-            <h3 className="font-display text-[1.7rem] text-ink-900 leading-none">Équipage</h3>
-            <p className="font-display italic text-[14px] text-ink-600">les aventuriers</p>
-          </div>
+        <section className="glass rounded-card px-5 py-4">
+          <h3 className="mb-4 font-display text-[1.7rem] font-semibold text-ink-900 leading-none">Équipage</h3>
           <FamilyStrip members={FAMILY_MEMBERS} />
         </section>
       </div>

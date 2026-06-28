@@ -3,9 +3,9 @@ import type { FlightLeg } from "../data/types";
 // Editorial flight leg: Fraunces title, paid status as small-caps text, the
 // segments as a ruled list with airport codes in display type. No icons.
 export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
-  <section className="mb-9">
+  <section className="glass rounded-card px-5 py-4 mb-4">
     <div className="flex items-baseline justify-between gap-3">
-      <h4 className="font-display text-[1.6rem] text-ink-900 leading-tight tracking-[-0.01em]">{leg.title}</h4>
+      <h4 className="font-display text-[1.6rem] font-semibold text-ink-900 leading-tight tracking-[-0.01em]">{leg.title}</h4>
       <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-jade-600">{leg.paid ? "Payé" : "Confirmé"}</span>
     </div>
     <p className="mt-1 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-500">{leg.sub}</p>

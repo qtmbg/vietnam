@@ -54,7 +54,7 @@ export const DayCardMobile = ({
       </div>
 
       {/* Schedule */}
-      <div className="mt-4 rounded-card border border-ink-200 bg-sand-50 shadow-soft px-5 py-1.5">
+      <div className="mt-4 rounded-card glass px-5 py-1.5">
         <div className="pt-3 pb-1">
           <span
             className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-[0.1em]"

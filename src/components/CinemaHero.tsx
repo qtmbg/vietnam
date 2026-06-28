@@ -5,7 +5,6 @@ import { ASSETS } from "../lib/assets";
 // masthead + "Index" text link, asymmetric title block with the countdown /
 // day treated as display typography. No glass pill, no accent chip, no icons.
 export const CinemaHero = ({
-  onOpenQuick,
   activeCity,
   coverSrc,
   daysTo,
@@ -13,7 +12,6 @@ export const CinemaHero = ({
   tripLen,
   isWithinTrip,
 }: {
-  onOpenQuick: () => void;
   activeCity: string;
   coverSrc?: string;
   daysTo: number;
@@ -40,19 +38,9 @@ export const CinemaHero = ({
       />
 
       {/* Masthead */}
-      <div className="absolute inset-x-0 top-0 px-7 pt-14 flex items-start justify-between">
-        <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.34em] text-sand-50/75">Carnet de voyage</p>
-          <div className="mt-2.5 h-px w-10 bg-sand-50/40" />
-        </div>
-        <button
-          type="button"
-          onClick={onOpenQuick}
-          aria-label="Index — accès rapide"
-          className="glass-on-photo rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-sand-50 active:scale-95 transition-transform"
-        >
-          Index
-        </button>
+      <div className="absolute inset-x-0 top-0 px-7 pt-14">
+        <p className="text-[11px] font-medium uppercase tracking-[0.34em] text-sand-50/75">Carnet de voyage</p>
+        <div className="mt-2.5 h-px w-10 bg-sand-50/40" />
       </div>
 
       {/* Title block */}

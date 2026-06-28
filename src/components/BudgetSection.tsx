@@ -11,7 +11,7 @@ const shortPlace = (s = "") => {
   return s.replace(/\s*\(.*?\)\s*$/, "").trim();
 };
 
-const cardCls = "rounded-card border border-ink-200 bg-sand-50 shadow-soft px-5 py-4";
+const cardCls = "rounded-card glass px-5 py-4";
 
 const Head = ({ title, amount }: { title: string; amount?: string }) => (
   <div className="flex items-baseline justify-between gap-3">
@@ -31,21 +31,23 @@ const Row = ({ title, sub, amount }: { title: string; sub?: string; amount: stri
   </div>
 );
 
-// SIMPLE budget — only what's left to pay. No Claudine/Nous shares. Lives in Guide.
+// Budget = a calm cost ESTIMATE, not an upfront bill. Hotels & land transfers
+// are settled in advance or on-site (our call) — nothing is due before departure.
 export const BudgetSection = ({ budget }: { budget: BudgetComputed }) => {
   const { hotels, transport, activities, grand } = budget;
 
   return (
     <div className="space-y-4">
-      {/* Reste à payer — the one number that matters */}
+      {/* Estimate headline */}
       <section className="glass rounded-card px-6 py-7">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">Reste à payer · USD</p>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">Budget · estimation · USD</p>
         <p className="mt-2 font-display font-semibold text-[3.2rem] text-ink-900 leading-none tabular-nums tracking-[-0.03em]">
           {formatUSD0(grand.toPay)}
         </p>
         <p className="mt-2 text-[14px] text-ink-500 tabular-nums">{usdToVndLabel(grand.toPay)}</p>
         <p className="mt-3 text-[14px] text-ink-600 leading-relaxed">
-          Hôtels encore dus, transferts privés et billets d'activités. Repas et vols internationaux non inclus.
+          Estimation à prévoir — hôtels, transferts privés et activités. Réglés en amont ou sur place selon les cas,
+          rien n'est dû avant le départ. Vols internes déjà payés.
         </p>
       </section>
 
@@ -74,7 +76,7 @@ export const BudgetSection = ({ budget }: { budget: BudgetComputed }) => {
       {/* Transferts privés */}
       <section className={cardCls}>
         <Head title="Transferts privés" amount={formatUSD0(transport.toPay)} />
-        <p className="mt-1 text-[12px] text-ink-500">{transport.items.length} trajets · van 16 places · à régler sur place</p>
+        <p className="mt-1 text-[12px] text-ink-500">{transport.items.length} trajets · van 16 places</p>
         <div className="mt-1 divide-y divide-ink-200">
           {transport.items.map((t) => (
             <Row
@@ -96,7 +98,7 @@ export const BudgetSection = ({ budget }: { budget: BudgetComputed }) => {
       {/* Activités */}
       <section className={cardCls}>
         <Head title="Activités" amount={formatUSD0(activities.total)} />
-        <p className="mt-1 text-[12px] text-ink-500">Estimations · billets à payer sur place (5 pers)</p>
+        <p className="mt-1 text-[12px] text-ink-500">Estimations · billets sur place (5 pers)</p>
         <div className="mt-1 divide-y divide-ink-200">
           {activities.items.map((a) => (
             <Row key={a.id} title={a.title} amount={formatUSD0(a.price_total_usd)} />
@@ -106,9 +108,9 @@ export const BudgetSection = ({ budget }: { budget: BudgetComputed }) => {
 
       {/* Ce qui est compté */}
       <section className={cardCls}>
-        <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">Ce qui est compté</p>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">Comment lire ce budget</p>
         <ol className="mt-3 space-y-2 text-[14px] text-ink-700 leading-relaxed">
-          <li>Hôtels encore dus, transferts privés et billets d'activités.</li>
+          <li>Une estimation, pas une facture : on règle en amont ou sur place selon les cas.</li>
           <li>Les vols internes VietJet sont déjà payés.</li>
           <li>Repas, vols internationaux et extras ne sont pas comptés ici.</li>
         </ol>

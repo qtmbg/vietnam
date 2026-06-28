@@ -9,7 +9,7 @@ import { selectDay } from "../lib/day";
 import { longDateLabel } from "../lib/dates";
 import { dayCoverFromDay } from "../lib/assets";
 import { MOOD_THEME } from "../lib/mood";
-import type { Mood, View } from "../data/types";
+import type { Mood } from "../data/types";
 
 // Destination city of a day label ("Hanoi → Ninh Binh" → "Ninh Binh") — where
 // you actually spend the day, so the day's Tang question points to the right place.
@@ -20,11 +20,9 @@ const dayDestCity = (label: string) => label.split("→").map((s) => s.trim()).f
 export const VoyageView = ({
   mood,
   setMood,
-  goView,
 }: {
   mood: Mood;
   setMood: (m: Mood) => void;
-  goView: (v: View) => void;
 }) => {
   const [detail, setDetail] = useState<DayDetailState | null>(null);
   const moodTheme = MOOD_THEME[mood];
@@ -38,19 +36,9 @@ export const VoyageView = ({
         className="pointer-events-none absolute inset-x-0 top-0 h-[480px] -z-10 motion-safe:animate-fade-up"
         style={{ background: `radial-gradient(95% 100% at 50% 0%, ${moodTheme.wash} 0%, transparent 72%)` }}
       />
-      <div className="flex items-start justify-between gap-4 mb-9">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Jour par jour</p>
-          <h2 className="mt-1.5 font-display font-semibold text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Voyage</h2>
-        </div>
-        <button
-          type="button"
-          onClick={() => goView("home")}
-          aria-label="Retour à l'accueil"
-          className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-600 active:text-ink-900 transition-colors"
-        >
-          ← Accueil
-        </button>
+      <div className="mb-9">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Jour par jour</p>
+        <h2 className="mt-1.5 font-display font-semibold text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Voyage</h2>
       </div>
 
       <div className="mb-12">

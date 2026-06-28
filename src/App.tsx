@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Calendar, BookOpen, Map } from "lucide-react";
+import { Home, Calendar, BookOpen, Map } from "lucide-react";
 
 import { TangContext } from "./lib/tangCtx";
 import { TRIP_DATA } from "./data/trip";
-import type { Mood, View, ModeOverride, TripMode } from "./data/types";
+import type { Mood, View, TripMode } from "./data/types";
 import { toISO, MS_DAY } from "./lib/dates";
 import { computeBudget } from "./lib/budget";
 import { selectDay } from "./lib/day";
-import { selectToSettle } from "./lib/prep";
 import { buildTripContext } from "./lib/tripContext";
 
-import { QuickSheet } from "./components/QuickSheet";
 import { MrTang } from "./components/MrTang";
 import { HomeView } from "./views/HomeView";
 import { VoyageView } from "./views/VoyageView";
@@ -29,12 +27,6 @@ export default function App() {
     const m = localStorage.getItem("trip_mood");
     return m ? (m as Mood) : "normal";
   });
-  const [quickOpen, setQuickOpen] = useState(false);
-  // Discreet override to preview the other home mode.
-  const [modeOverride, setModeOverride] = useState<ModeOverride>(() => {
-    const o = localStorage.getItem("trip_mode_override");
-    return o ? (o as ModeOverride) : "auto";
-  });
 
   // Which Guide sub-section is open (Cuisine / Vols / Budget / Infos / Conseils).
   const [guideTab, setGuideTab] = useState<GuideTab>(() => {
@@ -45,7 +37,6 @@ export default function App() {
   // Persist
   useEffect(() => localStorage.setItem("trip_guide_tab", guideTab), [guideTab]);
   useEffect(() => localStorage.setItem("trip_mood", mood), [mood]);
-  useEffect(() => localStorage.setItem("trip_mode_override", modeOverride), [modeOverride]);
 
   // ---- Trip window + mode ----
   const days = TRIP_DATA.itinerary_days;
@@ -55,8 +46,8 @@ export default function App() {
   const DEPART = TRIP_DATA.meta.flights.outbound.date; // 2026-07-24
   const tripLen = days.length;
 
-  const autoMode: TripMode = todayISO < DEPART ? "prep" : "travel";
-  const mode: TripMode = modeOverride === "auto" ? autoMode : modeOverride;
+  // Date-driven: prep before departure, travel during the trip.
+  const mode: TripMode = todayISO < DEPART ? "prep" : "travel";
 
   const daysToDeparture = Math.max(0, Math.ceil((+new Date(DEPART) - +new Date(todayISO)) / MS_DAY));
 
@@ -85,7 +76,6 @@ export default function App() {
     [currentDayDate]
   );
 
-  const toSettle = useMemo(() => selectToSettle(TRIP_DATA.expenses_usd, TRIP_DATA.hotels), []);
   const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd, TRIP_DATA.hotels), []);
   const tripContext = useMemo(() => buildTripContext(todayISO), [todayISO]);
 
@@ -94,12 +84,7 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0 }));
   };
 
-  // Budget + flights live inside Guide — these jump straight to their section.
-  const openBudget = useCallback(() => {
-    setGuideTab("budget");
-    setView("guide");
-    requestAnimationFrame(() => window.scrollTo({ top: 0 }));
-  }, []);
+  // Flights live inside Guide — this jumps straight to that section.
   const openFlights = useCallback(() => {
     setGuideTab("vols");
     setView("guide");
@@ -107,6 +92,7 @@ export default function App() {
   }, []);
 
   const TabsList = [
+    { id: "home", icon: Home, label: "Accueil" },
     { id: "voyage", icon: Calendar, label: "Voyage" },
     { id: "guide", icon: BookOpen, label: "Guide" },
     { id: "carte", icon: Map, label: "Carte" },
@@ -124,38 +110,31 @@ export default function App() {
   return (
     <TangContext.Provider value={{ open: tangOpen, prefill: tangPrefill, openTang, closeTang }}>
     <div className="min-h-screen bg-app font-sans text-ink-900 pb-36 overflow-x-clip">
-      <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} onBudget={openBudget} />
-
       {/* HOME — mode-driven accueil */}
       {view === "home" && (
         <HomeView
           mode={mode}
-          override={modeOverride}
-          setOverride={setModeOverride}
-          onOpenQuick={() => setQuickOpen(true)}
           daysToDeparture={daysToDeparture}
           dayNo={dayNo}
           tripLen={tripLen}
           currentDay={currentDay}
           firstCity={firstCity}
-          toSettle={toSettle}
           nextTransfer={nextTransfer}
           goView={goView}
-          openBudget={openBudget}
           openFlights={openFlights}
         />
       )}
 
       {/* VOYAGE — day by day, unified Day model */}
-      {view === "voyage" && <VoyageView mood={mood} setMood={setMood} goView={goView} />}
+      {view === "voyage" && <VoyageView mood={mood} setMood={setMood} />}
 
       {/* GUIDE — cuisine + vols + budget + infos + conseils */}
-      {view === "guide" && <GuideView tab={guideTab} setTab={setGuideTab} budget={budget} goView={goView} />}
+      {view === "guide" && <GuideView tab={guideTab} setTab={setGuideTab} budget={budget} />}
 
       {/* CARTE */}
-      {view === "carte" && <CarteView goView={goView} />}
+      {view === "carte" && <CarteView />}
 
-      {/* MOBILE NAV — 3 tabs, floating clear of the system bar */}
+      {/* MOBILE NAV — Accueil + 3 sections, floating clear of the system bar */}
       <nav
         aria-label="Navigation principale"
         className="fixed inset-x-0 z-[90] px-3 bottom-[calc(env(safe-area-inset-bottom)+0.75rem)]"
