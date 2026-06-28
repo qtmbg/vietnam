@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { X, Send, Loader2, Compass } from "lucide-react";
+import { X, Send, Loader2, Compass, WifiOff } from "lucide-react";
 import { TANG_SUGGESTIONS } from "../data/trip";
 import { useTang } from "../lib/tangCtx";
+import { useOnline } from "../lib/useOnline";
 
 const TangAvatar = ({ size = 48, className = "" }: { size?: number; className?: string }) => (
   <svg viewBox="0 0 48 48" width={size} height={size} className={className} aria-hidden="true">
@@ -25,6 +26,7 @@ type TangMsg = { role: "user" | "assistant"; content: string; sources?: { title:
 
 export const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) => {
   const { open, prefill, openTang, closeTang } = useTang();
+  const online = useOnline();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,6 +60,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
   const send = async (text: string) => {
     const q = text.trim();
     if (!q || loading) return;
+    if (!online) return; // hors-ligne : le bandeau explique déjà la situation
     const next: TangMsg[] = [...messages, { role: "user", content: q }];
     setMessages(next);
     setInput("");
@@ -91,11 +94,11 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
         >
           <span className="relative">
             <TangAvatar size={30} />
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-jade-400 ring-2 ring-ink-900" />
+            <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ring-2 ring-ink-900 ${online ? "bg-jade-400" : "bg-clay-400"}`} />
           </span>
           <span className="text-left leading-tight">
             <span className="block text-[12px] font-semibold text-sand-50">Mr. Tang</span>
-            <span className="block text-[11px] font-medium text-jade-300">Concierge</span>
+            <span className={`block text-[11px] font-medium ${online ? "text-jade-300" : "text-clay-300"}`}>{online ? "Concierge" : "Hors-ligne"}</span>
           </span>
         </button>
       )}
@@ -116,6 +119,15 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                 <X size={18} />
               </button>
             </div>
+
+            {!online && (
+              <div className="flex items-start gap-2.5 px-4 py-3 bg-clay-50 border-b border-clay-100 text-[13px] text-clay-800 leading-snug">
+                <WifiOff size={16} className="shrink-0 mt-0.5 text-clay-600" />
+                <p>
+                  <b>Hors-ligne.</b> Mr. Tang a besoin d’une connexion internet pour répondre. Le reste du carnet — itinéraire, hôtels, transferts, budget, guide — reste consultable sans réseau.
+                </p>
+              </div>
+            )}
 
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.length === 0 && (
@@ -168,7 +180,8 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                     key={s}
                     type="button"
                     onClick={() => send(s)}
-                    className="px-3 py-2 rounded-full bg-jade-50 border border-jade-100 text-[13px] font-semibold text-jade-700 active:scale-95 transition-transform text-left"
+                    disabled={!online}
+                    className="px-3 py-2 rounded-full bg-jade-50 border border-jade-100 text-[13px] font-semibold text-jade-700 active:scale-95 transition-transform text-left disabled:opacity-40 disabled:active:scale-100"
                   >
                     {s}
                   </button>
@@ -187,16 +200,16 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Demandez à Mr. Tang…"
+                placeholder={online ? "Demandez à Mr. Tang…" : "Hors-ligne — connexion requise"}
                 className="flex-1 bg-ink-50 border border-ink-100 rounded-full px-4 py-3 text-sm text-ink-900 placeholder:text-ink-500"
               />
               <button
                 type="submit"
-                disabled={loading || !input.trim()}
-                aria-label="Envoyer"
+                disabled={loading || !input.trim() || !online}
+                aria-label={online ? "Envoyer" : "Hors-ligne"}
                 className="w-11 h-11 rounded-full bg-clay-600 text-white flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shrink-0"
               >
-                {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+                {loading ? <Loader2 size={18} className="animate-spin" /> : online ? <Send size={18} /> : <WifiOff size={18} />}
               </button>
             </form>
           </div>

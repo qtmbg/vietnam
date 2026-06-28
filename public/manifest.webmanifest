@@ -1,0 +1,16 @@
+{
+  "name": "Vietnam 2026 — Carnet de voyage famille",
+  "short_name": "Vietnam 2026",
+  "description": "Itinéraire, hôtels, activités et budget — voyage famille au Vietnam, juillet–août 2026. Avec Mr. Tang, votre concierge.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf7f1",
+  "theme_color": "#14110c",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "maskable" }
+  ]
+}
