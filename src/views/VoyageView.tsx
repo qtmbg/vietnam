@@ -3,10 +3,16 @@ import { Segmented } from "../components/Segmented";
 import { DayCardMobile } from "../components/DayCardMobile";
 import { DayContext } from "../components/DayContext";
 import { DayDetail, type DayDetailState } from "../components/DayDetail";
+import { AskTang } from "../components/AskTang";
 import { TRIP_DATA } from "../data/trip";
 import { selectDay } from "../lib/day";
+import { longDateLabel } from "../lib/dates";
 import { dayCoverFromDay } from "../lib/assets";
 import type { Mood, View } from "../data/types";
+
+// Destination city of a day label ("Hanoi → Ninh Binh" → "Ninh Binh") — where
+// you actually spend the day, so the day's Tang question points to the right place.
+const dayDestCity = (label: string) => label.split("→").map((s) => s.trim()).filter(Boolean).pop() ?? label;
 
 // The "Voyage" tab: one editorial column, day by day, each day in context via
 // selectDay. Taps open the detail of the touched element.
@@ -64,6 +70,9 @@ export const VoyageView = ({
                   onActivity={(activity) => setDetail({ kind: "activity", activity })}
                   onTransfer={(expense) => setDetail({ kind: "transfer", expense })}
                 />
+              </div>
+              <div className="mt-5">
+                <AskTang question={`Que faire à ${dayDestCity(day.city)} le ${longDateLabel(day.date)} ?`} />
               </div>
             </div>
           );

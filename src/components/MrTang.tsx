@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { X, Send, Loader2, Compass } from "lucide-react";
 import { TANG_SUGGESTIONS } from "../data/trip";
+import { useTang } from "../lib/tangCtx";
 
 const TangAvatar = ({ size = 48, className = "" }: { size?: number; className?: string }) => (
   <svg viewBox="0 0 48 48" width={size} height={size} className={className} aria-hidden="true">
@@ -23,9 +24,10 @@ const TangAvatar = ({ size = 48, className = "" }: { size?: number; className?: 
 type TangMsg = { role: "user" | "assistant"; content: string; sources?: { title: string; url: string }[] };
 
 export const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) => {
-  const [open, setOpen] = useState(false);
+  const { open, prefill, openTang, closeTang } = useTang();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<TangMsg[]>(() => {
     const saved = localStorage.getItem("trip_tang_chat");
     if (saved) {
@@ -45,6 +47,13 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
   useEffect(() => {
     if (open) requestAnimationFrame(() => scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }));
   }, [messages, open, loading]);
+  // When opened from a card, drop that card's question into the input, ready to edit/send.
+  useEffect(() => {
+    if (open && prefill) {
+      setInput(prefill);
+      requestAnimationFrame(() => inputRef.current?.focus());
+    }
+  }, [open, prefill]);
 
   const send = async (text: string) => {
     const q = text.trim();
@@ -76,7 +85,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
       {!open && (
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={() => openTang()}
           aria-label="Ouvrir Mr. Tang, votre concierge"
           className="fixed right-4 bottom-[104px] z-[95] flex items-center gap-2 pl-2 pr-3.5 py-1.5 rounded-full bg-ink-900/95 backdrop-blur-sm shadow-float ring-1 ring-sand-50/15 active:scale-95 transition-transform motion-safe:animate-pop"
         >
@@ -93,7 +102,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
 
       {open && (
         <div className="fixed inset-0 z-[100] flex flex-col justify-end">
-          <button type="button" aria-label="Fermer le concierge" onClick={() => setOpen(false)} className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm" />
+          <button type="button" aria-label="Fermer le concierge" onClick={closeTang} className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm" />
           <div className="relative w-full max-h-[82vh] bg-white rounded-t-[2rem] shadow-float flex flex-col motion-safe:animate-fade-up">
             <div className="flex items-center gap-3 p-4 border-b border-ink-100">
               <TangAvatar size={44} />
@@ -103,7 +112,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                   <span className="w-1.5 h-1.5 rounded-full bg-jade-500" /> Votre concierge Vietnam
                 </p>
               </div>
-              <button type="button" aria-label="Fermer" onClick={() => setOpen(false)} className="w-9 h-9 rounded-full bg-ink-100 text-ink-600 flex items-center justify-center active:scale-90 transition-transform">
+              <button type="button" aria-label="Fermer" onClick={closeTang} className="w-9 h-9 rounded-full bg-ink-100 text-ink-600 flex items-center justify-center active:scale-90 transition-transform">
                 <X size={18} />
               </button>
             </div>
@@ -175,6 +184,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
               className="p-3 border-t border-ink-100 flex items-center gap-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
             >
               <input
+                ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Demandez à Mr. Tang…"

@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar, Wallet, BookOpen, Map } from "lucide-react";
 
+import { TangContext } from "./lib/tangCtx";
 import { TRIP_DATA } from "./data/trip";
 import type { Mood, View, ModeOverride, TripMode } from "./data/types";
 import { toISO, MS_DAY } from "./lib/dates";
@@ -108,7 +109,17 @@ export default function App() {
     { id: "carte", icon: Map, label: "Carte" },
   ] as const;
 
+  // Mr. Tang open/prefill — lets any card invoke him with a question ready.
+  const [tangOpen, setTangOpen] = useState(false);
+  const [tangPrefill, setTangPrefill] = useState("");
+  const openTang = useCallback((p = "") => {
+    setTangPrefill(p);
+    setTangOpen(true);
+  }, []);
+  const closeTang = useCallback(() => setTangOpen(false), []);
+
   return (
+    <TangContext.Provider value={{ open: tangOpen, prefill: tangPrefill, openTang, closeTang }}>
     <div className="min-h-screen bg-app font-sans text-ink-900 pb-36 overflow-x-clip">
       <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
@@ -171,5 +182,6 @@ export default function App() {
 
       <MrTang tripContext={tripContext} today={todayISO} />
     </div>
+    </TangContext.Provider>
   );
 }

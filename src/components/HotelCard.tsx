@@ -1,4 +1,5 @@
 import { SmartImage } from "./SmartImage";
+import { AskTang } from "./AskTang";
 import { P, ASSETS } from "../lib/assets";
 import { formatUSD0 } from "../lib/money";
 import { googleMapsSearchUrl } from "../lib/maps";
@@ -9,6 +10,7 @@ const linkCls =
 
 export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
   const link = hotel.booking_url || hotel.official_url;
+  const city = hotel.city.replace(/\(.*?\)/g, "").trim();
 
   return (
     <article>
@@ -63,6 +65,10 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
         <a href={googleMapsSearchUrl(hotel.name)} target="_blank" rel="noopener noreferrer" className={linkCls}>
           Carte →
         </a>
+      </div>
+
+      <div className="mt-4">
+        <AskTang question={`Que faire et où bien manger près de ${hotel.name} à ${city} ?`} />
       </div>
     </article>
   );

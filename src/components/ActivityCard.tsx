@@ -1,4 +1,5 @@
 import { SmartImage } from "./SmartImage";
+import { AskTang } from "./AskTang";
 import { P, ACT_COVERS, cityCoverFromLabel } from "../lib/assets";
 import { usdRounded } from "../lib/money";
 import { googleMapsSearchUrl } from "../lib/maps";
@@ -87,6 +88,10 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
         <a href={googleMapsSearchUrl(a.name + " " + a.city)} target="_blank" rel="noopener noreferrer" className={linkCls}>
           Carte →
         </a>
+      </div>
+
+      <div className="mt-4">
+        <AskTang question={`Comment bien profiter de ${a.name} à ${a.city} ? Horaires, astuces et pièges à éviter avec des enfants.`} />
       </div>
     </article>
   );
