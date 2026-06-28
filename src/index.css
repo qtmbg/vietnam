@@ -7,7 +7,7 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     /* Larger base so the whole UI scales up for easy reading (Claudine-friendly). */
-    font-size: 18px;
+    font-size: 19px;
   }
   body {
     font-family: "Inter", system-ui, -apple-system, sans-serif;

@@ -90,16 +90,10 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
           type="button"
           onClick={() => openTang()}
           aria-label="Ouvrir Mr. Tang, votre concierge"
-          className="fixed right-4 bottom-[104px] z-[95] flex items-center gap-2 pl-2 pr-3.5 py-1.5 rounded-full bg-ink-900/95 backdrop-blur-sm shadow-float ring-1 ring-sand-50/15 active:scale-95 transition-transform motion-safe:animate-pop"
+          className="fixed right-4 z-[95] bottom-[calc(env(safe-area-inset-bottom)+7rem)] w-14 h-14 rounded-full bg-ink-900/95 backdrop-blur-sm shadow-float ring-1 ring-sand-50/15 flex items-center justify-center active:scale-95 transition-transform motion-safe:animate-pop"
         >
-          <span className="relative">
-            <TangAvatar size={30} />
-            <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ring-2 ring-ink-900 ${online ? "bg-jade-400" : "bg-clay-400"}`} />
-          </span>
-          <span className="text-left leading-tight">
-            <span className="block text-[12px] font-semibold text-sand-50">Mr. Tang</span>
-            <span className={`block text-[11px] font-medium ${online ? "text-jade-300" : "text-clay-300"}`}>{online ? "Concierge" : "Hors-ligne"}</span>
-          </span>
+          <TangAvatar size={40} />
+          <span className={`absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full ring-2 ring-ink-900 ${online ? "bg-jade-400" : "bg-clay-400"}`} />
         </button>
       )}
 
@@ -111,7 +105,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
               <TangAvatar size={44} />
               <div className="flex-1 min-w-0">
                 <p className="font-display text-xl text-ink-900 leading-none">Mr. Tang</p>
-                <p className="text-[13px] font-semibold text-jade-600 flex items-center gap-1.5 mt-1">
+                <p className="text-[14px] font-semibold text-jade-600 flex items-center gap-1.5 mt-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-jade-500" /> Votre concierge Vietnam
                 </p>
               </div>
@@ -121,7 +115,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
             </div>
 
             {!online && (
-              <div className="flex items-start gap-2.5 px-4 py-3 bg-clay-50 border-b border-clay-100 text-[13px] text-clay-800 leading-snug">
+              <div className="flex items-start gap-2.5 px-4 py-3 bg-clay-50 border-b border-clay-100 text-[14px] text-clay-800 leading-snug">
                 <WifiOff size={16} className="shrink-0 mt-0.5 text-clay-600" />
                 <p>
                   <b>Hors-ligne.</b> Mr. Tang a besoin d’une connexion internet pour répondre. Le reste du carnet — itinéraire, hôtels, transferts, budget, guide — reste consultable sans réseau.
@@ -151,7 +145,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                       {m.sources && m.sources.length > 0 && (
                         <div className="mt-1.5 flex flex-wrap gap-1.5">
                           {m.sources.map((s, j) => (
-                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[13px] font-semibold text-clay-700 max-w-[170px] truncate">
+                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[14px] font-semibold text-clay-700 max-w-[170px] truncate">
                               <Compass size={11} className="shrink-0" /> {s.title}
                             </a>
                           ))}
@@ -181,7 +175,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                     type="button"
                     onClick={() => send(s)}
                     disabled={!online}
-                    className="px-3 py-2 rounded-full bg-jade-50 border border-jade-100 text-[13px] font-semibold text-jade-700 active:scale-95 transition-transform text-left disabled:opacity-40 disabled:active:scale-100"
+                    className="px-3 py-2 rounded-full bg-jade-50 border border-jade-100 text-[14px] font-semibold text-jade-700 active:scale-95 transition-transform text-left disabled:opacity-40 disabled:active:scale-100"
                   >
                     {s}
                   </button>

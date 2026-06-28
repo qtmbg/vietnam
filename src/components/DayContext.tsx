@@ -28,7 +28,7 @@ export const DayContext = ({
       {day.hotels.map((h) => (
         <button key={h.name} type="button" onClick={() => onHotel(h)} className="group w-full py-3.5 flex items-baseline gap-4 text-left">
           <Label>Où on dort</Label>
-          <span className="flex-1 text-[15px] font-medium text-ink-900 leading-snug">{h.name}</span>
+          <span className="flex-1 text-[16px] font-medium text-ink-900 leading-snug">{h.name}</span>
           <span className="shrink-0 text-ink-300 text-lg leading-none group-active:translate-x-0.5 transition-transform">›</span>
         </button>
       ))}
@@ -36,7 +36,7 @@ export const DayContext = ({
       {day.transfers.map((t) => (
         <button key={t.id} type="button" onClick={() => onTransfer(t)} className="group w-full py-3.5 flex items-baseline gap-4 text-left">
           <Label>Transfert</Label>
-          <span className="flex-1 text-[15px] font-medium text-ink-900 leading-snug">
+          <span className="flex-1 text-[16px] font-medium text-ink-900 leading-snug">
             {t.from} <span className="text-ink-500">→</span> {t.to}
           </span>
           <span className="shrink-0 text-ink-300 text-lg leading-none group-active:translate-x-0.5 transition-transform">›</span>
@@ -52,7 +52,7 @@ export const DayContext = ({
                 key={a.id}
                 type="button"
                 onClick={() => onActivity(a)}
-                className="text-[15px] font-medium text-ink-900 underline underline-offset-4 decoration-ink-300 decoration-1 active:text-clay-600 transition-colors text-left"
+                className="text-[16px] font-medium text-ink-900 underline underline-offset-4 decoration-ink-300 decoration-1 active:text-clay-600 transition-colors text-left"
               >
                 {a.name}
               </button>
@@ -64,7 +64,7 @@ export const DayContext = ({
       {day.cost.total > 0 && (
         <div className="py-3.5 flex items-baseline gap-4">
           <Label>Coût du jour</Label>
-          <span className="flex-1 text-[15px] font-semibold text-clay-600 tabular-nums">{formatUSD0(day.cost.total)}</span>
+          <span className="flex-1 text-[16px] font-semibold text-clay-600 tabular-nums">{formatUSD0(day.cost.total)}</span>
         </div>
       )}
     </div>

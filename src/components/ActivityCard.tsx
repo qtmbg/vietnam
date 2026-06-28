@@ -12,7 +12,7 @@ const linkCls =
 const Spec = ({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) => (
   <div className="py-3 flex items-baseline gap-4">
     <span className="w-[4.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">{label}</span>
-    <span className={`flex-1 text-[14px] leading-snug ${accent ? "font-semibold text-clay-600" : "font-medium text-ink-800"}`}>{value}</span>
+    <span className={`flex-1 text-[15px] leading-snug ${accent ? "font-semibold text-clay-600" : "font-medium text-ink-800"}`}>{value}</span>
   </div>
 );
 
@@ -78,15 +78,15 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
         <div className="py-3 flex items-baseline gap-4">
           <span className="w-[4.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">Prix</span>
           <span className="flex-1">
-            <span className="block text-[15px] font-semibold text-clay-600">{priceLine}</span>
-            {rawLine && <span className="block mt-0.5 text-[13px] text-ink-600 tabular-nums">{rawLine}</span>}
+            <span className="block text-[16px] font-semibold text-clay-600">{priceLine}</span>
+            {rawLine && <span className="block mt-0.5 text-[14px] text-ink-600 tabular-nums">{rawLine}</span>}
           </span>
         </div>
         {a.duration && <Spec label="Durée" value={a.duration} />}
         {a.kidsRule && <Spec label="Enfants" value={a.kidsRule} />}
       </div>
 
-      {a.notes && <p className="mt-4 text-[14px] text-ink-600 leading-relaxed">{a.notes}</p>}
+      {a.notes && <p className="mt-4 text-[15px] text-ink-600 leading-relaxed">{a.notes}</p>}
 
       <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
         {a.sourceUrl && (

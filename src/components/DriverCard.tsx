@@ -33,14 +33,14 @@ export const DriverCard = ({ driver, fallbackName }: { driver: DriverInfo; fallb
         {driver.address}
       </p>
 
-      {driver.note && <p className="mt-3 text-[13px] leading-relaxed text-ink-600">{driver.note}</p>}
+      {driver.note && <p className="mt-3 text-[14px] leading-relaxed text-ink-600">{driver.note}</p>}
 
       <div className="mt-4 flex items-center gap-4">
         <button
           type="button"
           onClick={copy}
           aria-label={copied ? "Adresse copiée" : "Copier le nom et l'adresse"}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-ink-900 text-sand-50 text-[13px] font-semibold active:scale-95 transition-transform"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-ink-900 text-sand-50 text-[14px] font-semibold active:scale-95 transition-transform"
         >
           {copied ? <Check size={15} /> : <Copy size={15} />} {copied ? "Copié" : "Copier"}
         </button>

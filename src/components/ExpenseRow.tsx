@@ -17,7 +17,7 @@ export const ExpenseRow = ({
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <p className="text-[15px] font-semibold text-ink-900 leading-snug">{item.title}</p>
+            <p className="text-[16px] font-semibold text-ink-900 leading-snug">{item.title}</p>
             {item.operated_by_ja_cosmo && (
               <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-jade-600">Ja Cosmo</span>
             )}
@@ -28,12 +28,12 @@ export const ExpenseRow = ({
           </p>
 
           {(item.from || item.to) && (
-            <p className="mt-2 text-[13px] font-medium text-ink-700">
+            <p className="mt-2 text-[14px] font-medium text-ink-700">
               {item.from ?? "—"} <span className="text-ink-500">→</span> {item.to ?? "—"}
             </p>
           )}
 
-          {item.notes && <p className="mt-2 text-[13px] text-ink-600 leading-relaxed">{item.notes}</p>}
+          {item.notes && <p className="mt-2 text-[14px] text-ink-600 leading-relaxed">{item.notes}</p>}
 
           {item.tags?.length ? (
             <p className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 text-[10.5px] font-medium uppercase tracking-[0.12em] text-ink-500">

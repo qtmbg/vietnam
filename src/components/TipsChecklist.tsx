@@ -39,7 +39,7 @@ export const TipsChecklist = () => {
               >
                 ✓
               </span>
-              <span className={`text-[15px] font-medium transition-colors ${on ? "text-ink-500 line-through" : "text-ink-800"}`}>{item}</span>
+              <span className={`text-[16px] font-medium transition-colors ${on ? "text-ink-500 line-through" : "text-ink-800"}`}>{item}</span>
             </button>
           );
         })}

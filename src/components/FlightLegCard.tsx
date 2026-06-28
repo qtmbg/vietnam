@@ -14,7 +14,7 @@ export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
       {leg.segs.map((s, i) => (
         <div key={i} className="py-4 border-b border-ink-200">
           <div className="flex items-baseline gap-2.5 flex-wrap">
-            <span className="text-[13px] font-bold text-ink-900 tabular-nums">{s.code}</span>
+            <span className="text-[14px] font-bold text-ink-900 tabular-nums">{s.code}</span>
             <span className="text-[12px] text-ink-600">{s.carrier}</span>
             {s.resa && <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-clay-600">Réf {s.resa}</span>}
           </div>
@@ -33,7 +33,7 @@ export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
               <p className="text-[12.5px] text-ink-600 tabular-nums">{s.arr}</p>
             </div>
           </div>
-          {s.note && <p className="mt-2 text-[13px] text-ink-600 leading-relaxed">{s.note}</p>}
+          {s.note && <p className="mt-2 text-[14px] text-ink-600 leading-relaxed">{s.note}</p>}
         </div>
       ))}
     </div>

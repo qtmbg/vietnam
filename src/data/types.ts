@@ -4,7 +4,7 @@
 import type { CrewId } from "../theme";
 
 export type Mood = "fatigue" | "normal" | "energy";
-export type View = "home" | "voyage" | "budget" | "guide" | "carte";
+export type View = "home" | "voyage" | "guide" | "carte";
 export type StatusTag = "CONFIRMED" | "ESTIMATE";
 
 // Home behaviour switches on where "today" sits vs the trip window.
@@ -81,6 +81,8 @@ export type ExpenseItemUSD = {
   payer_rule: PayerRule;
   claudine_usd?: number;
   nous_usd?: number;
+  /** true = already paid (e.g. domestic flights). Absent/false = still to settle. */
+  paid?: boolean;
   notes?: string;
   tags?: string[];
 };

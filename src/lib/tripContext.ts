@@ -30,6 +30,6 @@ export const buildTripContext = (today: string) => {
     `Itinéraire jour par jour :\n${days}`,
     `Transferts privés : ${transfers}.`,
     `Activités prévues : ${acts}.`,
-    "Budget : transports répartis Claudine 20% / le reste de la famille 80% ; activités en USD (1 $ ≈ 25 970 VND).",
+    "Budget (transports + activités, hors hôtels/repas) : transferts privés en van 16 places confirmés et à régler sur place ; vols internes VietJet déjà payés ; activités payées sur place (billets). Répartition : transports Claudine 20% / le reste de la famille 80% ; activités à parts égales entre adultes (1 $ ≈ 25 970 VND).",
   ].join("\n\n");
 };

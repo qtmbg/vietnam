@@ -5,10 +5,12 @@ export const QuickSheet = ({
   open,
   onClose,
   onGoto,
+  onBudget,
 }: {
   open: boolean;
   onClose: () => void;
   onGoto: (v: View) => void;
+  onBudget: () => void;
 }) => {
   if (!open) return null;
 
@@ -65,8 +67,9 @@ export const QuickSheet = ({
         </button>
 
         <button
+          type="button"
           onClick={() => {
-            onGoto("budget");
+            onBudget();
             onClose();
           }}
           className="p-6 rounded-3xl bg-sun-500 text-white text-left aspect-square flex flex-col justify-between"
@@ -74,13 +77,13 @@ export const QuickSheet = ({
           <Wallet size={32} />
           <div>
             <p className="font-black text-lg leading-tight mb-1">Budget</p>
-            <p className="text-xs font-medium text-white/70">USD uniquement</p>
+            <p className="text-xs font-medium text-white/70">Reste à payer</p>
           </div>
         </button>
       </div>
 
       <div className="mt-auto">
-        <p className="text-center text-white/40 text-[13px] font-bold uppercase tracking-[0.2em]">
+        <p className="text-center text-white/40 text-[14px] font-bold uppercase tracking-[0.2em]">
           Vietnam Trip 2026 — Hub Mobile
         </p>
       </div>

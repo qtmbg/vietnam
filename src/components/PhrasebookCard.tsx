@@ -9,8 +9,8 @@ export const PhrasebookCard = ({ items }: { items: PhraseItem[] }) => (
       {items.map((p) => (
         <div key={p.fr} className="py-3.5 border-b border-ink-200 flex items-baseline gap-4">
           <span className="w-[7.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.13em] text-ink-600">{p.fr}</span>
-          <span className="flex-1 text-[16px] font-semibold text-ink-900">{p.vi}</span>
-          <span className="shrink-0 font-display italic text-[13px] text-jade-600">{p.phon}</span>
+          <span className="flex-1 text-[17px] font-semibold text-ink-900">{p.vi}</span>
+          <span className="shrink-0 font-display italic text-[14px] text-jade-600">{p.phon}</span>
         </div>
       ))}
     </div>

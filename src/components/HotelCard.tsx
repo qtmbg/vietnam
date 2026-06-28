@@ -38,12 +38,12 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
       <p className={`mt-3 text-[12px] font-semibold uppercase tracking-[0.14em] ${hotel.paidBy ? "text-jade-600" : "text-clay-600"}`}>
         {hotel.paidBy ? `Payé · ${hotel.paidBy}` : "À régler"}
       </p>
-      {hotel.paidNote && <p className="mt-1 text-[13px] text-ink-600 leading-snug">{hotel.paidNote}</p>}
+      {hotel.paidNote && <p className="mt-1 text-[14px] text-ink-600 leading-snug">{hotel.paidNote}</p>}
 
-      <p className="mt-5 font-display italic text-[17px] text-ink-700 leading-relaxed">« {hotel.why} »</p>
+      <p className="mt-5 font-display italic text-[18px] text-ink-700 leading-relaxed">« {hotel.why} »</p>
 
       {hotel.note && (
-        <p className="mt-4 pl-3.5 border-l-2 border-clay-300 text-[14px] text-ink-600 leading-relaxed">{hotel.note}</p>
+        <p className="mt-4 pl-3.5 border-l-2 border-clay-300 text-[15px] text-ink-600 leading-relaxed">{hotel.note}</p>
       )}
 
       <div className="mt-6 border-y border-ink-200 divide-y divide-ink-200">

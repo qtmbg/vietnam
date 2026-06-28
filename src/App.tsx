@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Calendar, Wallet, BookOpen, Map } from "lucide-react";
+import { Calendar, BookOpen, Map } from "lucide-react";
 
 import { TangContext } from "./lib/tangCtx";
 import { TRIP_DATA } from "./data/trip";
 import type { Mood, View, ModeOverride, TripMode } from "./data/types";
 import { toISO, MS_DAY } from "./lib/dates";
-import { computeBudget, type BudgetFilters, type BudgetTab } from "./lib/budget";
+import { computeBudget } from "./lib/budget";
 import { selectDay } from "./lib/day";
 import { selectToSettle } from "./lib/prep";
 import { buildTripContext } from "./lib/tripContext";
@@ -14,15 +14,14 @@ import { QuickSheet } from "./components/QuickSheet";
 import { MrTang } from "./components/MrTang";
 import { HomeView } from "./views/HomeView";
 import { VoyageView } from "./views/VoyageView";
-import { BudgetView } from "./views/BudgetView";
-import { GuideView } from "./views/GuideView";
+import { GuideView, type GuideTab } from "./views/GuideView";
 import { CarteView } from "./views/CarteView";
 
 const baseCity = (label: string) => label.split("→").map((s) => s.trim())[0];
 
 // ============================================================
 // APP — orchestration: state, persistence, PREP/TRAVEL mode,
-// 4-tab routing, bottom nav and the Mr. Tang concierge.
+// 3-tab routing (budget folded into Guide) and the Mr. Tang concierge.
 // ============================================================
 export default function App() {
   const [view, setView] = useState<View>("home");
@@ -37,21 +36,14 @@ export default function App() {
     return o ? (o as ModeOverride) : "auto";
   });
 
-  // Budget filters (FR)
-  const [budgetTab, setBudgetTab] = useState<BudgetTab>(() => {
-    const t = localStorage.getItem("trip_budget_tab_v3");
-    return t ? (t as BudgetTab) : "overview";
-  });
-  const [filters, setFilters] = useState<BudgetFilters>(() => {
-    const f = localStorage.getItem("trip_budget_filters_v3");
-    return f
-      ? JSON.parse(f)
-      : { inclureConfirmes: true, inclureEstimes: true, seulementJaCosmo: false, recherche: "" };
+  // Which Guide sub-section is open (Cuisine / Vols / Budget / Infos / Conseils).
+  const [guideTab, setGuideTab] = useState<GuideTab>(() => {
+    const t = localStorage.getItem("trip_guide_tab");
+    return t ? (t as GuideTab) : "cuisine";
   });
 
   // Persist
-  useEffect(() => localStorage.setItem("trip_budget_filters_v3", JSON.stringify(filters)), [filters]);
-  useEffect(() => localStorage.setItem("trip_budget_tab_v3", budgetTab), [budgetTab]);
+  useEffect(() => localStorage.setItem("trip_guide_tab", guideTab), [guideTab]);
   useEffect(() => localStorage.setItem("trip_mood", mood), [mood]);
   useEffect(() => localStorage.setItem("trip_mode_override", modeOverride), [modeOverride]);
 
@@ -94,7 +86,7 @@ export default function App() {
   );
 
   const toSettle = useMemo(() => selectToSettle(TRIP_DATA.expenses_usd, TRIP_DATA.hotels), []);
-  const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd, filters), [filters]);
+  const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd), []);
   const tripContext = useMemo(() => buildTripContext(todayISO), [todayISO]);
 
   const goView = (v: View) => {
@@ -102,9 +94,15 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0 }));
   };
 
+  // Budget now lives inside Guide — this jumps straight to its section.
+  const openBudget = useCallback(() => {
+    setGuideTab("budget");
+    setView("guide");
+    requestAnimationFrame(() => window.scrollTo({ top: 0 }));
+  }, []);
+
   const TabsList = [
     { id: "voyage", icon: Calendar, label: "Voyage" },
-    { id: "budget", icon: Wallet, label: "Budget" },
     { id: "guide", icon: BookOpen, label: "Guide" },
     { id: "carte", icon: Map, label: "Carte" },
   ] as const;
@@ -121,7 +119,7 @@ export default function App() {
   return (
     <TangContext.Provider value={{ open: tangOpen, prefill: tangPrefill, openTang, closeTang }}>
     <div className="min-h-screen bg-app font-sans text-ink-900 pb-36 overflow-x-clip">
-      <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
+      <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} onBudget={openBudget} />
 
       {/* HOME — mode-driven accueil */}
       {view === "home" && (
@@ -138,26 +136,25 @@ export default function App() {
           toSettle={toSettle}
           nextTransfer={nextTransfer}
           goView={goView}
+          openBudget={openBudget}
         />
       )}
 
       {/* VOYAGE — day by day, unified Day model */}
       {view === "voyage" && <VoyageView mood={mood} setMood={setMood} goView={goView} />}
 
-      {/* BUDGET */}
-      {view === "budget" && (
-        <BudgetView budgetTab={budgetTab} setBudgetTab={setBudgetTab} filters={filters} setFilters={setFilters} budget={budget} goView={goView} />
-      )}
-
-      {/* GUIDE — food + vols + aéroports + phrases + conseils */}
-      {view === "guide" && <GuideView goView={goView} />}
+      {/* GUIDE — cuisine + vols + budget + infos + conseils */}
+      {view === "guide" && <GuideView tab={guideTab} setTab={setGuideTab} budget={budget} goView={goView} />}
 
       {/* CARTE */}
       {view === "carte" && <CarteView goView={goView} />}
 
-      {/* MOBILE NAV — 4 tabs */}
-      <nav aria-label="Navigation principale" className="fixed bottom-4 left-3 right-3 z-[90] pb-[env(safe-area-inset-bottom)]">
-        <div className="backdrop-blur-2xl bg-ink-900/90 rounded-[2rem] border border-white/10 p-1.5 flex items-stretch justify-between gap-0.5 shadow-float">
+      {/* MOBILE NAV — 3 tabs, floating clear of the system bar */}
+      <nav
+        aria-label="Navigation principale"
+        className="fixed inset-x-0 z-[90] px-3 bottom-[calc(env(safe-area-inset-bottom)+0.75rem)]"
+      >
+        <div className="mx-auto max-w-md backdrop-blur-2xl bg-ink-900/95 rounded-[2rem] border border-white/10 p-1.5 flex items-stretch justify-between gap-1 shadow-float">
           {TabsList.map((tab) => {
             const Icon = tab.icon;
             const active = view === tab.id;
@@ -168,12 +165,12 @@ export default function App() {
                 onClick={() => goView(tab.id as View)}
                 aria-label={tab.label}
                 aria-current={active ? "page" : undefined}
-                className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl transition-all duration-300 ${
-                  active ? "bg-white text-ink-900 shadow-float" : "text-white/55 active:scale-90"
+                className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 rounded-2xl transition-all duration-300 ${
+                  active ? "bg-white text-ink-900 shadow-float" : "text-white/60 active:scale-90"
                 }`}
               >
-                <Icon size={18} aria-hidden="true" />
-                <span className="text-[10px] font-bold tracking-tight leading-none">{tab.label}</span>
+                <Icon size={20} aria-hidden="true" />
+                <span className="text-[11px] font-bold tracking-tight leading-none">{tab.label}</span>
               </button>
             );
           })}

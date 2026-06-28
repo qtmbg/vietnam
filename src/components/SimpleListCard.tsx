@@ -4,7 +4,7 @@ export const SimpleListCard = ({ title, items }: { title: string; items: string[
     <h3 className="font-display text-[1.7rem] text-ink-900 leading-none tracking-[-0.01em]">{title}</h3>
     <div className="mt-4 border-t border-ink-200">
       {items.map((t, i) => (
-        <p key={i} className="py-3.5 border-b border-ink-200 text-[14.5px] text-ink-700 leading-relaxed">{t}</p>
+        <p key={i} className="py-3.5 border-b border-ink-200 text-[15.5px] text-ink-700 leading-relaxed">{t}</p>
       ))}
     </div>
   </section>

@@ -52,6 +52,7 @@ export const HomeView = ({
   toSettle,
   nextTransfer,
   goView,
+  openBudget,
 }: {
   mode: TripMode;
   override: ModeOverride;
@@ -65,6 +66,7 @@ export const HomeView = ({
   toSettle: ToSettle;
   nextTransfer: DaySelection["transfers"][number] | null;
   goView: (v: View) => void;
+  openBudget: () => void;
 }) => {
   const [detail, setDetail] = useState<DayDetailState | null>(null);
   const travel = mode === "travel";
@@ -100,7 +102,7 @@ export const HomeView = ({
               <div className="flex items-end justify-between gap-5">
                 <div className="min-w-0">
                   <h2 className="font-display text-[2.1rem] text-ink-900 leading-[1.0] tracking-[-0.015em]">Le grand départ</h2>
-                  <p className="mt-2 text-[14px] font-medium text-ink-600">Marrakech → Hanoi · {aller.segs[0]?.dep}</p>
+                  <p className="mt-2 text-[15px] font-medium text-ink-600">Marrakech → Hanoi · {aller.segs[0]?.dep}</p>
                 </div>
                 <span className="shrink-0 text-ink-300 text-xl leading-none group-active:translate-x-0.5 transition-transform">›</span>
               </div>
@@ -110,9 +112,9 @@ export const HomeView = ({
             <section>
               <Kicker>À régler avant le départ</Kicker>
               <div className="mt-3 border-y border-ink-200 divide-y divide-ink-200">
-                <button type="button" onClick={() => goView("budget")} className="w-full py-3.5 flex items-baseline gap-4 text-left group">
-                  <span className="flex-1 text-[15px] font-medium text-ink-900">Estimations à confirmer</span>
-                  <span className="shrink-0 text-[14px] font-semibold text-clay-600 tabular-nums">~{formatUSD0(toSettle.estimatesTotal)}</span>
+                <button type="button" onClick={openBudget} className="w-full py-3.5 flex items-baseline gap-4 text-left group">
+                  <span className="flex-1 text-[16px] font-medium text-ink-900">Transferts privés · reste à payer</span>
+                  <span className="shrink-0 text-[15px] font-semibold text-clay-600 tabular-nums">{formatUSD0(toSettle.transportToPay)}</span>
                   <span className="shrink-0 text-ink-300 text-lg leading-none group-active:translate-x-0.5 transition-transform">›</span>
                 </button>
                 {toSettle.hotels.map(({ hotel, reason }) => (
@@ -123,7 +125,7 @@ export const HomeView = ({
                     className="w-full py-3.5 flex items-baseline gap-4 text-left group"
                   >
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[15px] font-medium text-ink-900 leading-snug">{hotel.name}</span>
+                      <span className="block text-[16px] font-medium text-ink-900 leading-snug">{hotel.name}</span>
                       <span className="block mt-0.5 text-[12.5px] text-ink-600 leading-snug">{reason}</span>
                     </span>
                     <span className="shrink-0 text-ink-300 text-lg leading-none group-active:translate-x-0.5 transition-transform">›</span>
@@ -131,7 +133,7 @@ export const HomeView = ({
                 ))}
               </div>
               <p className="mt-2.5 text-[12px] text-ink-500">
-                {toSettle.estimates.length} estimations · {toSettle.hotels.length} hôtels
+                {toSettle.transferCount} transferts · {toSettle.hotels.length} hôtels · activités à payer sur place
               </p>
             </section>
 
@@ -169,10 +171,10 @@ export const HomeView = ({
                 <div className="h-px w-full bg-ink-200 my-3.5" />
                 <div className="flex items-end justify-between gap-5">
                   <div className="min-w-0">
-                    <p className="text-[15px] font-medium text-ink-900 leading-snug">
+                    <p className="text-[16px] font-medium text-ink-900 leading-snug">
                       {nextTransfer.from} <span className="text-ink-500">→</span> {nextTransfer.to}
                     </p>
-                    {nextTransfer.date && <p className="mt-1.5 text-[13px] text-ink-600">{safeDateLabel(nextTransfer.date)}</p>}
+                    {nextTransfer.date && <p className="mt-1.5 text-[14px] text-ink-600">{safeDateLabel(nextTransfer.date)}</p>}
                   </div>
                   <span className="shrink-0 text-ink-300 text-xl leading-none group-active:translate-x-0.5 transition-transform">›</span>
                 </div>
@@ -195,7 +197,7 @@ export const HomeView = ({
         <section className="pb-4">
           <div className="flex items-baseline justify-between mb-4 border-t border-ink-200 pt-4">
             <h3 className="font-display text-[1.7rem] text-ink-900 leading-none">Équipage</h3>
-            <p className="font-display italic text-[13px] text-ink-600">les aventuriers</p>
+            <p className="font-display italic text-[14px] text-ink-600">les aventuriers</p>
           </div>
           <FamilyStrip members={FAMILY_MEMBERS} />
         </section>

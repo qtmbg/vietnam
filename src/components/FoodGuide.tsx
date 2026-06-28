@@ -11,10 +11,10 @@ export const FoodGuide = ({ groups }: { groups: FoodCity[] }) => (
           {g.dishes.map((d) => (
             <div key={d.name} className="py-4 border-b border-ink-200">
               <div className="flex items-baseline gap-2.5 flex-wrap">
-                <p className="text-[16px] font-semibold text-ink-900">{d.name}</p>
-                <p className="font-display italic text-[14px] text-jade-600">{d.vi}</p>
+                <p className="text-[17px] font-semibold text-ink-900">{d.name}</p>
+                <p className="font-display italic text-[15px] text-jade-600">{d.vi}</p>
               </div>
-              <p className="mt-1.5 text-[14px] text-ink-600 leading-relaxed">{d.desc}</p>
+              <p className="mt-1.5 text-[15px] text-ink-600 leading-relaxed">{d.desc}</p>
               {d.where && <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.13em] text-clay-600">{d.where}</p>}
             </div>
           ))}

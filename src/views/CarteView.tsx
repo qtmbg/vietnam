@@ -13,7 +13,7 @@ const PlaceRow = ({ place }: { place: Place }) => (
     className="group flex items-baseline gap-4 py-3.5 border-b border-ink-200"
   >
     <span className="w-[4.75rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-600">{place.kind}</span>
-    <span className="flex-1 text-[15px] font-medium text-ink-900 leading-snug">{place.label}</span>
+    <span className="flex-1 text-[16px] font-medium text-ink-900 leading-snug">{place.label}</span>
     <span className="shrink-0 text-ink-300 text-sm group-active:translate-x-0.5 transition-transform">↗</span>
   </a>
 );
@@ -41,7 +41,7 @@ export const CarteView = ({ goView }: { goView: (v: View) => void }) => {
         </button>
       </div>
 
-      <p className="mb-8 text-[14px] text-ink-600 leading-relaxed">Touchez un lieu pour l’ouvrir dans Google Maps.</p>
+      <p className="mb-8 text-[15px] text-ink-600 leading-relaxed">Touchez un lieu pour l’ouvrir dans Google Maps.</p>
 
       <div className="space-y-10 pb-20">
         {cities.map((city) => {
@@ -67,7 +67,7 @@ export const CarteView = ({ goView }: { goView: (v: View) => void }) => {
                 </a>
               </div>
               {places.length === 0 ? (
-                <p className="mt-2.5 text-[13px] font-display italic text-ink-500">Étape de transit.</p>
+                <p className="mt-2.5 text-[14px] font-display italic text-ink-500">Étape de transit.</p>
               ) : (
                 <div className="mt-3 border-t border-ink-200">
                   {places.map((p, i) => (

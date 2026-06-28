@@ -12,7 +12,7 @@ export const FamilyStrip = ({ members }: { members: FamilyMember[] }) => (
         <SmartImage src={P(m.src)} alt={m.name} fallback={m.fallback} className="w-[62px] h-[76px] rounded-[3px] ring-1 ring-ink-200" />
         <span className="mt-2.5 h-px w-5" style={{ backgroundColor: crew[m.id] }} />
         <figcaption className="mt-2 text-center leading-none">
-          <p className="text-[13px] font-semibold text-ink-900">{m.name}</p>
+          <p className="text-[14px] font-semibold text-ink-900">{m.name}</p>
           <p className="mt-1 font-display italic text-[12px] text-ink-600">{m.desc}</p>
         </figcaption>
       </figure>

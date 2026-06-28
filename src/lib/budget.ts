@@ -1,105 +1,82 @@
 // ============================================================
 // BUDGET ENGINE (USD only, no hotels, no food)
-// - Transport: 20% Claudine / 80% Nous (on the included transport set)
-// - Activities: explicit split if provided else adult_equal_split fallback
+// Simple by design — no filters. Splits the trip's variable cost
+// (transport + activities) into "déjà payé" and "reste à payer",
+// and into Claudine / Nous shares.
+//   • Transport: Claudine 20% / Nous 80%
+//   • Activities: explicit split if given, else adult_equal_split (÷3)
+//   • paid === true (domestic flights) → already settled
 // ============================================================
 import type { ExpenseItemUSD } from "../data/types";
 import { sum } from "./utils";
 
-export type BudgetTab = "overview" | "transport" | "activities";
+export type AllocatedExpense = ExpenseItemUSD & { alloc_claudine: number; alloc_nous: number };
 
-export type BudgetFilters = {
-  inclureConfirmes: boolean;
-  inclureEstimes: boolean;
-  seulementJaCosmo: boolean;
-  recherche: string;
+export type BudgetGroup = {
+  total: number; // everything in the group
+  paid: number; // already settled
+  toPay: number; // still to settle
+  claudine: number; // Claudine share over the whole group
+  nous: number; // Nous share over the whole group
+  claudineToPay: number; // Claudine share, unpaid items only
+  nousToPay: number; // Nous share, unpaid items only
+  items: AllocatedExpense[];
 };
-
-type AllocatedExpense = ExpenseItemUSD & { alloc_claudine: number; alloc_nous: number };
 
 export type BudgetComputed = {
-  transport: {
-    total: number;
-    items: AllocatedExpense[];
-    claudine_total: number;
-    nous_total: number;
-  };
-  activities: {
-    total: number;
-    items: AllocatedExpense[];
-    claudine_total: number;
-    nous_total: number;
-  };
+  transport: BudgetGroup;
+  activities: BudgetGroup;
   grand: {
     total: number;
-    claudine_total: number;
-    nous_total: number;
+    paid: number;
+    toPay: number;
+    claudineToPay: number;
+    nousToPay: number;
   };
 };
 
-export const computeBudget = (expenses: ExpenseItemUSD[], filters: BudgetFilters): BudgetComputed => {
-  const q = filters.recherche.trim().toLowerCase();
+const allocTransport = (t: ExpenseItemUSD): AllocatedExpense => ({
+  ...t,
+  alloc_claudine: t.price_total_usd * 0.2,
+  alloc_nous: t.price_total_usd * 0.8,
+});
 
-  const filtered = expenses.filter((e) => {
-    if (!filters.inclureConfirmes && e.status === "CONFIRMED") return false;
-    if (!filters.inclureEstimes && e.status === "ESTIMATE") return false;
-    if (filters.seulementJaCosmo && !e.operated_by_ja_cosmo) return false;
+const allocActivity = (a: ExpenseItemUSD): AllocatedExpense => {
+  if (a.payer_rule === "split_given") {
+    return { ...a, alloc_claudine: a.claudine_usd ?? 0, alloc_nous: a.nous_usd ?? 0 };
+  }
+  const each = a.price_total_usd / 3; // adult_equal_split fallback
+  return { ...a, alloc_claudine: each, alloc_nous: a.price_total_usd - each };
+};
 
-    if (q) {
-      const blob = [
-        e.id,
-        e.category,
-        e.mode,
-        e.operator,
-        e.status,
-        e.title,
-        e.from ?? "",
-        e.to ?? "",
-        (e.tags ?? []).join(" "),
-        e.notes ?? "",
-      ]
-        .join(" ")
-        .toLowerCase();
-      if (!blob.includes(q)) return false;
-    }
-    return true;
-  });
+const group = (items: AllocatedExpense[]): BudgetGroup => {
+  const unpaid = items.filter((i) => !i.paid);
+  const paidItems = items.filter((i) => i.paid);
+  return {
+    total: sum(items.map((i) => i.price_total_usd)),
+    paid: sum(paidItems.map((i) => i.price_total_usd)),
+    toPay: sum(unpaid.map((i) => i.price_total_usd)),
+    claudine: sum(items.map((i) => i.alloc_claudine)),
+    nous: sum(items.map((i) => i.alloc_nous)),
+    claudineToPay: sum(unpaid.map((i) => i.alloc_claudine)),
+    nousToPay: sum(unpaid.map((i) => i.alloc_nous)),
+    items,
+  };
+};
 
-  const transports = filtered.filter((e) => e.category === "transport");
-  const activities = filtered.filter((e) => e.category === "activity");
-
-  const transportTotal = sum(transports.map((t) => t.price_total_usd));
-  const transportClaudine = transportTotal * 0.2;
-  const transportNous = transportTotal * 0.8;
-
-  const transportItems = transports.map((t) => {
-    const ratio = transportTotal > 0 ? t.price_total_usd / transportTotal : 0;
-    return {
-      ...t,
-      alloc_claudine: transportClaudine * ratio,
-      alloc_nous: transportNous * ratio,
-    };
-  });
-
-  const activityItems = activities.map((a) => {
-    if (a.payer_rule === "split_given") {
-      return { ...a, alloc_claudine: a.claudine_usd ?? 0, alloc_nous: a.nous_usd ?? 0 };
-    }
-    const each = a.price_total_usd / 3; // fallback
-    return { ...a, alloc_claudine: each, alloc_nous: a.price_total_usd - each };
-  });
-
-  const activitiesTotal = sum(activityItems.map((a) => a.price_total_usd));
-  const activitiesClaudine = sum(activityItems.map((a) => a.alloc_claudine));
-  const activitiesNous = sum(activityItems.map((a) => a.alloc_nous));
-
-  const grandTotal = transportTotal + activitiesTotal;
-  const grandClaudine = transportClaudine + activitiesClaudine;
-  const grandNous = transportNous + activitiesNous;
+export const computeBudget = (expenses: ExpenseItemUSD[]): BudgetComputed => {
+  const transport = group(expenses.filter((e) => e.category === "transport").map(allocTransport));
+  const activities = group(expenses.filter((e) => e.category === "activity").map(allocActivity));
 
   return {
-    transport: { total: transportTotal, items: transportItems, claudine_total: transportClaudine, nous_total: transportNous },
-    activities: { total: activitiesTotal, items: activityItems, claudine_total: activitiesClaudine, nous_total: activitiesNous },
-    grand: { total: grandTotal, claudine_total: grandClaudine, nous_total: grandNous },
+    transport,
+    activities,
+    grand: {
+      total: transport.total + activities.total,
+      paid: transport.paid + activities.paid,
+      toPay: transport.toPay + activities.toPay,
+      claudineToPay: transport.claudineToPay + activities.claudineToPay,
+      nousToPay: transport.nousToPay + activities.nousToPay,
+    },
   };
 };
