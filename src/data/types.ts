@@ -13,6 +13,15 @@ export type ModeOverride = "auto" | "prep" | "travel";
 
 export type Money = { us: number; claudine: number; currency: "USD" };
 
+// "À montrer au chauffeur" — the local-form name + address a Vietnamese taxi
+// driver actually reads, with diacritics. address is the real drop-off point
+// (a pier/station rather than the venue when relevant); note explains that.
+export type DriverInfo = {
+  nameVi: string; // Vietnamese name with diacritics (what you show/say)
+  address: string; // full local-form address, the drop-off point
+  note?: string; // short FR hint for the driver (gate, pier, landmark…)
+};
+
 export type HotelItem = {
   city: string;
   name: string;
@@ -25,6 +34,7 @@ export type HotelItem = {
   cover?: string;
   paidBy?: "Nous" | "Claudine"; // who fronted the payment (cash flow, not the share split)
   paidNote?: string; // optional clarifier shown next to the "Payé" badge
+  driver?: DriverInfo; // "à montrer au chauffeur" hand-off
 };
 
 export type LinkItem = { name: string; url: string };
@@ -103,6 +113,7 @@ export type PlannedActivity = {
   notes?: string;
   tags?: string[];
   impact?: boolean; // for mode kids
+  driver?: DriverInfo; // "à montrer au chauffeur" hand-off
 };
 
 export interface TripData {

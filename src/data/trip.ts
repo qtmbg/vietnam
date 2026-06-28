@@ -92,6 +92,11 @@ export const TRIP_DATA: TripData = {
     {
       city: "Hanoi",
       name: "Ja Cosmo Hotel and Spa",
+      driver: {
+        nameVi: "Khách sạn Ja Cosmo Hotel & Spa",
+        address: "23 Lò Sũ, Hoàn Kiếm, Hà Nội",
+        note: "Vieux Quartier, près du lac Hoàn Kiếm. Rues étroites : « 23 Lò Sũ » suffit.",
+      },
       dates: "26 juil → 28 juil, puis 15 août → 17 août",
       budget: { us: 144, claudine: 88, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/ja-cosmo-and-spa.html",
@@ -102,6 +107,11 @@ export const TRIP_DATA: TripData = {
     {
       city: "Ninh Binh (Tam Coc)",
       name: "Tam Coc Golden Fields Homestay",
+      driver: {
+        nameVi: "Tam Cốc Golden Fields Homestay",
+        address: "Khu Hang Đùng, thôn Văn Lâm, Tam Cốc, Hoa Lư, Ninh Bình",
+        note: "Adresse rurale sans numéro : viser le Bến thuyền Tam Cốc (embarcadère), le homestay est fléché.",
+      },
       dates: "28 juil → 30 juil",
       budget: { us: 140, claudine: 110, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/tam-coc-golden-fields-homestay.html",
@@ -111,6 +121,11 @@ export const TRIP_DATA: TripData = {
     {
       city: "Ha Long",
       name: "Wyndham Legend Halong",
+      driver: {
+        nameVi: "Wyndham Legend Hạ Long",
+        address: "Số 12 đường Hạ Long, Bãi Cháy, TP. Hạ Long, Quảng Ninh",
+        note: "Deux tours sur le front de mer de Bãi Cháy, près du pont de Bãi Cháy.",
+      },
       dates: "30 juil → 31 juil",
       budget: { us: 70, claudine: 90, currency: "USD" },      booking_url: "https://www.booking.com/hotel/vn/wyndham-legend-halong-bai-chay5.html",
       why: "Transition confortable avant croisière, logistique simple.",
@@ -120,6 +135,11 @@ export const TRIP_DATA: TripData = {
     {
       city: "Ha Long (Croisière)",
       name: "Renea Cruises Halong",
+      driver: {
+        nameVi: "Cảng tàu khách quốc tế Hạ Long",
+        address: "Số 9 đường Hạ Long, Bãi Cháy, TP. Hạ Long, Quảng Ninh",
+        note: "Embarquement de la croisière : déposer au port de croisière international de Hạ Long (Bãi Cháy).",
+      },
       dates: "31 juil → 01 août",
       budget: { us: 330, claudine: 300, currency: "USD" },
       booking_url: "https://www.booking.com/hotel/vn/renea-cruises-halong-ha-long.html",
@@ -130,6 +150,11 @@ export const TRIP_DATA: TripData = {
     {
       city: "Hoi An (Cua Dai Beach)",
       name: "Palm Garden Beach Resort & Spa",
+      driver: {
+        nameVi: "Palm Garden Beach Resort & Spa",
+        address: "Đường Lạc Long Quân, biển Cửa Đại, Cẩm An, Hội An, Quảng Nam",
+        note: "Front de mer de Cửa Đại, ~5 km à l'est de la vieille ville de Hội An.",
+      },
       dates: "01 août → 08 août",
       budget: { us: 1008, claudine: 924, currency: "USD" },      booking_url: "https://www.booking.com/hotel/vn/palm-garden-beach-resort-spa-510.html",
       why: "Grand resort avec plage et immense piscine. Le top pour se poser en famille.",
@@ -141,6 +166,11 @@ export const TRIP_DATA: TripData = {
     {
       city: "Whale Island (Hon Ong)",
       name: "Whale Island Resort",
+      driver: {
+        nameVi: "Whale Island Resort (Khu Du Lịch Hòn Ông)",
+        address: "Bến tàu Đầm Môn, thôn Đầm Môn, xã Vạn Thạnh, Vạn Ninh, Khánh Hòa",
+        note: "Île de Hòn Ông, accès uniquement en bateau : déposer à l'embarcadère de Đầm Môn (bến tàu Đầm Môn).",
+      },
       dates: "08 août → 12 août",
       budget: { us: 350, claudine: 350, currency: "USD" },      official_url: "https://whaleislandresort.com/",
       why: "Déconnexion nature pure, rythme famille, mer & ciel.",
@@ -151,6 +181,11 @@ export const TRIP_DATA: TripData = {
     {
       city: "Ho Chi Minh City",
       name: "Alagon Saigon Hotel & Spa",
+      driver: {
+        nameVi: "Alagon Saigon Hotel & Spa",
+        address: "289–291 Lý Tự Trọng, Bến Thành, Quận 1, TP. Hồ Chí Minh",
+        note: "Trois hôtels Alagon dans la rue : bien viser le n° 289–291.",
+      },
       dates: "12 août → 15 août",
       budget: { us: 400, claudine: 240, currency: "USD" },      booking_url: "https://www.booking.com/hotel/vn/alagon-saigon.html",
       why: "Très central pour histoire, colonial, street life.",
@@ -687,6 +722,11 @@ export const TRIP_DATA: TripData = {
     // HANOI
     {
       id: "ACT-HAN-001",
+      driver: {
+        nameVi: "Nhà hát Múa rối Thăng Long",
+        address: "57B Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội",
+        note: "Au bord nord-est du lac Hoàn Kiếm (Hồ Gươm).",
+      },
       city: "Hanoi",
       window: "25–28 juil + 15–17 août",
       name: "Spectacle marionnettes sur l’eau (Thang Long)",
@@ -707,6 +747,11 @@ export const TRIP_DATA: TripData = {
     },
     {
       id: "ACT-HAN-002",
+      driver: {
+        nameVi: "Di tích Nhà tù Hỏa Lò",
+        address: "Số 1 phố Hỏa Lò, Hoàn Kiếm, Hà Nội",
+        note: "À ~600 m à l'ouest du lac Hoàn Kiếm.",
+      },
       city: "Hanoi",
       window: "25–28 juil + 15–17 août",
       name: "Musée prison Hoa Lo",
@@ -730,6 +775,11 @@ export const TRIP_DATA: TripData = {
     // NINH BINH
     {
       id: "ACT-NB-001",
+      driver: {
+        nameVi: "Bến thuyền Tràng An",
+        address: "Đại lộ Tràng An, Hoa Lư, Ninh Bình",
+        note: "Billetterie au bord de route ; le quai d'embarquement des barques est en face.",
+      },
       city: "Ninh Binh",
       window: "28–30 juil",
       name: "Trang An (UNESCO) — tour en barque (ticket site)",
@@ -750,6 +800,11 @@ export const TRIP_DATA: TripData = {
     },
     {
       id: "ACT-NB-002",
+      driver: {
+        nameVi: "Hang Múa (Khu du lịch Hang Múa)",
+        address: "Thôn Khê Đầu Hạ, Ninh Xuân, Hoa Lư, Ninh Bình",
+        note: "Déposer au parking/billetterie ; montée au point de vue à pied (~500 marches).",
+      },
       city: "Ninh Binh",
       window: "28–30 juil",
       name: "Hang Mua (Mua Caves) — viewpoint",
@@ -772,6 +827,11 @@ export const TRIP_DATA: TripData = {
     // HOI AN
     {
       id: "ACT-HA-001",
+      driver: {
+        nameVi: "Quầy bán vé Phố cổ Hội An",
+        address: "08 Hoàng Diệu, Minh An, Hội An, Quảng Nam",
+        note: "Bureau des billets, à une entrée de la vieille ville (zone piétonne).",
+      },
       city: "Hoi An",
       window: "1–6 août",
       name: "Hoi An Ancient Town — ticket (pass)",
@@ -792,6 +852,11 @@ export const TRIP_DATA: TripData = {
     },
     {
       id: "ACT-HA-002",
+      driver: {
+        nameVi: "Rừng dừa Bảy Mẫu (Cẩm Thanh)",
+        address: "Đường Trần Nhân Tông, xã Cẩm Thanh, Hội An, Quảng Nam",
+        note: "Forêt de cocotiers de Cẩm Thanh (barques-paniers thúng chai).",
+      },
       city: "Hoi An",
       window: "1–6 août",
       name: "Cam Thanh Coconut Village — basket boat",
@@ -812,6 +877,11 @@ export const TRIP_DATA: TripData = {
     },
     {
       id: "ACT-HA-003",
+      driver: {
+        nameVi: "Thánh địa Mỹ Sơn",
+        address: "Xã Duy Phú, Duy Xuyên, Quảng Nam",
+        note: "Déposer au guichet/parking de l'entrée ; navette puis marche jusqu'aux temples.",
+      },
       city: "Hoi An",
       window: "1–6 août",
       name: "My Son Sanctuary (UNESCO) — ticket site",
@@ -832,6 +902,11 @@ export const TRIP_DATA: TripData = {
     },
     {
       id: "ACT-HA-004",
+      driver: {
+        nameVi: "Công viên Ấn tượng Hội An",
+        address: "200 Nguyễn Tri Phương, Cẩm Nam, Hội An, Quảng Nam",
+        note: "Sur l'îlot de Cẩm Nam ; accès par le pont de Cẩm Nam (cầu Cẩm Nam).",
+      },
       city: "Hoi An",
       window: "1–6 août",
       name: "Hoi An Memories Show",
@@ -854,6 +929,11 @@ export const TRIP_DATA: TripData = {
     // DA NANG
     {
       id: "ACT-DAD-001",
+      driver: {
+        nameVi: "Danh thắng Ngũ Hành Sơn",
+        address: "81 Huyền Trân Công Chúa, Hòa Hải, Ngũ Hành Sơn, Đà Nẵng",
+        note: "Déposer au Cổng 1 (billetterie principale), au pied du mont Thủy Sơn.",
+      },
       city: "Da Nang",
       window: "6–8 août (excursion depuis Hoi An)",
       name: "Marble Mountains (Ngu Hanh Son)",
@@ -874,6 +954,11 @@ export const TRIP_DATA: TripData = {
     },
     {
       id: "ACT-DAD-002",
+      driver: {
+        nameVi: "Sun World Bà Nà Hills — Ga cáp treo",
+        address: "Thôn An Sơn, xã Hòa Ninh, Hòa Vang, Đà Nẵng",
+        note: "Déposer à la station du téléphérique en bas (Ga Suối Mơ).",
+      },
       city: "Da Nang",
       window: "6–8 août (excursion depuis Hoi An)",
       name: "Ba Na Hills (Golden Bridge) — option",
@@ -917,6 +1002,11 @@ export const TRIP_DATA: TripData = {
     },
     {
       id: "ACT-SGN-002",
+      driver: {
+        nameVi: "Địa đạo Củ Chi (Bến Đình)",
+        address: "741 Tỉnh lộ 15, Nhuận Đức, Củ Chi, TP. Hồ Chí Minh",
+        note: "Site de Bến Đình (≠ Bến Dược). ~70 km du centre, 1 h 30–2 h de route.",
+      },
       city: "Ho Chi Minh City",
       window: "12–15 août",
       name: "Cu Chi Tunnels — demi-journée (histoire)",

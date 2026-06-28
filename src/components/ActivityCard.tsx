@@ -1,5 +1,6 @@
 import { SmartImage } from "./SmartImage";
 import { AskTang } from "./AskTang";
+import { DriverCard } from "./DriverCard";
 import { P, ACT_COVERS, cityCoverFromLabel } from "../lib/assets";
 import { usdRounded, usdToVnd, formatVND0 } from "../lib/money";
 import { googleMapsSearchUrl } from "../lib/maps";
@@ -97,6 +98,8 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
           Carte →
         </a>
       </div>
+
+      {a.driver && <DriverCard driver={a.driver} fallbackName={a.name} />}
 
       <div className="mt-4">
         <AskTang question={`Comment bien profiter de ${a.name} à ${a.city} ? Horaires, astuces et pièges à éviter avec des enfants.`} />

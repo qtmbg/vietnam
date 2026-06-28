@@ -1,5 +1,6 @@
 import { SmartImage } from "./SmartImage";
 import { AskTang } from "./AskTang";
+import { DriverCard } from "./DriverCard";
 import { P, ASSETS } from "../lib/assets";
 import { formatUSD0, usdToVndLabel } from "../lib/money";
 import { googleMapsSearchUrl } from "../lib/maps";
@@ -72,6 +73,8 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
           Carte →
         </a>
       </div>
+
+      {hotel.driver && <DriverCard driver={hotel.driver} fallbackName={hotel.name} />}
 
       <div className="mt-4">
         <AskTang question={`Que faire et où bien manger près de ${hotel.name} à ${city} ?`} />
