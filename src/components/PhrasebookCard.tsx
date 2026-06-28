@@ -1,24 +1,18 @@
-import { Languages } from "lucide-react";
 import type { PhraseItem } from "../data/types";
 
+// Editorial phrasebook: FR as a small-caps label, VN in bold, phonetics in
+// Fraunces italic. Ruled list, no icons.
 export const PhrasebookCard = ({ items }: { items: PhraseItem[] }) => (
-  <div className="bg-white rounded-[40px] border border-ink-100 shadow-xl p-8 mb-8">
-    <div className="flex items-center gap-3 mb-8">
-      <div className="p-3 rounded-2xl bg-jade-50 text-jade-600">
-        <Languages size={24} />
-      </div>
-      <h4 className="text-2xl font-black text-ink-900 tracking-tighter leading-none">Mots utiles</h4>
-    </div>
-    <div className="space-y-6">
+  <section>
+    <h3 className="font-display text-[1.7rem] text-ink-900 leading-none tracking-[-0.01em]">Mots utiles</h3>
+    <div className="mt-4 border-t border-ink-200">
       {items.map((p) => (
-        <div key={p.fr}>
-          <p className="text-[13px] font-black text-ink-400 uppercase tracking-widest mb-1">{p.fr}</p>
-          <div className="flex items-baseline gap-2">
-            <p className="text-lg font-black text-ink-900">{p.vi}</p>
-            <p className="text-xs font-bold text-jade-500 italic">• {p.phon}</p>
-          </div>
+        <div key={p.fr} className="py-3.5 border-b border-ink-200 flex items-baseline gap-4">
+          <span className="w-[7.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.13em] text-ink-500">{p.fr}</span>
+          <span className="flex-1 text-[16px] font-semibold text-ink-900">{p.vi}</span>
+          <span className="shrink-0 font-display italic text-[13px] text-jade-600">{p.phon}</span>
         </div>
       ))}
     </div>
-  </div>
+  </section>
 );

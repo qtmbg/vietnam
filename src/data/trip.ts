@@ -954,7 +954,7 @@ export const FLIGHTS: FlightLeg[] = [
   },
   {
     title: "Vols internes · Vietnam",
-    sub: "VietJet · 4 vols · confirmés & payés ✓",
+    sub: "VietJet · 4 vols · confirmés & payés",
     paid: true,
     segs: [
       { code: "VJ723", carrier: "VietJet", fromCode: "HPH", fromCity: "Hai Phong", toCode: "DAD", toCity: "Da Nang", dep: "01 août · 19:10", arr: "01 août · 20:25", resa: "7BYD6X" },

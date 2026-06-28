@@ -1,46 +1,41 @@
-import { Plane, BadgeCheck, ArrowRight } from "lucide-react";
-import { Card } from "./Card";
 import type { FlightLeg } from "../data/types";
 
+// Editorial flight leg: Fraunces title, paid status as small-caps text, the
+// segments as a ruled list with airport codes in display type. No icons.
 export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
-  <Card className="p-6 mb-6">
-    <div className="flex items-start justify-between gap-3 mb-5">
-      <div className="min-w-0">
-        <h4 className="font-display text-[22px] text-ink-900 leading-tight">{leg.title}</h4>
-        <p className="text-[13px] font-semibold text-ink-400 mt-0.5">{leg.sub}</p>
-      </div>
-      <span className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-jade-600 text-white text-[12px] font-bold uppercase tracking-wide">
-        <BadgeCheck size={13} /> {leg.paid ? "Payé" : "Confirmé"}
-      </span>
+  <section className="mb-9">
+    <div className="flex items-baseline justify-between gap-3">
+      <h4 className="font-display text-[1.6rem] text-ink-900 leading-tight tracking-[-0.01em]">{leg.title}</h4>
+      <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-jade-600">{leg.paid ? "Payé" : "Confirmé"}</span>
     </div>
-    <div className="space-y-5">
+    <p className="mt-1 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-400">{leg.sub}</p>
+
+    <div className="mt-4 border-t border-ink-200">
       {leg.segs.map((s, i) => (
-        <div key={i} className="relative pl-7">
-          <div className="absolute left-[5px] top-2 bottom-2 w-px bg-ink-200" />
-          <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full bg-brand-600 ring-4 ring-brand-50" />
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-ink-900 text-white text-[12px] font-bold">
-              <Plane size={12} /> {s.code}
-            </span>
-            <span className="text-[12px] font-semibold text-ink-400">{s.carrier}</span>
-            {s.resa && <span className="text-[12px] font-bold text-brand-700">Réf {s.resa}</span>}
+        <div key={i} className="py-4 border-b border-ink-200">
+          <div className="flex items-baseline gap-2.5 flex-wrap">
+            <span className="text-[13px] font-bold text-ink-900 tabular-nums">{s.code}</span>
+            <span className="text-[12px] text-ink-500">{s.carrier}</span>
+            {s.resa && <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-clay-600">Réf {s.resa}</span>}
           </div>
-          <div className="flex items-start gap-3">
-            <div>
-              <p className="font-display text-xl text-ink-900 leading-none">{s.fromCode}</p>
-              <p className="text-[12px] font-semibold text-ink-500">{s.fromCity}</p>
-              <p className="text-[13px] font-bold text-ink-700 mt-1">{s.dep}</p>
+          <div className="mt-2.5 flex items-baseline gap-3">
+            <div className="text-left">
+              <p className="font-display text-[1.35rem] text-ink-900 leading-none">{s.fromCode}</p>
+              <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-ink-400">{s.fromCity}</p>
             </div>
-            <ArrowRight size={18} className="text-ink-300 mt-1.5 shrink-0" />
-            <div>
-              <p className="font-display text-xl text-ink-900 leading-none">{s.toCode}</p>
-              <p className="text-[12px] font-semibold text-ink-500">{s.toCity}</p>
-              <p className="text-[13px] font-bold text-ink-700 mt-1">{s.arr}</p>
+            <span className="text-ink-300 text-lg leading-none">→</span>
+            <div className="text-left">
+              <p className="font-display text-[1.35rem] text-ink-900 leading-none">{s.toCode}</p>
+              <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-ink-400">{s.toCity}</p>
+            </div>
+            <div className="ml-auto text-right">
+              <p className="text-[12.5px] font-medium text-ink-700 tabular-nums">{s.dep}</p>
+              <p className="text-[12.5px] text-ink-500 tabular-nums">{s.arr}</p>
             </div>
           </div>
-          {s.note && <p className="mt-2 text-[13px] font-medium text-ink-500 leading-snug">{s.note}</p>}
+          {s.note && <p className="mt-2 text-[13px] text-ink-500 leading-relaxed">{s.note}</p>}
         </div>
       ))}
     </div>
-  </Card>
+  </section>
 );

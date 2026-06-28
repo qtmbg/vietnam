@@ -64,7 +64,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
     } catch {
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: "Je n'arrive pas à me connecter pour l'instant 😅. Réessaie dans un moment — il faut une connexion internet (et que Mr. Tang soit activé sur le serveur)." },
+        { role: "assistant", content: "Je n'arrive pas à me connecter pour l'instant. Réessaie dans un moment — il faut une connexion internet (et que Mr. Tang soit activé sur le serveur)." },
       ]);
     } finally {
       setLoading(false);
@@ -113,7 +113,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                 <div className="flex gap-2.5">
                   <TangAvatar size={32} className="shrink-0 mt-0.5" />
                   <div className="rounded-2xl rounded-tl-md bg-ink-50 border border-ink-100 p-3 text-sm text-ink-700 leading-relaxed">
-                    Xin chào ! 👋 Je suis <b>Mr. Tang</b>, votre concierge pour le Vietnam. Je connais tout votre voyage — itinéraire, hôtels, transferts, budget — et je peux aussi chercher en direct des idées : expos, restos, événements, météo… Posez-moi votre question !
+                    Xin chào ! Je suis <b>Mr. Tang</b>, votre concierge pour le Vietnam. Je connais tout votre voyage — itinéraire, hôtels, transferts, budget — et je peux aussi chercher en direct des idées : expos, restos, événements, météo… Posez-moi votre question !
                   </div>
                 </div>
               )}
