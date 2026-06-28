@@ -1,7 +1,7 @@
 import { SmartImage } from "./SmartImage";
 import { AskTang } from "./AskTang";
 import { P, ACT_COVERS, cityCoverFromLabel } from "../lib/assets";
-import { usdRounded } from "../lib/money";
+import { usdRounded, usdToVnd, formatVND0 } from "../lib/money";
 import { googleMapsSearchUrl } from "../lib/maps";
 import type { PlannedActivity } from "../data/types";
 
@@ -30,12 +30,20 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
     return "—";
   })();
 
+  // The dong line: the exact local price when known, otherwise an instant
+  // "≈ …" conversion from the USD figure — so every activity shows VND.
   const rawLine = (() => {
     if (a.pricing.vnd_range) {
       const [min, max] = a.pricing.vnd_range;
       return `${min.toLocaleString("vi-VN")}–${max.toLocaleString("vi-VN")} VND`;
     }
     if (typeof a.pricing.vnd_adult === "number") return `${a.pricing.vnd_adult.toLocaleString("vi-VN")} VND`;
+    if (a.pricing.usd_range) {
+      const [min, max] = a.pricing.usd_range;
+      return `≈ ${formatVND0(usdToVnd(min))}–${formatVND0(usdToVnd(max))}`;
+    }
+    const usd = a.pricing.usd_adult ?? a.pricing.estimatedUSD_adult;
+    if (typeof usd === "number") return `≈ ${formatVND0(usdToVnd(usd))}`;
     return "";
   })();
 

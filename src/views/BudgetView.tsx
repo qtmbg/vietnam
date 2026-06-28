@@ -3,7 +3,7 @@ import { Segmented } from "../components/Segmented";
 import { Toggle } from "../components/Toggle";
 import { StatChip } from "../components/StatChip";
 import { ExpenseRow } from "../components/ExpenseRow";
-import { formatUSD0 } from "../lib/money";
+import { formatUSD0, usdToVndLabel } from "../lib/money";
 import type { BudgetFilters, BudgetComputed, BudgetTab } from "../lib/budget";
 import type { View } from "../data/types";
 
@@ -84,6 +84,7 @@ export const BudgetView = ({
       <section className="mt-10 pb-20">
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Total (scope)</p>
         <p className="mt-2 font-display font-light text-[3.4rem] text-ink-900 leading-none tabular-nums tracking-[-0.02em]">{formatUSD0(budget.grand.total)}</p>
+        <p className="mt-1.5 text-[14px] text-ink-500 tabular-nums">{usdToVndLabel(budget.grand.total)}</p>
         <p className="mt-2.5 text-[13px] text-ink-600">Transports + activités (USD uniquement). Hôtels / food exclus.</p>
 
         <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-ink-200 pt-6">
@@ -109,6 +110,7 @@ export const BudgetView = ({
       <section className="mt-10 pb-20">
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Transports (filtrés)</p>
         <p className="mt-2 font-display text-[2.6rem] text-ink-900 leading-none tabular-nums">{formatUSD0(budget.transport.total)}</p>
+        <p className="mt-1.5 text-[13px] text-ink-500 tabular-nums">{usdToVndLabel(budget.transport.total)}</p>
         <p className="mt-2.5 text-[13px] text-ink-600">
           Claudine {formatUSD0(budget.transport.claudine_total)} · Nous {formatUSD0(budget.transport.nous_total)}
         </p>
@@ -127,6 +129,7 @@ export const BudgetView = ({
       <section className="mt-10 pb-20">
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Activités (filtrées)</p>
         <p className="mt-2 font-display text-[2.6rem] text-ink-900 leading-none tabular-nums">{formatUSD0(budget.activities.total)}</p>
+        <p className="mt-1.5 text-[13px] text-ink-500 tabular-nums">{usdToVndLabel(budget.activities.total)}</p>
         <p className="mt-2.5 text-[13px] text-ink-600">
           Claudine {formatUSD0(budget.activities.claudine_total)} · Nous {formatUSD0(budget.activities.nous_total)}
         </p>

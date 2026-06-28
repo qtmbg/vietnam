@@ -1,7 +1,7 @@
 import { SmartImage } from "./SmartImage";
 import { AskTang } from "./AskTang";
 import { P, ASSETS } from "../lib/assets";
-import { formatUSD0 } from "../lib/money";
+import { formatUSD0, usdToVndLabel } from "../lib/money";
 import { googleMapsSearchUrl } from "../lib/maps";
 import type { HotelItem } from "../data/types";
 
@@ -48,11 +48,17 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
       <div className="mt-6 border-y border-ink-200 divide-y divide-ink-200">
         <div className="py-3 flex items-baseline justify-between gap-4">
           <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">Nous</span>
-          <span className="font-display text-[1.4rem] text-ink-900 leading-none tabular-nums">{formatUSD0(hotel.budget.us)}</span>
+          <span className="text-right">
+            <span className="block font-display text-[1.4rem] text-ink-900 leading-none tabular-nums">{formatUSD0(hotel.budget.us)}</span>
+            <span className="block mt-1 text-[12px] text-ink-500 tabular-nums">{usdToVndLabel(hotel.budget.us)}</span>
+          </span>
         </div>
         <div className="py-3 flex items-baseline justify-between gap-4">
           <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">Claudine</span>
-          <span className="font-display text-[1.4rem] text-ink-900 leading-none tabular-nums">{formatUSD0(hotel.budget.claudine)}</span>
+          <span className="text-right">
+            <span className="block font-display text-[1.4rem] text-ink-900 leading-none tabular-nums">{formatUSD0(hotel.budget.claudine)}</span>
+            <span className="block mt-1 text-[12px] text-ink-500 tabular-nums">{usdToVndLabel(hotel.budget.claudine)}</span>
+          </span>
         </div>
       </div>
 

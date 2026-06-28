@@ -1,4 +1,4 @@
-import { formatUSD0 } from "../lib/money";
+import { formatUSD0, usdToVndLabel } from "../lib/money";
 import type { ExpenseItemUSD } from "../data/types";
 
 // Editorial expense row: hairline block, status + Ja Cosmo as small-caps text,
@@ -49,6 +49,7 @@ export const ExpenseRow = ({
             {confirmed ? "Confirmé" : "Estimé"}
           </p>
           <p className="mt-1.5 font-display text-[1.5rem] text-ink-900 leading-none tabular-nums">{formatUSD0(item.price_total_usd)}</p>
+          <p className="mt-1 text-[11px] text-ink-500 tabular-nums">{usdToVndLabel(item.price_total_usd)}</p>
           {item.date && <p className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-500 tabular-nums">{item.date}</p>}
         </div>
       </div>
