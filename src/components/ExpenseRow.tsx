@@ -13,7 +13,7 @@ export const ExpenseRow = ({
   const confirmed = item.status === "CONFIRMED";
 
   return (
-    <div className="border border-ink-200 rounded-[3px] p-4">
+    <div className="border border-ink-200 rounded-2xl p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2.5 flex-wrap">

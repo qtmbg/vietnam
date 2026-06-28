@@ -1,66 +1,67 @@
 /** @type {import('tailwindcss').Config} */
 // ============================================================
-// DESIGN TOKENS — "Carnet éditorial" art direction.
-// Earthy, warm, magazine palette (Cereal / Kinfolk / Monocle):
-//   ink   — warm charcoal / espresso (text + neutrals), NOT cool slate
-//   sand  — the dominant warm paper / oat surface + page ground
-//   jade  — muted forest / sage (calm editorial green)
-//   clay  — terracotta, the single warm accent (used sparingly)
-// brand (indigo) and sun (amber) are kept defined for views not yet
-// reworked, but DEMOTED — indigo is at most a discreet accent now.
-// theme.ts mirrors these values; keep both in sync. Zero non-token colour.
+// DESIGN TOKENS — "Apple / Liquid Glass" art direction.
+// Pure white surfaces, neutral system grays, one vibrant accent.
+//   ink   — neutral gray → near-black (text + neutrals, Apple label scale)
+//   sand  — white → light gray SURFACES (the "paper" is now white)
+//   jade  — systemGreen (paid / online / positive)
+//   clay  — systemBlue, the single accent (links, active, figures)
+// brand (systemIndigo) + sun (systemOrange) kept for the quick-sheet tiles.
+// Token names are unchanged so the whole app re-skins from here.
+// theme.ts mirrors these; keep both in sync. Glass material lives in index.css.
 // ============================================================
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
-        display: ["Fraunces", "Georgia", "serif"],
+        // Apple system stack first (SF Pro on Apple devices), Inter as fallback.
+        sans: ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "Inter", "system-ui", "sans-serif"],
+        display: ["-apple-system", "BlinkMacSystemFont", "SF Pro Display", "Inter", "system-ui", "sans-serif"],
       },
       colors: {
-        // ink — warm charcoal / espresso
+        // ink — neutral gray scale → near-black (Apple labels/separators)
         ink: {
-          50: "#f7f3ec", 100: "#efe9dd", 200: "#e4dccd", 300: "#cdc3b2", 400: "#a99e8a",
-          500: "#847a68", 600: "#635a4b", 700: "#4a4236", 800: "#332d24", 900: "#221d16", 950: "#14110c",
+          50: "#f5f5f7", 100: "#ececee", 200: "#e3e3e6", 300: "#d2d2d7", 400: "#aeaeb2",
+          500: "#8e8e93", 600: "#6e6e73", 700: "#48484a", 800: "#2c2c2e", 900: "#1d1d1f", 950: "#000000",
         },
-        // sand — warm paper / oat, the dominant surface
+        // sand — white → light-gray SURFACES (no more beige)
         sand: {
-          50: "#faf7f1", 100: "#f3ecdf", 200: "#eadeca", 300: "#dccdb0", 400: "#cab68f",
-          500: "#b59e74", 600: "#9c835a", 700: "#7e6948", 800: "#65543c", 900: "#534633", 950: "#2f2619",
+          50: "#ffffff", 100: "#f5f5f7", 200: "#ececee", 300: "#e3e3e6", 400: "#d2d2d7",
+          500: "#aeaeb2", 600: "#8e8e93", 700: "#6e6e73", 800: "#48484a", 900: "#2c2c2e", 950: "#1d1d1f",
         },
-        // jade — muted forest / sage
+        // jade — systemGreen
         jade: {
-          50: "#eef1ec", 100: "#dae2d4", 200: "#bccdb1", 300: "#97ad88", 400: "#6f8a5e",
-          500: "#526e43", 600: "#405737", 700: "#344629", 800: "#2b3a23", 900: "#1f2b1a", 950: "#111a0f",
+          50: "#e9f9ef", 100: "#ccf0d8", 200: "#9fe3b5", 300: "#5fd089", 400: "#34c759",
+          500: "#28a745", 600: "#1f8c3a", 700: "#1a7331", 800: "#185f2b", 900: "#144d24", 950: "#0a2e15",
         },
-        // clay — terracotta accent
+        // clay — systemBlue, the single accent
         clay: {
-          50: "#fbf0e9", 100: "#f5ddd0", 200: "#e9bda4", 300: "#db9876", 400: "#cd744d",
-          500: "#bd5a34", 600: "#a4472a", 700: "#863824", 800: "#6d3022", 900: "#5a2a20", 950: "#311510",
+          50: "#eaf3ff", 100: "#d6e9ff", 200: "#aed2ff", 300: "#6db8ff", 400: "#2e9bff",
+          500: "#0a84ff", 600: "#0071e3", 700: "#0062c4", 800: "#0050a0", 900: "#003f7e", 950: "#002a55",
         },
-        // brand — indigo, DEMOTED (kept for not-yet-reworked views)
+        // brand — systemIndigo (quick-sheet tile)
         brand: {
-          50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc", 400: "#818cf8",
-          500: "#6366f1", 600: "#4f46e5", 700: "#4338ca", 800: "#3730a3", 900: "#312e81", 950: "#1e1b4b",
+          50: "#eeeefe", 100: "#e0e0fd", 200: "#c6c5fb", 300: "#a5a3f7", 400: "#8482f1",
+          500: "#5e5ce6", 600: "#4b48d6", 700: "#3e3bb5", 800: "#343293", 900: "#2e2c75", 950: "#1c1b46",
         },
-        // sun — amber, kept for not-yet-reworked views
+        // sun — systemOrange (quick-sheet tile)
         sun: {
-          50: "#fffbeb", 100: "#fef3c7", 200: "#fde68a", 300: "#fcd34d", 400: "#fbbf24",
-          500: "#f59e0b", 600: "#d97706", 700: "#b45309", 800: "#92400e", 900: "#78350f", 950: "#451a03",
+          50: "#fff4e6", 100: "#ffe6c4", 200: "#ffcd89", 300: "#ffb24d", 400: "#ff9f0a",
+          500: "#f59000", 600: "#d97b06", 700: "#b4610b", 800: "#924e0e", 900: "#78400f", 950: "#451f03",
         },
       },
       backgroundImage: {
-        // Warm paper ground — sober, no indigo. Barely-there sand wash.
-        app: "radial-gradient(130% 90% at 50% 0%,#f3ecdf 0%,#faf7f1 42%)",
+        // Clean white ground with a whisper of colour so the glass has something to refract.
+        app: "radial-gradient(58% 46% at 12% 2%,rgba(10,132,255,0.06) 0%,transparent 58%),radial-gradient(54% 44% at 100% 10%,rgba(52,199,89,0.06) 0%,transparent 56%),radial-gradient(120% 95% at 50% 100%,#f5f5f7 0%,#ffffff 52%)",
       },
-      // Editorial: restrained radii, thin rules carry the structure instead.
-      borderRadius: { card: "0.5rem", hero: "0.75rem" },
+      // Apple radii — generous, soft.
+      borderRadius: { card: "1.25rem", hero: "1.5rem" },
       boxShadow: {
-        // Warm, soft, minimal — editorial pages lean on rules, not float.
-        soft: "0 1px 2px rgba(47,38,25,.04),0 1px 3px rgba(47,38,25,.05)",
-        card: "0 12px 34px -18px rgba(47,38,25,.20)",
-        float: "0 26px 60px -24px rgba(47,38,25,.30)",
+        // Neutral, soft — Apple depth.
+        soft: "0 1px 2px rgba(0,0,0,.04),0 1px 3px rgba(0,0,0,.06)",
+        card: "0 10px 30px -12px rgba(0,0,0,.16)",
+        float: "0 24px 60px -20px rgba(0,0,0,.30)",
       },
       keyframes: {
         fadeUp: { "0%": { opacity: "0", transform: "translateY(12px)" }, "100%": { opacity: "1", transform: "none" } },

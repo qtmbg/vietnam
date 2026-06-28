@@ -34,6 +34,7 @@ export type HotelItem = {
   cover?: string;
   paidBy?: "Nous" | "Claudine"; // who fronted the payment (cash flow, not the share split)
   paidNote?: string; // optional clarifier shown next to the "Payé" badge
+  toPayUSD?: number; // amount still owed on this hotel (USD). absent/0 = fully paid
   driver?: DriverInfo; // "à montrer au chauffeur" hand-off
 };
 

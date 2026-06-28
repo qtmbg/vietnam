@@ -49,7 +49,7 @@ export const CinemaHero = ({
           type="button"
           onClick={onOpenQuick}
           aria-label="Index — accès rapide"
-          className="text-[12px] font-medium uppercase tracking-[0.22em] text-sand-50/85 underline underline-offset-4 decoration-sand-50/40 decoration-1 active:opacity-70 transition-opacity"
+          className="glass-on-photo rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-sand-50 active:scale-95 transition-transform"
         >
           Index
         </button>
@@ -58,7 +58,7 @@ export const CinemaHero = ({
       {/* Title block */}
       <div className="absolute inset-x-0 bottom-0 px-7 pb-12">
         {/* Countdown / day as a display figure with a magazine caption */}
-        <div className="mb-5 flex items-baseline gap-3">
+        <div className="mb-5 inline-flex items-baseline gap-3 glass-on-photo rounded-[1.25rem] px-4 py-2.5">
           {isWithinTrip ? (
             <>
               <span className="font-display text-sand-50 text-[clamp(2.4rem,12vw,3.4rem)] leading-none tabular-nums">
@@ -82,7 +82,7 @@ export const CinemaHero = ({
           )}
         </div>
 
-        <h1 className="font-display font-light text-sand-50 text-[clamp(3.6rem,19vw,5.6rem)] leading-[0.82] tracking-[-0.02em]">
+        <h1 className="font-display font-semibold text-sand-50 text-[clamp(3.6rem,19vw,5.6rem)] leading-[0.82] tracking-[-0.02em]">
           Vietnam
         </h1>
 

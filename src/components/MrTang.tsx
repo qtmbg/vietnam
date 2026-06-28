@@ -90,18 +90,19 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
           type="button"
           onClick={() => openTang()}
           aria-label="Ouvrir Mr. Tang, votre concierge"
-          className="fixed right-4 z-[95] bottom-[calc(env(safe-area-inset-bottom)+7rem)] w-14 h-14 rounded-full bg-ink-900/95 backdrop-blur-sm shadow-float ring-1 ring-sand-50/15 flex items-center justify-center active:scale-95 transition-transform motion-safe:animate-pop"
+          className="fixed right-4 z-[95] bottom-[calc(env(safe-area-inset-bottom)+7rem)] w-14 h-14 rounded-full glass flex items-center justify-center active:scale-95 transition-transform motion-safe:animate-pop"
         >
           <TangAvatar size={40} />
-          <span className={`absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full ring-2 ring-ink-900 ${online ? "bg-jade-400" : "bg-clay-400"}`} />
+          <span className={`absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full ring-2 ring-white ${online ? "bg-jade-400" : "bg-ink-400"}`} />
         </button>
       )}
 
       {open && (
         <div className="fixed inset-0 z-[100] flex flex-col justify-end">
-          <button type="button" aria-label="Fermer le concierge" onClick={closeTang} className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm" />
-          <div className="relative w-full max-h-[82vh] bg-white rounded-t-[2rem] shadow-float flex flex-col motion-safe:animate-fade-up">
-            <div className="flex items-center gap-3 p-4 border-b border-ink-100">
+          <button type="button" aria-label="Fermer le concierge" onClick={closeTang} className="absolute inset-0 bg-ink-950/30 backdrop-blur-md" />
+          <div className="relative w-full max-h-[82vh] glass-strong rounded-t-[2rem] flex flex-col motion-safe:animate-fade-up">
+            <div className="mx-auto mt-2.5 h-1.5 w-10 rounded-full bg-ink-300" />
+            <div className="flex items-center gap-3 p-4 border-b border-ink-200">
               <TangAvatar size={44} />
               <div className="flex-1 min-w-0">
                 <p className="font-display text-xl text-ink-900 leading-none">Mr. Tang</p>

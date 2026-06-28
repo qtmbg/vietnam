@@ -30,7 +30,7 @@ export const GuideView = ({
       <div className="flex items-start justify-between gap-4 mb-9">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Food · vols · budget · pratique</p>
-          <h2 className="mt-1.5 font-display font-light text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Guide</h2>
+          <h2 className="mt-1.5 font-display font-semibold text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Guide</h2>
         </div>
         <button
           type="button"

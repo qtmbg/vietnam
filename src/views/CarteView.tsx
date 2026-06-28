@@ -29,7 +29,7 @@ export const CarteView = ({ goView }: { goView: (v: View) => void }) => {
       <div className="flex items-start justify-between gap-4 mb-7">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Tous les lieux</p>
-          <h2 className="mt-1.5 font-display font-light text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Carte</h2>
+          <h2 className="mt-1.5 font-display font-semibold text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Carte</h2>
         </div>
         <button
           type="button"

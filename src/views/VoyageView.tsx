@@ -32,7 +32,7 @@ export const VoyageView = ({
       <div className="flex items-start justify-between gap-4 mb-9">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Jour par jour</p>
-          <h2 className="mt-1.5 font-display font-light text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Voyage</h2>
+          <h2 className="mt-1.5 font-display font-semibold text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Voyage</h2>
         </div>
         <button
           type="button"
@@ -62,7 +62,7 @@ export const VoyageView = ({
           const sel = selectDay(day.date);
           return (
             <div key={day.date} className="mb-16">
-              <DayCardMobile day={day} coverSrc={dayCoverFromDay(day)} mood={mood} dayNumber={i + 1} />
+              <DayCardMobile day={day} coverSrc={dayCoverFromDay(day)} mood={mood} dayNumber={i + 1} dayTotal={TRIP_DATA.itinerary_days.length} />
               <div className="mt-6">
                 <DayContext
                   day={sel}

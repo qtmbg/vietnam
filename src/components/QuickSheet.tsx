@@ -14,78 +14,47 @@ export const QuickSheet = ({
 }) => {
   if (!open) return null;
 
+  const tiles = [
+    { key: "voyage", icon: Calendar, label: "Voyage", sub: "Jour par jour", tint: "text-clay-600", run: () => onGoto("voyage") },
+    { key: "carte", icon: Map, label: "Carte", sub: "Tous les lieux", tint: "text-jade-600", run: () => onGoto("carte") },
+    { key: "guide", icon: Utensils, label: "Guide", sub: "Food + vols + pratique", tint: "text-brand-500", run: () => onGoto("guide") },
+    { key: "budget", icon: Wallet, label: "Budget", sub: "Reste à payer", tint: "text-sun-500", run: onBudget },
+  ];
+
   return (
-    <div className="fixed inset-0 z-[100] bg-ink-900/90 backdrop-blur-xl p-8 flex flex-col">
+    <div className="fixed inset-0 z-[100] bg-white/55 backdrop-blur-2xl p-8 flex flex-col">
       <div className="flex justify-between items-center mb-12">
-        <h3 className="text-3xl font-black text-white">Accès rapide</h3>
-        <button onClick={onClose} className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white">
-          <X size={24} />
+        <h3 className="font-display text-3xl font-semibold text-ink-900 tracking-[-0.02em]">Accès rapide</h3>
+        <button type="button" onClick={onClose} aria-label="Fermer" className="w-11 h-11 rounded-full glass flex items-center justify-center text-ink-700 active:scale-90 transition-transform">
+          <X size={22} />
         </button>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <button
-          onClick={() => {
-            onGoto("voyage");
-            onClose();
-          }}
-          className="p-6 rounded-3xl bg-brand-500 text-white text-left aspect-square flex flex-col justify-between"
-        >
-          <Calendar size={32} />
-          <div>
-            <p className="font-black text-lg leading-tight mb-1">Voyage</p>
-            <p className="text-xs font-medium text-white/70">Jour par jour</p>
-          </div>
-        </button>
-
-        <button
-          onClick={() => {
-            onGoto("carte");
-            onClose();
-          }}
-          className="p-6 rounded-3xl bg-jade-500 text-white text-left aspect-square flex flex-col justify-between"
-        >
-          <Map size={32} />
-          <div>
-            <p className="font-black text-lg leading-tight mb-1">Carte</p>
-            <p className="text-xs font-medium text-white/70">Tous les lieux</p>
-          </div>
-        </button>
-
-        <button
-          onClick={() => {
-            onGoto("guide");
-            onClose();
-          }}
-          className="p-6 rounded-3xl bg-ink-100 text-ink-900 text-left aspect-square flex flex-col justify-between"
-        >
-          <Utensils size={32} />
-          <div>
-            <p className="font-black text-lg leading-tight mb-1">Guide</p>
-            <p className="text-xs font-medium text-ink-600">Food + vols + pratique</p>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            onBudget();
-            onClose();
-          }}
-          className="p-6 rounded-3xl bg-sun-500 text-white text-left aspect-square flex flex-col justify-between"
-        >
-          <Wallet size={32} />
-          <div>
-            <p className="font-black text-lg leading-tight mb-1">Budget</p>
-            <p className="text-xs font-medium text-white/70">Reste à payer</p>
-          </div>
-        </button>
+        {tiles.map((t) => {
+          const Icon = t.icon;
+          return (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => {
+                t.run();
+                onClose();
+              }}
+              className="glass rounded-[1.5rem] p-6 text-left aspect-square flex flex-col justify-between active:scale-[0.97] transition-transform"
+            >
+              <Icon size={30} className={t.tint} />
+              <div>
+                <p className="font-semibold text-[18px] leading-tight mb-0.5 text-ink-900">{t.label}</p>
+                <p className="text-[13px] font-medium text-ink-500">{t.sub}</p>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       <div className="mt-auto">
-        <p className="text-center text-white/40 text-[14px] font-bold uppercase tracking-[0.2em]">
-          Vietnam Trip 2026 — Hub Mobile
-        </p>
+        <p className="text-center text-ink-400 text-[12px] font-semibold uppercase tracking-[0.2em]">Vietnam Trip 2026</p>
       </div>
     </div>
   );

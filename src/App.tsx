@@ -86,7 +86,7 @@ export default function App() {
   );
 
   const toSettle = useMemo(() => selectToSettle(TRIP_DATA.expenses_usd, TRIP_DATA.hotels), []);
-  const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd), []);
+  const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd, TRIP_DATA.hotels), []);
   const tripContext = useMemo(() => buildTripContext(todayISO), [todayISO]);
 
   const goView = (v: View) => {
@@ -154,7 +154,7 @@ export default function App() {
         aria-label="Navigation principale"
         className="fixed inset-x-0 z-[90] px-3 bottom-[calc(env(safe-area-inset-bottom)+0.75rem)]"
       >
-        <div className="mx-auto max-w-md backdrop-blur-2xl bg-ink-900/95 rounded-[2rem] border border-white/10 p-1.5 flex items-stretch justify-between gap-1 shadow-float">
+        <div className="mx-auto max-w-md glass rounded-[2rem] p-1.5 flex items-stretch justify-between gap-1">
           {TabsList.map((tab) => {
             const Icon = tab.icon;
             const active = view === tab.id;
@@ -165,12 +165,12 @@ export default function App() {
                 onClick={() => goView(tab.id as View)}
                 aria-label={tab.label}
                 aria-current={active ? "page" : undefined}
-                className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 rounded-2xl transition-all duration-300 ${
-                  active ? "bg-white text-ink-900 shadow-float" : "text-white/60 active:scale-90"
+                className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 rounded-[1.4rem] transition-all duration-300 ${
+                  active ? "bg-white text-clay-600 shadow-soft" : "text-ink-500 active:scale-95"
                 }`}
               >
-                <Icon size={20} aria-hidden="true" />
-                <span className="text-[11px] font-bold tracking-tight leading-none">{tab.label}</span>
+                <Icon size={21} aria-hidden="true" />
+                <span className="text-[11px] font-semibold tracking-tight leading-none">{tab.label}</span>
               </button>
             );
           })}

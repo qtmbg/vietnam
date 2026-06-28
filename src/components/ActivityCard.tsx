@@ -50,7 +50,7 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
 
   return (
     <article>
-      <div className="relative overflow-hidden rounded-[3px]">
+      <div className="relative overflow-hidden rounded-2xl">
         <SmartImage
           src={ACT_COVERS[a.id] ? P(ACT_COVERS[a.id]) : cityCoverFromLabel(a.city)}
           alt={a.name}

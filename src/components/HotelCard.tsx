@@ -16,7 +16,7 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
   return (
     <article>
       {hotel.cover && (
-        <div className="relative overflow-hidden rounded-[3px]">
+        <div className="relative overflow-hidden rounded-2xl">
           <SmartImage
             src={P(hotel.cover)}
             alt={hotel.name}

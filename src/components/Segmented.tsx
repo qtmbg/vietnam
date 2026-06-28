@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
-// Editorial section tabs: a hairline-ruled row, active item underlined in clay.
+// Apple-style segmented control: a glass pill track with a white chip sliding
+// under the active item.
 export const Segmented = ({
   items,
   value,
@@ -10,7 +11,7 @@ export const Segmented = ({
   value: string;
   onChange: (id: string) => void;
 }) => (
-  <div className="flex items-stretch gap-6 border-b border-ink-200 overflow-x-auto no-scrollbar">
+  <div className="glass rounded-full p-1 flex items-stretch gap-1 overflow-x-auto no-scrollbar">
     {items.map((it) => {
       const on = value === it.id;
       return (
@@ -18,8 +19,8 @@ export const Segmented = ({
           key={it.id}
           type="button"
           onClick={() => onChange(it.id)}
-          className={`shrink-0 -mb-px flex items-center gap-2 pb-2.5 border-b-2 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors ${
-            on ? "border-clay-500 text-ink-900" : "border-transparent text-ink-500 active:text-ink-600"
+          className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] font-semibold whitespace-nowrap transition-all duration-300 ${
+            on ? "bg-white text-clay-600 shadow-soft" : "text-ink-500 active:text-ink-700"
           }`}
         >
           {it.icon}

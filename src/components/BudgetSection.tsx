@@ -1,104 +1,116 @@
-import { StatChip } from "./StatChip";
 import { formatUSD0, usdToVndLabel } from "../lib/money";
 import { safeDateLabel } from "../lib/dates";
 import type { BudgetComputed } from "../lib/budget";
 
-const Kicker = ({ children }: { children: string }) => (
-  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">{children}</p>
-);
+// Shorten a verbose transfer endpoint: airports → "Aéroport XXX", venues lose
+// their parenthetical so routes stay on one tidy line on a phone.
+const AIRPORT = /\(([A-Z]{3})\)/;
+const shortPlace = (s = "") => {
+  const m = s.match(AIRPORT);
+  if (m && /airport|aéroport/i.test(s)) return `Aéroport ${m[1]}`;
+  return s.replace(/\s*\(.*?\)\s*$/, "").trim();
+};
 
-// One ruled line: a label (+ optional date) on the left, the figure on the right.
-const Line = ({ label, sub, amount }: { label: string; sub?: string; amount: string }) => (
-  <div className="py-3 flex items-baseline gap-4">
-    <span className="min-w-0 flex-1">
-      <span className="block text-[15px] font-medium text-ink-900 leading-snug">{label}</span>
-      {sub && <span className="block mt-0.5 text-[12px] font-medium uppercase tracking-[0.1em] text-ink-500">{sub}</span>}
-    </span>
-    <span className="shrink-0 font-display text-[1.2rem] text-ink-900 tabular-nums leading-none">{amount}</span>
+const cardCls = "rounded-card border border-ink-200 bg-sand-50 shadow-soft px-5 py-4";
+
+const Head = ({ title, amount }: { title: string; amount?: string }) => (
+  <div className="flex items-baseline justify-between gap-3">
+    <h3 className="font-display text-[1.3rem] font-semibold text-ink-900 tracking-[-0.01em] leading-none">{title}</h3>
+    {amount && <span className="font-display text-[1.3rem] font-semibold text-ink-900 tabular-nums leading-none">{amount}</span>}
   </div>
 );
 
-// SIMPLE budget — "reste à payer", clear lists, one Claudine/Nous split per
-// section. No filters, no per-item clutter. Lives inside the Guide tab.
+// One ruled line: title (+ optional sub) left, price right.
+const Row = ({ title, sub, amount }: { title: string; sub?: string; amount: string }) => (
+  <div className="py-3 flex items-baseline gap-4">
+    <span className="min-w-0 flex-1">
+      <span className="block text-[15px] font-medium text-ink-900 leading-snug">{title}</span>
+      {sub && <span className="block mt-1 text-[12px] font-medium text-ink-500 leading-snug">{sub}</span>}
+    </span>
+    <span className="shrink-0 font-display text-[1.1rem] font-semibold text-ink-900 tabular-nums leading-none">{amount}</span>
+  </div>
+);
+
+// SIMPLE budget — only what's left to pay. No Claudine/Nous shares. Lives in Guide.
 export const BudgetSection = ({ budget }: { budget: BudgetComputed }) => {
-  const transfers = budget.transport.items
-    .filter((i) => i.mode !== "flight_domestic")
-    .slice()
-    .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? -1 : 1));
-  const hasFlights = budget.transport.paid > 0;
-  const activities = budget.activities.items;
+  const { hotels, transport, activities, grand } = budget;
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-4">
       {/* Reste à payer — the one number that matters */}
-      <section>
-        <Kicker>Reste à payer · USD</Kicker>
-        <p className="mt-2 font-display font-light text-[3.2rem] text-ink-900 leading-none tabular-nums tracking-[-0.02em]">
-          {formatUSD0(budget.grand.toPay)}
+      <section className="glass rounded-card px-6 py-7">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">Reste à payer · USD</p>
+        <p className="mt-2 font-display font-semibold text-[3.2rem] text-ink-900 leading-none tabular-nums tracking-[-0.03em]">
+          {formatUSD0(grand.toPay)}
         </p>
-        <p className="mt-1.5 text-[14px] text-ink-500 tabular-nums">{usdToVndLabel(budget.grand.toPay)}</p>
-        <p className="mt-2.5 text-[14px] text-ink-600 leading-relaxed">
-          Transferts privés + activités. Hôtels & repas non inclus — les vols internes sont déjà payés.
+        <p className="mt-2 text-[14px] text-ink-500 tabular-nums">{usdToVndLabel(grand.toPay)}</p>
+        <p className="mt-3 text-[14px] text-ink-600 leading-relaxed">
+          Hôtels encore dus, transferts privés et billets d'activités. Repas et vols internationaux non inclus.
         </p>
-        <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ink-200 pt-5">
-          <StatChip label="Part Claudine" value={formatUSD0(budget.grand.claudineToPay)} accent="jade" />
-          <StatChip label="Part famille (nous)" value={formatUSD0(budget.grand.nousToPay)} accent="ink" />
-        </div>
       </section>
 
-      {/* Transferts privés (16 places) */}
-      <section>
-        <div className="flex items-baseline justify-between gap-4 border-b border-ink-300 pb-2.5">
-          <h3 className="font-display text-[1.55rem] text-ink-900 leading-none">Transferts privés</h3>
-          <span className="font-display text-[1.55rem] text-ink-900 tabular-nums leading-none">{formatUSD0(budget.transport.toPay)}</span>
-        </div>
-        <p className="mt-2 text-[12px] text-ink-500">{transfers.length} trajets · van 16 places · à régler sur place</p>
+      {/* Hôtels */}
+      <section className={cardCls}>
+        <Head title="Hôtels" amount={formatUSD0(hotels.toPay)} />
         <div className="mt-1 divide-y divide-ink-200">
-          {transfers.map((t) => (
-            <Line
+          {hotels.toPayItems.map(({ hotel, amount }) => (
+            <Row key={hotel.name} title={hotel.name} sub={hotel.paidNote ?? hotel.dates} amount={formatUSD0(amount)} />
+          ))}
+        </div>
+        {hotels.paidItems.length > 0 && (
+          <div className="mt-2 pt-3 border-t border-ink-200 space-y-2">
+            {hotels.paidItems.map((h) => (
+              <div key={h.name} className="flex items-baseline justify-between gap-3">
+                <span className="min-w-0 flex-1 text-[14px] text-ink-500 leading-snug truncate">{h.name}</span>
+                <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-jade-500">
+                  Payé{h.paidBy ? ` · ${h.paidBy}` : ""}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Transferts privés */}
+      <section className={cardCls}>
+        <Head title="Transferts privés" amount={formatUSD0(transport.toPay)} />
+        <p className="mt-1 text-[12px] text-ink-500">{transport.items.length} trajets · van 16 places · à régler sur place</p>
+        <div className="mt-1 divide-y divide-ink-200">
+          {transport.items.map((t) => (
+            <Row
               key={t.id}
-              label={`${t.from} → ${t.to}`}
+              title={`${shortPlace(t.from)} → ${shortPlace(t.to)}`}
               sub={t.date ? safeDateLabel(t.date) : undefined}
               amount={formatUSD0(t.price_total_usd)}
             />
           ))}
         </div>
-        <p className="mt-3 text-[14px] text-ink-600">
-          Claudine {formatUSD0(budget.transport.claudineToPay)} · Nous {formatUSD0(budget.transport.nousToPay)}{" "}
-          <span className="text-ink-400">(20 / 80)</span>
-        </p>
-        {hasFlights && (
-          <div className="mt-4 pt-3.5 border-t border-ink-200 flex items-baseline justify-between gap-4 text-ink-500">
-            <span className="text-[14px]">Vols internes VietJet — déjà payés</span>
-            <span className="font-display text-[1.1rem] tabular-nums leading-none line-through decoration-ink-300">{formatUSD0(budget.transport.paid)}</span>
+        {transport.paid > 0 && (
+          <div className="mt-2 pt-3 border-t border-ink-200 flex items-baseline justify-between gap-3">
+            <span className="min-w-0 flex-1 text-[14px] text-ink-500 leading-snug">Vols internes VietJet</span>
+            <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-jade-500">Payé</span>
           </div>
         )}
       </section>
 
       {/* Activités */}
-      <section>
-        <div className="flex items-baseline justify-between gap-4 border-b border-ink-300 pb-2.5">
-          <h3 className="font-display text-[1.55rem] text-ink-900 leading-none">Activités</h3>
-          <span className="font-display text-[1.55rem] text-ink-900 tabular-nums leading-none">{formatUSD0(budget.activities.total)}</span>
-        </div>
-        <p className="mt-2 text-[12px] text-ink-500">Estimations · billets à payer sur place (5 pers)</p>
+      <section className={cardCls}>
+        <Head title="Activités" amount={formatUSD0(activities.total)} />
+        <p className="mt-1 text-[12px] text-ink-500">Estimations · billets à payer sur place (5 pers)</p>
         <div className="mt-1 divide-y divide-ink-200">
-          {activities.map((a) => (
-            <Line key={a.id} label={a.title} amount={formatUSD0(a.price_total_usd)} />
+          {activities.items.map((a) => (
+            <Row key={a.id} title={a.title} amount={formatUSD0(a.price_total_usd)} />
           ))}
         </div>
-        <p className="mt-3 text-[14px] text-ink-600">
-          Claudine {formatUSD0(budget.activities.claudine)} · Nous {formatUSD0(budget.activities.nous)}
-        </p>
       </section>
 
-      {/* La règle */}
-      <section className="border-t border-ink-200 pt-5">
-        <Kicker>Comment c'est réparti</Kicker>
+      {/* Ce qui est compté */}
+      <section className={cardCls}>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">Ce qui est compté</p>
         <ol className="mt-3 space-y-2 text-[14px] text-ink-700 leading-relaxed">
-          <li>Transferts privés : Claudine 20 % · le reste de la famille 80 %.</li>
-          <li>Activités : à parts égales entre adultes (enfants souvent gratuits ou réduits).</li>
-          <li>Hôtels, repas et vols internationaux ne sont pas comptés ici.</li>
+          <li>Hôtels encore dus, transferts privés et billets d'activités.</li>
+          <li>Les vols internes VietJet sont déjà payés.</li>
+          <li>Repas, vols internationaux et extras ne sont pas comptés ici.</li>
         </ol>
       </section>
     </div>

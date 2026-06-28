@@ -10,13 +10,12 @@
     font-size: 19px;
   }
   body {
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    background-color: theme("colors.sand.50");
     color: theme("colors.ink.900");
+    background-color: #ffffff;
   }
-  /* Editorial display: let Fraunces use its optical-size axis at large sizes. */
   h1,
   h2,
   h3,
@@ -35,6 +34,47 @@
   }
 }
 
+@layer components {
+  /* ============================================================
+     LIQUID GLASS — Apple-style frosted material.
+     Three weights, all with a bright top edge + soft bottom shade
+     to fake the glass bevel, plus a real backdrop blur+saturate so
+     whatever sits behind tints through. -webkit- first for iOS.
+     ============================================================ */
+  .glass {
+    background-color: rgba(255, 255, 255, 0.62);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04),
+      0 12px 36px -18px rgba(0, 0, 0, 0.22);
+  }
+  /* More opaque — for sheets/panels that hold a lot of reading text. */
+  .glass-strong {
+    background-color: rgba(255, 255, 255, 0.86);
+    -webkit-backdrop-filter: blur(34px) saturate(200%);
+    backdrop-filter: blur(34px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95), 0 -10px 50px -16px rgba(0, 0, 0, 0.18);
+  }
+  /* Frosted dark — for chrome that needs to read over bright/white content. */
+  .glass-dark {
+    background-color: rgba(28, 28, 30, 0.7);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), 0 18px 44px -20px rgba(0, 0, 0, 0.45);
+  }
+  /* Glass over a photo (light text on top) — subtle so the image still reads. */
+  .glass-on-photo {
+    background-color: rgba(28, 28, 30, 0.26);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.28);
+  }
+}
+
 @layer utilities {
   .no-scrollbar {
     -ms-overflow-style: none;
@@ -45,20 +85,8 @@
   }
   /* ONE constant warm grade on every photo, for unity across the book. */
   .photo-grade {
-    filter: saturate(0.9) contrast(1.04) brightness(1.02) sepia(0.08);
+    filter: saturate(0.96) contrast(1.04) brightness(1.02) sepia(0.05);
   }
-}
-
-/* Paper grain — subtle film/print texture over the whole book. */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.04;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @media (prefers-reduced-motion: reduce) {

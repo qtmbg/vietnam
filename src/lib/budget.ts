@@ -1,82 +1,60 @@
 // ============================================================
-// BUDGET ENGINE (USD only, no hotels, no food)
-// Simple by design — no filters. Splits the trip's variable cost
-// (transport + activities) into "déjà payé" and "reste à payer",
-// and into Claudine / Nous shares.
-//   • Transport: Claudine 20% / Nous 80%
-//   • Activities: explicit split if given, else adult_equal_split (÷3)
-//   • paid === true (domestic flights) → already settled
+// BUDGET ENGINE (USD) — "reste à payer", no shares.
+// Pulls the three variable buckets still to settle:
+//   • Hôtels   — what's still owed (HotelItem.toPayUSD), paid ones flagged
+//   • Transferts privés — road/boat transfers not yet paid
+//   • Activités — on-site tickets (estimates)
+// Domestic flights (paid:true) are shown as already settled.
+// Hotels, meals & international flights are out of scope.
 // ============================================================
-import type { ExpenseItemUSD } from "../data/types";
+import type { ExpenseItemUSD, HotelItem } from "../data/types";
 import { sum } from "./utils";
 
-export type AllocatedExpense = ExpenseItemUSD & { alloc_claudine: number; alloc_nous: number };
-
-export type BudgetGroup = {
-  total: number; // everything in the group
-  paid: number; // already settled
-  toPay: number; // still to settle
-  claudine: number; // Claudine share over the whole group
-  nous: number; // Nous share over the whole group
-  claudineToPay: number; // Claudine share, unpaid items only
-  nousToPay: number; // Nous share, unpaid items only
-  items: AllocatedExpense[];
-};
+export type HotelToPay = { hotel: HotelItem; amount: number };
 
 export type BudgetComputed = {
-  transport: BudgetGroup;
-  activities: BudgetGroup;
-  grand: {
-    total: number;
-    paid: number;
+  hotels: {
     toPay: number;
-    claudineToPay: number;
-    nousToPay: number;
+    toPayItems: HotelToPay[];
+    paidItems: HotelItem[];
   };
-};
-
-const allocTransport = (t: ExpenseItemUSD): AllocatedExpense => ({
-  ...t,
-  alloc_claudine: t.price_total_usd * 0.2,
-  alloc_nous: t.price_total_usd * 0.8,
-});
-
-const allocActivity = (a: ExpenseItemUSD): AllocatedExpense => {
-  if (a.payer_rule === "split_given") {
-    return { ...a, alloc_claudine: a.claudine_usd ?? 0, alloc_nous: a.nous_usd ?? 0 };
-  }
-  const each = a.price_total_usd / 3; // adult_equal_split fallback
-  return { ...a, alloc_claudine: each, alloc_nous: a.price_total_usd - each };
-};
-
-const group = (items: AllocatedExpense[]): BudgetGroup => {
-  const unpaid = items.filter((i) => !i.paid);
-  const paidItems = items.filter((i) => i.paid);
-  return {
-    total: sum(items.map((i) => i.price_total_usd)),
-    paid: sum(paidItems.map((i) => i.price_total_usd)),
-    toPay: sum(unpaid.map((i) => i.price_total_usd)),
-    claudine: sum(items.map((i) => i.alloc_claudine)),
-    nous: sum(items.map((i) => i.alloc_nous)),
-    claudineToPay: sum(unpaid.map((i) => i.alloc_claudine)),
-    nousToPay: sum(unpaid.map((i) => i.alloc_nous)),
-    items,
+  transport: {
+    toPay: number;
+    paid: number; // domestic flights, already paid
+    items: ExpenseItemUSD[]; // unpaid transfers only (flights excluded)
   };
+  activities: {
+    total: number;
+    items: ExpenseItemUSD[];
+  };
+  grand: { toPay: number };
 };
 
-export const computeBudget = (expenses: ExpenseItemUSD[]): BudgetComputed => {
-  const transport = group(expenses.filter((e) => e.category === "transport").map(allocTransport));
-  const activities = group(expenses.filter((e) => e.category === "activity").map(allocActivity));
+export const computeBudget = (expenses: ExpenseItemUSD[], hotels: HotelItem[]): BudgetComputed => {
+  // Hotels
+  const toPayItems = hotels
+    .filter((h) => (h.toPayUSD ?? 0) > 0)
+    .map((h) => ({ hotel: h, amount: h.toPayUSD as number }));
+  const paidItems = hotels.filter((h) => !(h.toPayUSD && h.toPayUSD > 0));
+  const hotelsToPay = sum(toPayItems.map((i) => i.amount));
+
+  // Transport: split flights (paid) from road/boat transfers (to pay)
+  const transport = expenses.filter((e) => e.category === "transport");
+  const flightsPaid = sum(transport.filter((e) => e.mode === "flight_domestic").map((e) => e.price_total_usd));
+  const transferItems = transport
+    .filter((e) => e.mode !== "flight_domestic" && !e.paid)
+    .slice()
+    .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? -1 : 1));
+  const transfersToPay = sum(transferItems.map((e) => e.price_total_usd));
+
+  // Activities: on-site tickets
+  const activityItems = expenses.filter((e) => e.category === "activity");
+  const activitiesTotal = sum(activityItems.map((e) => e.price_total_usd));
 
   return {
-    transport,
-    activities,
-    grand: {
-      total: transport.total + activities.total,
-      paid: transport.paid + activities.paid,
-      toPay: transport.toPay + activities.toPay,
-      claudineToPay: transport.claudineToPay + activities.claudineToPay,
-      nousToPay: transport.nousToPay + activities.nousToPay,
-    },
+    hotels: { toPay: hotelsToPay, toPayItems, paidItems },
+    transport: { toPay: transfersToPay, paid: flightsPaid, items: transferItems },
+    activities: { total: activitiesTotal, items: activityItems },
+    grand: { toPay: hotelsToPay + transfersToPay + activitiesTotal },
   };
 };
