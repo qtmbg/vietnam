@@ -20,14 +20,14 @@ export const GuideView = ({ goView }: { goView: (v: View) => void }) => {
     <div className="motion-safe:animate-fade-up px-7 pt-12">
       <div className="flex items-start justify-between gap-4 mb-9">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">Food · vols · pratique</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Food · vols · pratique</p>
           <h2 className="mt-1.5 font-display font-light text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Guide</h2>
         </div>
         <button
           type="button"
           onClick={() => goView("home")}
           aria-label="Retour à l'accueil"
-          className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500 active:text-ink-900 transition-colors"
+          className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-600 active:text-ink-900 transition-colors"
         >
           ← Accueil
         </button>

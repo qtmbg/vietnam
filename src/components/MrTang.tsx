@@ -103,7 +103,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                   <span className="w-1.5 h-1.5 rounded-full bg-jade-500" /> Votre concierge Vietnam
                 </p>
               </div>
-              <button type="button" aria-label="Fermer" onClick={() => setOpen(false)} className="w-9 h-9 rounded-full bg-ink-100 text-ink-500 flex items-center justify-center active:scale-90 transition-transform">
+              <button type="button" aria-label="Fermer" onClick={() => setOpen(false)} className="w-9 h-9 rounded-full bg-ink-100 text-ink-600 flex items-center justify-center active:scale-90 transition-transform">
                 <X size={18} />
               </button>
             </div>
@@ -178,7 +178,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Demandez à Mr. Tang…"
-                className="flex-1 bg-ink-50 border border-ink-100 rounded-full px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400"
+                className="flex-1 bg-ink-50 border border-ink-100 rounded-full px-4 py-3 text-sm text-ink-900 placeholder:text-ink-500"
               />
               <button
                 type="submit"

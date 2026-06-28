@@ -21,8 +21,8 @@ export const DetailSheet = ({
       <button type="button" aria-label="Fermer" onClick={onClose} className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm" />
       <div className="relative w-full max-h-[88vh] bg-sand-50 rounded-t-[1.25rem] shadow-float flex flex-col motion-safe:animate-fade-up">
         <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-ink-200">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-ink-500">{title}</p>
-          <button type="button" aria-label="Fermer" onClick={onClose} className="w-9 h-9 rounded-full bg-ink-100 text-ink-500 flex items-center justify-center active:scale-90 transition-transform">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-ink-600">{title}</p>
+          <button type="button" aria-label="Fermer" onClick={onClose} className="w-9 h-9 rounded-full bg-ink-100 text-ink-600 flex items-center justify-center active:scale-90 transition-transform">
             <X size={18} />
           </button>
         </div>

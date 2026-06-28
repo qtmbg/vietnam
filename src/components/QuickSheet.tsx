@@ -60,7 +60,7 @@ export const QuickSheet = ({
           <Utensils size={32} />
           <div>
             <p className="font-black text-lg leading-tight mb-1">Guide</p>
-            <p className="text-xs font-medium text-ink-500">Food + vols + pratique</p>
+            <p className="text-xs font-medium text-ink-600">Food + vols + pratique</p>
           </div>
         </button>
 

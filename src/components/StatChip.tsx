@@ -12,7 +12,7 @@ export const StatChip = ({
     accent === "jade" ? "text-jade-600" : accent === "sun" ? "text-clay-600" : "text-ink-900";
   return (
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">{label}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">{label}</p>
       <p className={`mt-1 font-display text-[1.7rem] leading-none tabular-nums ${fig}`}>{value}</p>
     </div>
   );

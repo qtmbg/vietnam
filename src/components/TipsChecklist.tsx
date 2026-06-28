@@ -20,7 +20,7 @@ export const TipsChecklist = () => {
     <section>
       <div className="flex items-baseline justify-between mb-4">
         <h3 className="font-display text-[1.7rem] text-ink-900 leading-none tracking-[-0.01em]">Essentiels</h3>
-        <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-ink-500 tabular-nums">{progress}% prêt</p>
+        <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-ink-600 tabular-nums">{progress}% prêt</p>
       </div>
       <div className="border-t border-ink-200">
         {ESSENTIALS_CHECKLIST.map((item) => {
@@ -39,7 +39,7 @@ export const TipsChecklist = () => {
               >
                 ✓
               </span>
-              <span className={`text-[15px] font-medium transition-colors ${on ? "text-ink-400 line-through" : "text-ink-800"}`}>{item}</span>
+              <span className={`text-[15px] font-medium transition-colors ${on ? "text-ink-500 line-through" : "text-ink-800"}`}>{item}</span>
             </button>
           );
         })}

@@ -9,7 +9,7 @@ const linkCls =
 
 const Spec = ({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) => (
   <div className="py-3 flex items-baseline gap-4">
-    <span className="w-[4.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">{label}</span>
+    <span className="w-[4.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">{label}</span>
     <span className={`flex-1 text-[14px] leading-snug ${accent ? "font-semibold text-clay-600" : "font-medium text-ink-800"}`}>{value}</span>
   </div>
 );
@@ -59,17 +59,17 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
       </div>
 
       <h3 className="mt-5 font-display text-[1.8rem] text-ink-900 leading-tight tracking-[-0.01em]">{a.name}</h3>
-      <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.18em] text-ink-400">
+      <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.18em] text-ink-500">
         {a.category}
         {a.payMode ? ` · ${a.payMode}` : ""} · {a.provider}
       </p>
 
       <div className="mt-4 border-y border-ink-200 divide-y divide-ink-200">
         <div className="py-3 flex items-baseline gap-4">
-          <span className="w-[4.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">Prix</span>
+          <span className="w-[4.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">Prix</span>
           <span className="flex-1">
             <span className="block text-[15px] font-semibold text-clay-600">{priceLine}</span>
-            {rawLine && <span className="block mt-0.5 text-[13px] text-ink-500 tabular-nums">{rawLine}</span>}
+            {rawLine && <span className="block mt-0.5 text-[13px] text-ink-600 tabular-nums">{rawLine}</span>}
           </span>
         </div>
         {a.duration && <Spec label="Durée" value={a.duration} />}

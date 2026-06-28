@@ -12,7 +12,7 @@ const PlaceRow = ({ place }: { place: Place }) => (
     rel="noopener noreferrer"
     className="group flex items-baseline gap-4 py-3.5 border-b border-ink-200"
   >
-    <span className="w-[4.75rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-500">{place.kind}</span>
+    <span className="w-[4.75rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-600">{place.kind}</span>
     <span className="flex-1 text-[15px] font-medium text-ink-900 leading-snug">{place.label}</span>
     <span className="shrink-0 text-ink-300 text-sm group-active:translate-x-0.5 transition-transform">↗</span>
   </a>
@@ -28,20 +28,20 @@ export const CarteView = ({ goView }: { goView: (v: View) => void }) => {
     <div className="motion-safe:animate-fade-up px-7 pt-12">
       <div className="flex items-start justify-between gap-4 mb-7">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">Tous les lieux</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Tous les lieux</p>
           <h2 className="mt-1.5 font-display font-light text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Carte</h2>
         </div>
         <button
           type="button"
           onClick={() => goView("home")}
           aria-label="Retour à l'accueil"
-          className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500 active:text-ink-900 transition-colors"
+          className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-600 active:text-ink-900 transition-colors"
         >
           ← Accueil
         </button>
       </div>
 
-      <p className="mb-8 text-[14px] text-ink-500 leading-relaxed">Touchez un lieu pour l’ouvrir dans Google Maps.</p>
+      <p className="mb-8 text-[14px] text-ink-600 leading-relaxed">Touchez un lieu pour l’ouvrir dans Google Maps.</p>
 
       <div className="space-y-10 pb-20">
         {cities.map((city) => {
@@ -67,7 +67,7 @@ export const CarteView = ({ goView }: { goView: (v: View) => void }) => {
                 </a>
               </div>
               {places.length === 0 ? (
-                <p className="mt-2.5 text-[13px] font-display italic text-ink-400">Étape de transit.</p>
+                <p className="mt-2.5 text-[13px] font-display italic text-ink-500">Étape de transit.</p>
               ) : (
                 <div className="mt-3 border-t border-ink-200">
                   {places.map((p, i) => (

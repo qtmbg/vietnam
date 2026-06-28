@@ -23,20 +23,20 @@ export const ExpenseRow = ({
             )}
           </div>
 
-          <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.13em] text-ink-400">
+          <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.13em] text-ink-500">
             {item.id} · {item.operator} · {item.mode.replaceAll("_", " ")}
           </p>
 
           {(item.from || item.to) && (
             <p className="mt-2 text-[13px] font-medium text-ink-700">
-              {item.from ?? "—"} <span className="text-ink-400">→</span> {item.to ?? "—"}
+              {item.from ?? "—"} <span className="text-ink-500">→</span> {item.to ?? "—"}
             </p>
           )}
 
-          {item.notes && <p className="mt-2 text-[13px] text-ink-500 leading-relaxed">{item.notes}</p>}
+          {item.notes && <p className="mt-2 text-[13px] text-ink-600 leading-relaxed">{item.notes}</p>}
 
           {item.tags?.length ? (
-            <p className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 text-[10.5px] font-medium uppercase tracking-[0.12em] text-ink-400">
+            <p className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 text-[10.5px] font-medium uppercase tracking-[0.12em] text-ink-500">
               {item.tags.slice(0, 4).map((t) => (
                 <span key={t}>{t}</span>
               ))}
@@ -49,18 +49,18 @@ export const ExpenseRow = ({
             {confirmed ? "Confirmé" : "Estimé"}
           </p>
           <p className="mt-1.5 font-display text-[1.5rem] text-ink-900 leading-none tabular-nums">{formatUSD0(item.price_total_usd)}</p>
-          {item.date && <p className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-400 tabular-nums">{item.date}</p>}
+          {item.date && <p className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-500 tabular-nums">{item.date}</p>}
         </div>
       </div>
 
       {showAlloc && (
         <div className="mt-3.5 pt-3.5 border-t border-ink-200 flex gap-10">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-500">Claudine</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-600">Claudine</p>
             <p className="mt-1 font-display text-[1.15rem] text-ink-900 leading-none tabular-nums">{formatUSD0(item.alloc_claudine)}</p>
           </div>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-500">Nous</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-600">Nous</p>
             <p className="mt-1 font-display text-[1.15rem] text-ink-900 leading-none tabular-nums">{formatUSD0(item.alloc_nous)}</p>
           </div>
         </div>

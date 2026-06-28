@@ -57,9 +57,9 @@ export const DayCardMobile = ({
           const rest = isFatigue && b.label === "Soir" && !b.plan.toLowerCase().includes("repos");
           return (
             <div key={idx} className="py-4 border-b border-ink-200 flex gap-4">
-              <span className="w-[4.5rem] shrink-0 pt-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-500">{b.label}</span>
+              <span className="w-[4.5rem] shrink-0 pt-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-600">{b.label}</span>
               {rest ? (
-                <p className="flex-1 font-display italic text-[15px] text-ink-500 leading-relaxed">Repos suggéré ce soir.</p>
+                <p className="flex-1 font-display italic text-[15px] text-ink-600 leading-relaxed">Repos suggéré ce soir.</p>
               ) : (
                 <div className="flex-1">
                   <p className="text-[15px] text-ink-800 leading-relaxed">{b.plan}</p>
@@ -86,7 +86,7 @@ export const DayCardMobile = ({
       </div>
 
       {mood === "energy" && (
-        <p className="mt-4 pl-3 border-l-2 border-clay-300 font-display italic text-[15px] text-ink-500 leading-relaxed">
+        <p className="mt-4 pl-3 border-l-2 border-clay-300 font-display italic text-[15px] text-ink-600 leading-relaxed">
           Énergie au max : un café caché, puis une balade.
         </p>
       )}

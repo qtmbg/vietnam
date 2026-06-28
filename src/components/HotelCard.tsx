@@ -30,12 +30,12 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
       )}
 
       <h3 className="mt-5 font-display text-[1.9rem] text-ink-900 leading-tight tracking-[-0.01em]">{hotel.name}</h3>
-      <p className="mt-1.5 text-[12px] font-medium uppercase tracking-[0.16em] text-ink-500">{hotel.dates}</p>
+      <p className="mt-1.5 text-[12px] font-medium uppercase tracking-[0.16em] text-ink-600">{hotel.dates}</p>
 
       <p className={`mt-3 text-[12px] font-semibold uppercase tracking-[0.14em] ${hotel.paidBy ? "text-jade-600" : "text-clay-600"}`}>
         {hotel.paidBy ? `Payé · ${hotel.paidBy}` : "À régler"}
       </p>
-      {hotel.paidNote && <p className="mt-1 text-[13px] text-ink-500 leading-snug">{hotel.paidNote}</p>}
+      {hotel.paidNote && <p className="mt-1 text-[13px] text-ink-600 leading-snug">{hotel.paidNote}</p>}
 
       <p className="mt-5 font-display italic text-[17px] text-ink-700 leading-relaxed">« {hotel.why} »</p>
 
@@ -45,11 +45,11 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
 
       <div className="mt-6 border-y border-ink-200 divide-y divide-ink-200">
         <div className="py-3 flex items-baseline justify-between gap-4">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">Nous</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">Nous</span>
           <span className="font-display text-[1.4rem] text-ink-900 leading-none tabular-nums">{formatUSD0(hotel.budget.us)}</span>
         </div>
         <div className="py-3 flex items-baseline justify-between gap-4">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">Claudine</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">Claudine</span>
           <span className="font-display text-[1.4rem] text-ink-900 leading-none tabular-nums">{formatUSD0(hotel.budget.claudine)}</span>
         </div>
       </div>

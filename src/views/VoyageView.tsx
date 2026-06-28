@@ -25,21 +25,21 @@ export const VoyageView = ({
     <div className="motion-safe:animate-fade-up px-7 pt-12">
       <div className="flex items-start justify-between gap-4 mb-9">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">Jour par jour</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Jour par jour</p>
           <h2 className="mt-1.5 font-display font-light text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Voyage</h2>
         </div>
         <button
           type="button"
           onClick={() => goView("home")}
           aria-label="Retour à l'accueil"
-          className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500 active:text-ink-900 transition-colors"
+          className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-600 active:text-ink-900 transition-colors"
         >
           ← Accueil
         </button>
       </div>
 
       <div className="mb-12">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500 mb-3">Énergie du jour</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600 mb-3">Énergie du jour</p>
         <Segmented
           value={mood}
           onChange={(id) => setMood(id as Mood)}

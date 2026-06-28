@@ -3,7 +3,7 @@ import type { DaySelection } from "../lib/day";
 import type { HotelItem, PlannedActivity, ExpenseItemUSD } from "../data/types";
 
 const Label = ({ children }: { children: string }) => (
-  <span className="w-[5.5rem] shrink-0 pt-0.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">{children}</span>
+  <span className="w-[5.5rem] shrink-0 pt-0.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">{children}</span>
 );
 
 // The unified per-day context (selectDay) rendered as an editorial specs list:
@@ -37,7 +37,7 @@ export const DayContext = ({
         <button key={t.id} type="button" onClick={() => onTransfer(t)} className="group w-full py-3.5 flex items-baseline gap-4 text-left">
           <Label>Transfert</Label>
           <span className="flex-1 text-[15px] font-medium text-ink-900 leading-snug">
-            {t.from} <span className="text-ink-400">→</span> {t.to}
+            {t.from} <span className="text-ink-500">→</span> {t.to}
           </span>
           <span className="shrink-0 text-ink-300 text-lg leading-none group-active:translate-x-0.5 transition-transform">›</span>
         </button>

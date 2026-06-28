@@ -13,7 +13,7 @@ export const Toggle = ({
   <div className="flex items-center justify-between gap-4 py-3.5">
     <div className="min-w-0">
       <p className="text-[14px] font-semibold text-ink-900 leading-tight">{label}</p>
-      {hint && <p className="mt-0.5 text-[12px] text-ink-500">{hint}</p>}
+      {hint && <p className="mt-0.5 text-[12px] text-ink-600">{hint}</p>}
     </div>
     <button
       type="button"

@@ -13,7 +13,7 @@ export const FamilyStrip = ({ members }: { members: FamilyMember[] }) => (
         <span className="mt-2.5 h-px w-5" style={{ backgroundColor: crew[m.id] }} />
         <figcaption className="mt-2 text-center leading-none">
           <p className="text-[13px] font-semibold text-ink-900">{m.name}</p>
-          <p className="mt-1 font-display italic text-[12px] text-ink-500">{m.desc}</p>
+          <p className="mt-1 font-display italic text-[12px] text-ink-600">{m.desc}</p>
         </figcaption>
       </figure>
     ))}

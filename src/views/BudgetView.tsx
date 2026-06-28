@@ -11,7 +11,7 @@ const RESET: BudgetFilters = { inclureConfirmes: true, inclureEstimes: true, seu
 
 const Empty = ({ label, onReset }: { label: string; onReset: () => void }) => (
   <div className="border border-dashed border-ink-300 rounded-[3px] p-8 text-center">
-    <p className="text-[14px] text-ink-500">{label}</p>
+    <p className="text-[14px] text-ink-600">{label}</p>
     <button
       type="button"
       onClick={onReset}
@@ -40,14 +40,14 @@ export const BudgetView = ({
   <div className="motion-safe:animate-fade-up px-7 pt-12">
     <div className="flex items-start justify-between gap-4 mb-9">
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">USD · sans hôtels · sans food</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">USD · sans hôtels · sans food</p>
         <h2 className="mt-1.5 font-display font-light text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Budget</h2>
       </div>
       <button
         type="button"
         onClick={() => goView("home")}
         aria-label="Retour à l'accueil"
-        className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500 active:text-ink-900 transition-colors"
+        className="shrink-0 mt-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-600 active:text-ink-900 transition-colors"
       >
         ← Accueil
       </button>
@@ -65,12 +65,12 @@ export const BudgetView = ({
 
     {/* Filters */}
     <section className="mt-8">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500 mb-3">Filtres · affecte les totaux</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600 mb-3">Filtres · affecte les totaux</p>
       <input
         value={filters.recherche}
         onChange={(e) => setFilters((f) => ({ ...f, recherche: e.target.value }))}
         placeholder="id, opérateur, trajet, notes, tag…"
-        className="w-full bg-transparent border-b border-ink-300 py-2.5 text-[15px] text-ink-900 placeholder:text-ink-400 focus:border-clay-500 outline-none transition-colors"
+        className="w-full bg-transparent border-b border-ink-300 py-2.5 text-[15px] text-ink-900 placeholder:text-ink-500 focus:border-clay-500 outline-none transition-colors"
       />
       <div className="mt-1 border-t border-ink-200 divide-y divide-ink-200">
         <Toggle label="Inclure confirmés" hint="Données confirmées" value={filters.inclureConfirmes} onChange={(v) => setFilters((f) => ({ ...f, inclureConfirmes: v }))} />
@@ -82,9 +82,9 @@ export const BudgetView = ({
     {/* Overview */}
     {budgetTab === "overview" && (
       <section className="mt-10 pb-20">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">Total (scope)</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Total (scope)</p>
         <p className="mt-2 font-display font-light text-[3.4rem] text-ink-900 leading-none tabular-nums tracking-[-0.02em]">{formatUSD0(budget.grand.total)}</p>
-        <p className="mt-2.5 text-[13px] text-ink-500">Transports + activités (USD uniquement). Hôtels / food exclus.</p>
+        <p className="mt-2.5 text-[13px] text-ink-600">Transports + activités (USD uniquement). Hôtels / food exclus.</p>
 
         <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-ink-200 pt-6">
           <StatChip label="Claudine" value={formatUSD0(budget.grand.claudine_total)} accent="brand" />
@@ -94,7 +94,7 @@ export const BudgetView = ({
         </div>
 
         <div className="mt-8 border-t border-ink-200 pt-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500 mb-3">Les règles</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600 mb-3">Les règles</p>
           <ol className="space-y-2 text-[13.5px] text-ink-700 leading-relaxed">
             <li>1 — Transports : Claudine 20 % · Nous 80 %.</li>
             <li>2 — Activités : répartition explicite si disponible.</li>
@@ -107,9 +107,9 @@ export const BudgetView = ({
     {/* Transport */}
     {budgetTab === "transport" && (
       <section className="mt-10 pb-20">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">Transports (filtrés)</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Transports (filtrés)</p>
         <p className="mt-2 font-display text-[2.6rem] text-ink-900 leading-none tabular-nums">{formatUSD0(budget.transport.total)}</p>
-        <p className="mt-2.5 text-[13px] text-ink-500">
+        <p className="mt-2.5 text-[13px] text-ink-600">
           Claudine {formatUSD0(budget.transport.claudine_total)} · Nous {formatUSD0(budget.transport.nous_total)}
         </p>
         <div className="mt-6 space-y-4">
@@ -125,9 +125,9 @@ export const BudgetView = ({
     {/* Activities */}
     {budgetTab === "activities" && (
       <section className="mt-10 pb-20">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">Activités (filtrées)</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Activités (filtrées)</p>
         <p className="mt-2 font-display text-[2.6rem] text-ink-900 leading-none tabular-nums">{formatUSD0(budget.activities.total)}</p>
-        <p className="mt-2.5 text-[13px] text-ink-500">
+        <p className="mt-2.5 text-[13px] text-ink-600">
           Claudine {formatUSD0(budget.activities.claudine_total)} · Nous {formatUSD0(budget.activities.nous_total)}
         </p>
         <div className="mt-6 space-y-4">
