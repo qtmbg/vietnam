@@ -12,6 +12,7 @@
 // It DERIVES everything from TRIP_DATA — it never duplicates data.
 // ============================================================
 import { TRIP_DATA } from "../data/trip";
+import { cityMatches } from "./city";
 import type { HotelItem, ItineraryDay, ExpenseItemUSD, PlannedActivity } from "../data/types";
 
 export type DayCost = {
@@ -31,7 +32,7 @@ export type DaySelection = {
   itineraryDay: ItineraryDay | null;
   /** The day's city label (raw, e.g. "Hanoi → Ninh Binh"), or null. */
   city: string | null;
-  /** Hotel(s) whose city matches the day's city. */
+  /** Hotel(s) where you sleep that night (matched on the day's destination city). */
   hotels: HotelItem[];
   /** Planned activities located in the day's city. */
   activities: PlannedActivity[];
@@ -39,17 +40,6 @@ export type DaySelection = {
   transfers: ExpenseItemUSD[];
   /** Aggregated day cost, derived from the day's transfers. */
   cost: DayCost;
-};
-
-// Normalise a city label for loose matching: lowercase, drop "(…)" and trim.
-const normCity = (s: string) => s.toLowerCase().replace(/\(.*?\)/g, "").trim();
-
-// Two city labels relate if either normalised form contains the other.
-const cityMatches = (a: string, b: string) => {
-  const na = normCity(a);
-  const nb = normCity(b);
-  if (!na || !nb) return false;
-  return na === nb || na.includes(nb) || nb.includes(na);
 };
 
 // The distinct city tokens of a day ("A → B" → ["A", "B"]).
@@ -61,7 +51,10 @@ export const selectDay = (date: string): DaySelection => {
 
   const inDayCity = (city: string) => tokens.some((t) => cityMatches(t, city));
 
-  const hotels = itineraryDay ? TRIP_DATA.hotels.filter((h) => inDayCity(h.city)) : [];
+  // Where you sleep = the day's destination (last token of "A → B"), so a
+  // transit day shows the hotel you arrive at, not the one you left.
+  const destToken = tokens[tokens.length - 1];
+  const hotels = itineraryDay && destToken ? TRIP_DATA.hotels.filter((h) => cityMatches(destToken, h.city)) : [];
   const activities = itineraryDay ? TRIP_DATA.planned_activities.filter((a) => inDayCity(a.city)) : [];
 
   const transfers = TRIP_DATA.expenses_usd.filter((e) => e.category === "transport" && e.date === date);

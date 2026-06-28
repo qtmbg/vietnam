@@ -4,8 +4,12 @@
 import type { CrewId } from "../theme";
 
 export type Mood = "fatigue" | "normal" | "energy";
-export type View = "home" | "itinerary" | "hotels" | "flights" | "activities" | "guide" | "tips" | "budget";
+export type View = "home" | "voyage" | "budget" | "guide" | "carte";
 export type StatusTag = "CONFIRMED" | "ESTIMATE";
+
+// Home behaviour switches on where "today" sits vs the trip window.
+export type TripMode = "prep" | "travel";
+export type ModeOverride = "auto" | "prep" | "travel";
 
 export type Money = { us: number; claudine: number; currency: "USD" };
 

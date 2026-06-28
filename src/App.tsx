@@ -1,28 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
-import { Star, Calendar, Hotel, Sparkles, Utensils, Lightbulb, Wallet } from "lucide-react";
+import { Calendar, Wallet, BookOpen, Map } from "lucide-react";
 
 import { TRIP_DATA } from "./data/trip";
-import type { Mood, View, PlannedActivity } from "./data/types";
-import { uniqCitiesByOrder } from "./lib/city";
+import type { Mood, View, ModeOverride, TripMode } from "./data/types";
 import { toISO, MS_DAY } from "./lib/dates";
-import { clamp } from "./lib/utils";
 import { computeBudget, type BudgetFilters, type BudgetTab } from "./lib/budget";
+import { selectDay } from "./lib/day";
+import { selectToSettle } from "./lib/prep";
 import { buildTripContext } from "./lib/tripContext";
 
 import { QuickSheet } from "./components/QuickSheet";
 import { MrTang } from "./components/MrTang";
 import { HomeView } from "./views/HomeView";
-import { ItineraryView } from "./views/ItineraryView";
-import { HotelsView } from "./views/HotelsView";
-import { FlightsView } from "./views/FlightsView";
-import { ActivitiesView } from "./views/ActivitiesView";
-import { GuideView } from "./views/GuideView";
-import { TipsView } from "./views/TipsView";
+import { VoyageView } from "./views/VoyageView";
 import { BudgetView } from "./views/BudgetView";
+import { GuideView } from "./views/GuideView";
+import { CarteView } from "./views/CarteView";
+
+const baseCity = (label: string) => label.split("→").map((s) => s.trim())[0];
 
 // ============================================================
-// APP — orchestration: state, persistence, derived values,
-// view routing, bottom nav and the Mr. Tang concierge.
+// APP — orchestration: state, persistence, PREP/TRAVEL mode,
+// 4-tab routing, bottom nav and the Mr. Tang concierge.
 // ============================================================
 export default function App() {
   const [view, setView] = useState<View>("home");
@@ -31,6 +30,11 @@ export default function App() {
     return m ? (m as Mood) : "normal";
   });
   const [quickOpen, setQuickOpen] = useState(false);
+  // Discreet override to preview the other home mode.
+  const [modeOverride, setModeOverride] = useState<ModeOverride>(() => {
+    const o = localStorage.getItem("trip_mode_override");
+    return o ? (o as ModeOverride) : "auto";
+  });
 
   // Budget filters (FR)
   const [budgetTab, setBudgetTab] = useState<BudgetTab>(() => {
@@ -44,147 +48,103 @@ export default function App() {
       : { inclureConfirmes: true, inclureEstimes: true, seulementJaCosmo: false, recherche: "" };
   });
 
-  const cities = useMemo(() => uniqCitiesByOrder(TRIP_DATA.itinerary_days), []);
-  const [activeCity, setActiveCity] = useState(() => localStorage.getItem("trip_active_city") || cities[0] || "Hanoi");
-
-  const todayISO = toISO(new Date());
-  const tripStart = TRIP_DATA.itinerary_days[0]?.date;
-  const tripEnd = TRIP_DATA.itinerary_days[TRIP_DATA.itinerary_days.length - 1]?.date;
-  const isWithinTrip = tripStart && tripEnd ? todayISO >= tripStart && todayISO <= tripEnd : false;
-
-  const todayIndex = useMemo(() => {
-    const idx = TRIP_DATA.itinerary_days.findIndex((d) => d.date === todayISO);
-    return idx >= 0 ? idx : 0;
-  }, [todayISO]);
-
-  // Hydrate the focused day from localStorage on first render, unless the
-  // trip is live (then snap to today) — same result as the original load
-  // effect, but without a flash of the default.
-  const [focusDayIndex, setFocusDayIndex] = useState(() => {
-    if (isWithinTrip) return todayIndex;
-    const saved = localStorage.getItem("trip_focus_day");
-    return saved ? Number(saved) : todayIndex;
-  });
-  const focusDay = TRIP_DATA.itinerary_days[clamp(focusDayIndex, 0, TRIP_DATA.itinerary_days.length - 1)];
-
   // Persist
-  useEffect(() => localStorage.setItem("trip_active_city", activeCity), [activeCity]);
-  useEffect(() => localStorage.setItem("trip_focus_day", String(focusDayIndex)), [focusDayIndex]);
   useEffect(() => localStorage.setItem("trip_budget_filters_v3", JSON.stringify(filters)), [filters]);
   useEffect(() => localStorage.setItem("trip_budget_tab_v3", budgetTab), [budgetTab]);
   useEffect(() => localStorage.setItem("trip_mood", mood), [mood]);
+  useEffect(() => localStorage.setItem("trip_mode_override", modeOverride), [modeOverride]);
 
-  const setCityFromFocus = () => {
-    const base = focusDay.city.split("→").map((s) => s.trim())[0];
-    setActiveCity(base);
-  };
+  // ---- Trip window + mode ----
+  const days = TRIP_DATA.itinerary_days;
+  const todayISO = toISO(new Date());
+  const firstDayISO = days[0].date;
+  const lastDayISO = days[days.length - 1].date;
+  const DEPART = TRIP_DATA.meta.flights.outbound.date; // 2026-07-24
+  const tripLen = days.length;
 
-  const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd, filters), [filters]);
+  const autoMode: TripMode = todayISO < DEPART ? "prep" : "travel";
+  const mode: TripMode = modeOverride === "auto" ? autoMode : modeOverride;
 
-  // Live countdown / trip-day + glanceable "today" derivations
-  const daysTo = Math.max(0, Math.ceil((+new Date(tripStart!) - +new Date(todayISO)) / MS_DAY));
-  const tripLen = Math.round((+new Date(tripEnd!) - +new Date(tripStart!)) / MS_DAY) + 1;
-  const dayNo = clamp(Math.floor((+new Date(todayISO) - +new Date(tripStart!)) / MS_DAY) + 1, 1, tripLen);
-  const todayDay = TRIP_DATA.itinerary_days[todayIndex];
+  const daysToDeparture = Math.max(0, Math.ceil((+new Date(DEPART) - +new Date(todayISO)) / MS_DAY));
+
+  // The "current day" of the trip — clamp today into the trip, then take the
+  // last itinerary day on or before it (itinerary dates aren't consecutive).
+  const refISO = todayISO < firstDayISO ? firstDayISO : todayISO > lastDayISO ? lastDayISO : todayISO;
+  const currentDayIndex = useMemo(() => {
+    let idx = 0;
+    for (let i = 0; i < days.length; i++) {
+      if (days[i].date <= refISO) idx = i;
+    }
+    return idx;
+  }, [days, refISO]);
+  const currentDayDate = days[currentDayIndex].date;
+  const dayNo = currentDayIndex + 1;
+  const currentDay = useMemo(() => selectDay(currentDayDate), [currentDayDate]);
+  const firstCity = baseCity(days[0].city);
+
+  // Strictly AFTER the current day, so it isn't the same transfer already
+  // shown inside the current day's context.
   const nextTransfer = useMemo(
     () =>
       TRIP_DATA.expenses_usd
-        .filter((e) => e.category === "transport" && e.date && e.date >= todayISO)
+        .filter((e) => e.category === "transport" && e.date && e.date > currentDayDate)
         .sort((a, b) => (a.date! < b.date! ? -1 : 1))[0] ?? null,
-    [todayISO]
+    [currentDayDate]
   );
-  const lastDay = TRIP_DATA.itinerary_days.length - 1;
+
+  const toSettle = useMemo(() => selectToSettle(TRIP_DATA.expenses_usd, TRIP_DATA.hotels), []);
+  const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd, filters), [filters]);
+  const tripContext = useMemo(() => buildTripContext(todayISO), [todayISO]);
+
   const goView = (v: View) => {
     setView(v);
     requestAnimationFrame(() => window.scrollTo({ top: 0 }));
   };
-  const tripContext = useMemo(() => buildTripContext(todayISO), [todayISO]);
 
   const TabsList = [
-    { id: "home", icon: Star, label: "Accueil" },
-    { id: "itinerary", icon: Calendar, label: "Jours" },
-    { id: "hotels", icon: Hotel, label: "Hôtels" },
-    { id: "activities", icon: Sparkles, label: "Activités" },
-    { id: "guide", icon: Utensils, label: "Guide" },
-    { id: "tips", icon: Lightbulb, label: "Conseils" },
+    { id: "voyage", icon: Calendar, label: "Voyage" },
     { id: "budget", icon: Wallet, label: "Budget" },
+    { id: "guide", icon: BookOpen, label: "Guide" },
+    { id: "carte", icon: Map, label: "Carte" },
   ] as const;
-
-  // Activities filtered by city & kids mode
-  const activitiesByCity = useMemo(() => {
-    const list = TRIP_DATA.planned_activities;
-    const map = new Map<string, PlannedActivity[]>();
-    for (const a of list) {
-      const k = a.city;
-      if (!map.has(k)) map.set(k, []);
-      map.get(k)!.push(a);
-    }
-    // Keep a consistent order
-    const order = ["Hanoi", "Ninh Binh", "Ha Long", "Hoi An", "Da Nang", "Ho Chi Minh City", "Whale Island"];
-    const out: { city: string; items: PlannedActivity[] }[] = [];
-    for (const c of order) {
-      if (map.has(c)) out.push({ city: c, items: map.get(c)! });
-    }
-    // add any leftover
-    for (const [c, items] of map.entries()) {
-      if (!order.includes(c)) out.push({ city: c, items });
-    }
-    return out;
-  }, []);
 
   return (
     <div className="min-h-screen bg-app font-sans text-ink-900 pb-36 overflow-x-clip">
       <QuickSheet open={quickOpen} onClose={() => setQuickOpen(false)} onGoto={(v) => setView(v)} />
 
-      {/* HOME */}
+      {/* HOME — mode-driven accueil */}
       {view === "home" && (
         <HomeView
+          mode={mode}
+          override={modeOverride}
+          setOverride={setModeOverride}
           onOpenQuick={() => setQuickOpen(true)}
-          activeCity={activeCity}
-          daysTo={daysTo}
+          daysToDeparture={daysToDeparture}
           dayNo={dayNo}
           tripLen={tripLen}
-          isWithinTrip={isWithinTrip}
-          todayDay={todayDay}
-          todayIndex={todayIndex}
+          currentDay={currentDay}
+          firstCity={firstCity}
+          toSettle={toSettle}
           nextTransfer={nextTransfer}
-          mood={mood}
-          setMood={setMood}
-          focusDay={focusDay}
-          focusDayIndex={focusDayIndex}
-          setFocusDayIndex={setFocusDayIndex}
-          lastDay={lastDay}
-          setCityFromFocus={setCityFromFocus}
           goView={goView}
         />
       )}
 
-      {/* ITINERARY */}
-      {view === "itinerary" && (
-        <ItineraryView cities={cities} activeCity={activeCity} setActiveCity={setActiveCity} mood={mood} goView={goView} />
-      )}
-
-      {/* HOTELS */}
-      {view === "hotels" && <HotelsView goView={goView} />}
-
-      {/* FLIGHTS */}
-      {view === "flights" && <FlightsView goView={goView} />}
-
-      {/* ACTIVITIES */}
-      {view === "activities" && <ActivitiesView groups={activitiesByCity} goView={goView} />}
-
-      {/* GUIDE */}
-      {view === "guide" && <GuideView goView={goView} />}
-
-      {/* TIPS */}
-      {view === "tips" && <TipsView goView={goView} />}
+      {/* VOYAGE — day by day, unified Day model */}
+      {view === "voyage" && <VoyageView mood={mood} setMood={setMood} goView={goView} />}
 
       {/* BUDGET */}
       {view === "budget" && (
         <BudgetView budgetTab={budgetTab} setBudgetTab={setBudgetTab} filters={filters} setFilters={setFilters} budget={budget} goView={goView} />
       )}
 
-      {/* MOBILE NAV */}
+      {/* GUIDE — food + vols + aéroports + phrases + conseils */}
+      {view === "guide" && <GuideView goView={goView} />}
+
+      {/* CARTE */}
+      {view === "carte" && <CarteView goView={goView} />}
+
+      {/* MOBILE NAV — 4 tabs */}
       <nav aria-label="Navigation principale" className="fixed bottom-4 left-3 right-3 z-[90] pb-[env(safe-area-inset-bottom)]">
         <div className="backdrop-blur-2xl bg-ink-900/90 rounded-[2rem] border border-white/10 p-1.5 flex items-stretch justify-between gap-0.5 shadow-float">
           {TabsList.map((tab) => {

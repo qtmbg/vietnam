@@ -1,4 +1,4 @@
-import { X, Lightbulb, Sparkles, Utensils, Wallet } from "lucide-react";
+import { X, Calendar, Wallet, Utensils, Map } from "lucide-react";
 import type { View } from "../data/types";
 
 export const QuickSheet = ({
@@ -24,29 +24,29 @@ export const QuickSheet = ({
       <div className="grid grid-cols-2 gap-4">
         <button
           onClick={() => {
-            onGoto("tips");
+            onGoto("voyage");
             onClose();
           }}
           className="p-6 rounded-3xl bg-brand-500 text-white text-left aspect-square flex flex-col justify-between"
         >
-          <Lightbulb size={32} />
+          <Calendar size={32} />
           <div>
-            <p className="font-black text-lg leading-tight mb-1">Conseils</p>
-            <p className="text-xs font-medium text-white/70">Checklist + argent</p>
+            <p className="font-black text-lg leading-tight mb-1">Voyage</p>
+            <p className="text-xs font-medium text-white/70">Jour par jour</p>
           </div>
         </button>
 
         <button
           onClick={() => {
-            onGoto("activities");
+            onGoto("carte");
             onClose();
           }}
           className="p-6 rounded-3xl bg-jade-500 text-white text-left aspect-square flex flex-col justify-between"
         >
-          <Sparkles size={32} />
+          <Map size={32} />
           <div>
-            <p className="font-black text-lg leading-tight mb-1">Activités</p>
-            <p className="text-xs font-medium text-white/70">Par ville</p>
+            <p className="font-black text-lg leading-tight mb-1">Carte</p>
+            <p className="text-xs font-medium text-white/70">Tous les lieux</p>
           </div>
         </button>
 
@@ -60,7 +60,7 @@ export const QuickSheet = ({
           <Utensils size={32} />
           <div>
             <p className="font-black text-lg leading-tight mb-1">Guide</p>
-            <p className="text-xs font-medium text-ink-500">Food + aéroports</p>
+            <p className="text-xs font-medium text-ink-500">Food + vols + pratique</p>
           </div>
         </button>
 
