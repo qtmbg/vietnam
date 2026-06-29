@@ -36,34 +36,44 @@
 
 @layer components {
   /* ============================================================
-     LIQUID GLASS — Apple-style frosted material.
-     Three weights, all with a bright top edge + soft bottom shade
-     to fake the glass bevel, plus a real backdrop blur+saturate so
-     whatever sits behind tints through. -webkit- first for iOS.
+     LIQUID GLASS — "goutte d'eau". Reserved for surfaces that have
+     something to refract: chrome floating over scrolling content
+     (nav, FAB), sheets, and panels sitting ON photos. A top sheen +
+     bright specular edge fake the water-drop bevel. -webkit- first
+     for iOS. NEVER use these over flat white — use .card there.
      ============================================================ */
   .glass {
-    background-color: rgba(255, 255, 255, 0.62);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04),
-      0 12px 36px -18px rgba(0, 0, 0, 0.22);
+    background-color: rgba(255, 255, 255, 0.52);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 46%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    backdrop-filter: blur(24px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95), inset 0 -10px 18px -12px rgba(0, 0, 0, 0.06),
+      0 14px 38px -18px rgba(0, 0, 0, 0.26);
   }
   /* More opaque — for sheets/panels that hold a lot of reading text. */
   .glass-strong {
-    background-color: rgba(255, 255, 255, 0.86);
+    background-color: rgba(255, 255, 255, 0.85);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 40%);
     -webkit-backdrop-filter: blur(34px) saturate(200%);
     backdrop-filter: blur(34px) saturate(200%);
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95), 0 -10px 50px -16px rgba(0, 0, 0, 0.18);
   }
-  /* Glass over a photo (light text on top) — subtle so the image still reads. */
+  /* Water drop over a photo (light text on top) — transparent, specular. */
   .glass-on-photo {
-    background-color: rgba(28, 28, 30, 0.26);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.24);
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.28);
+    background-color: rgba(18, 18, 20, 0.2);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 52%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    backdrop-filter: blur(14px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.42), 0 10px 30px -16px rgba(0, 0, 0, 0.5);
+  }
+  /* Plain white content surface — NO backdrop-filter (smooth iOS scroll). */
+  .card {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 30px -18px rgba(0, 0, 0, 0.22);
   }
 }
 

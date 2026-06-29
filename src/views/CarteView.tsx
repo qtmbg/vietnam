@@ -43,7 +43,7 @@ export const CarteView = () => {
           }
 
           return (
-            <section key={city} className="glass rounded-card px-5 py-4">
+            <section key={city} className="card rounded-card px-5 py-4">
               <div className="flex items-baseline justify-between gap-3">
                 <h3 className="font-display text-[1.7rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">{city}</h3>
                 <a
@@ -69,7 +69,7 @@ export const CarteView = () => {
         })}
 
         {/* Aéroports — every airport, incl. HPH / CXR */}
-        <section className="glass rounded-card px-5 py-4">
+        <section className="card rounded-card px-5 py-4">
           <h3 className="font-display text-[1.7rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">Aéroports</h3>
           <div className="mt-3 border-t border-ink-200">
             {TRIP_DATA.airport_glossary.map((ap) => (

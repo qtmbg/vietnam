@@ -5,7 +5,7 @@ import type { FoodCity } from "../data/types";
 export const FoodGuide = ({ groups }: { groups: FoodCity[] }) => (
   <div className="space-y-4">
     {groups.map((g) => (
-      <section key={g.city} className="glass rounded-card px-5 py-4">
+      <section key={g.city} className="card rounded-card px-5 py-4">
         <h3 className="font-display text-[1.7rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">{g.city}</h3>
         <div className="mt-4 border-t border-ink-200">
           {g.dishes.map((d) => (

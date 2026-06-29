@@ -22,7 +22,7 @@ const FlightsLink = ({ onFlights }: { onFlights: () => void }) => (
     <button
       type="button"
       onClick={onFlights}
-      className="glass rounded-full px-4 py-2 text-[13px] font-semibold text-clay-600 inline-flex items-center gap-1.5 active:scale-95 transition-transform"
+      className="card rounded-full px-4 py-2 text-[13px] font-semibold text-clay-600 inline-flex items-center gap-1.5 active:scale-95 transition-transform"
     >
       Vols <span aria-hidden="true">↗</span>
     </button>
@@ -77,7 +77,7 @@ export const HomeView = ({
         {!travel && (
           <>
             {/* Prochain jalon — le grand départ (ouvre les vols) */}
-            <button type="button" onClick={openFlights} className="glass rounded-card px-5 py-4 w-full text-left group">
+            <button type="button" onClick={openFlights} className="card rounded-card px-5 py-4 w-full text-left group">
               <Kicker>Prochain jalon</Kicker>
               <div className="mt-3 flex items-end justify-between gap-5">
                 <div className="min-w-0">
@@ -96,7 +96,7 @@ export const HomeView = ({
         {travel && (
           <>
             {/* Aujourd'hui — le jour courant via selectDay */}
-            <section className="glass rounded-card px-5 py-4">
+            <section className="card rounded-card px-5 py-4">
               <div className="flex items-baseline justify-between mb-1.5">
                 <Kicker>Aujourd'hui</Kicker>
                 <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-ink-600 tabular-nums">
@@ -117,7 +117,7 @@ export const HomeView = ({
 
             {/* Prochain transfert avec adresse */}
             {nextTransfer && (
-              <button type="button" onClick={() => setDetail({ kind: "transfer", expense: nextTransfer })} className="glass rounded-card px-5 py-4 w-full text-left group">
+              <button type="button" onClick={() => setDetail({ kind: "transfer", expense: nextTransfer })} className="card rounded-card px-5 py-4 w-full text-left group">
                 <Kicker>Prochain transfert</Kicker>
                 <div className="mt-3 flex items-end justify-between gap-5">
                   <div className="min-w-0">
@@ -137,14 +137,14 @@ export const HomeView = ({
         <button
           type="button"
           onClick={() => goView("voyage")}
-          className="glass rounded-card px-5 py-4 w-full flex items-baseline justify-between gap-4 text-left group"
+          className="card rounded-card px-5 py-4 w-full flex items-baseline justify-between gap-4 text-left group"
         >
           <span className="font-display text-[1.6rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">Le voyage, jour par jour</span>
           <span className="shrink-0 text-ink-500 text-xl leading-none group-active:translate-x-0.5 transition-transform">→</span>
         </button>
 
         {/* Équipage */}
-        <section className="glass rounded-card px-5 py-4">
+        <section className="card rounded-card px-5 py-4">
           <h3 className="mb-4 font-display text-[1.7rem] font-semibold text-ink-900 leading-none">Équipage</h3>
           <FamilyStrip members={FAMILY_MEMBERS} />
         </section>

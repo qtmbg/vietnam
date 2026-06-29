@@ -17,7 +17,7 @@ export const TipsChecklist = () => {
   const progress = Math.round((checked.length / ESSENTIALS_CHECKLIST.length) * 100);
 
   return (
-    <section className="glass rounded-card px-5 py-4">
+    <section className="card rounded-card px-5 py-4">
       <div className="flex items-baseline justify-between mb-4">
         <h3 className="font-display text-[1.7rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">Essentiels</h3>
         <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-ink-600 tabular-nums">{progress}% prêt</p>

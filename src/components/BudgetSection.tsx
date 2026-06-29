@@ -11,7 +11,7 @@ const shortPlace = (s = "") => {
   return s.replace(/\s*\(.*?\)\s*$/, "").trim();
 };
 
-const cardCls = "rounded-card glass px-5 py-4";
+const cardCls = "rounded-card card px-5 py-4";
 
 const Head = ({ title, amount }: { title: string; amount?: string }) => (
   <div className="flex items-baseline justify-between gap-3">
@@ -39,7 +39,7 @@ export const BudgetSection = ({ budget }: { budget: BudgetComputed }) => {
   return (
     <div className="space-y-4">
       {/* Estimate headline */}
-      <section className="glass rounded-card px-6 py-7">
+      <section className="card rounded-card px-6 py-7">
         <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">Budget · estimation · USD</p>
         <p className="mt-2 font-display font-semibold text-[3.2rem] text-ink-900 leading-none tabular-nums tracking-[-0.03em]">
           {formatUSD0(grand.toPay)}

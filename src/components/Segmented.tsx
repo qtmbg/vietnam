@@ -12,7 +12,7 @@ export const Segmented = ({
   onChange: (id: string) => void;
   accent?: string;
 }) => (
-  <div className="glass rounded-full p-1 flex items-stretch gap-1 overflow-x-auto no-scrollbar">
+  <div className="bg-ink-100 rounded-full p-1 flex items-stretch gap-1 overflow-x-auto no-scrollbar">
     {items.map((it) => {
       const on = value === it.id;
       return (
