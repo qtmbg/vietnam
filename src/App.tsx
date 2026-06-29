@@ -126,7 +126,7 @@ export default function App() {
       )}
 
       {/* VOYAGE — day by day, unified Day model */}
-      {view === "voyage" && <VoyageView mood={mood} setMood={setMood} />}
+      {view === "voyage" && <VoyageView mood={mood} setMood={setMood} currentDayIndex={currentDayIndex} />}
 
       {/* GUIDE — cuisine + vols + budget + infos + conseils */}
       {view === "guide" && <GuideView tab={guideTab} setTab={setGuideTab} budget={budget} />}
