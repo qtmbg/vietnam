@@ -1,18 +1,29 @@
+import { Plane, BedDouble } from "lucide-react";
 import { Segmented } from "../components/Segmented";
 import { FoodGuide } from "../components/FoodGuide";
+import { RestaurantGuide } from "../components/RestaurantGuide";
+import { ThingsGuide } from "../components/ThingsGuide";
 import { FlightLegCard } from "../components/FlightLegCard";
+import { DocCard } from "../components/DocCard";
 import { AirportGlossaryCard } from "../components/AirportGlossaryCard";
 import { PhrasebookCard } from "../components/PhrasebookCard";
 import { TipsChecklist } from "../components/TipsChecklist";
 import { SimpleListCard } from "../components/SimpleListCard";
 import { BudgetSection } from "../components/BudgetSection";
 import { FOOD_GUIDE, FLIGHTS, MONEY_TIPS, TRIP_DATA } from "../data/trip";
+import { RESTAURANTS, THINGS_TODO } from "../data/guide";
+import { INTL_TICKETS, DOHA_DOCS } from "../data/documents";
 import type { BudgetComputed } from "../lib/budget";
 
-export type GuideTab = "cuisine" | "vols" | "budget" | "infos" | "conseils";
+export type GuideTab = "cuisine" | "afaire" | "vols" | "budget" | "infos" | "conseils";
 
-// The "Guide" tab merges cuisine + vols + budget + infos + conseils into one
-// sectioned reference view. Budget lives here now (no longer its own tab).
+// Small uppercase section divider used inside a tab to separate sub-sections.
+const SectionLabel = ({ children }: { children: string }) => (
+  <p className="mb-3 mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">{children}</p>
+);
+
+// The "Guide" tab merges cuisine + à faire + vols + budget + infos + conseils
+// into one sectioned reference view. Budget lives here now (no longer its own tab).
 export const GuideView = ({
   tab,
   setTab,
@@ -25,7 +36,7 @@ export const GuideView = ({
   return (
     <div className="motion-safe:animate-fade-up px-7 pt-12">
       <div className="mb-9">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Food · vols · budget · pratique</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">Food · à faire · vols · budget</p>
         <h2 className="mt-1.5 font-display font-semibold text-[2.8rem] text-ink-900 leading-[0.9] tracking-[-0.02em]">Guide</h2>
       </div>
 
@@ -34,6 +45,7 @@ export const GuideView = ({
         onChange={(id) => setTab(id as GuideTab)}
         items={[
           { id: "cuisine", label: "Cuisine" },
+          { id: "afaire", label: "À faire" },
           { id: "vols", label: "Vols" },
           { id: "budget", label: "Budget" },
           { id: "infos", label: "Infos" },
@@ -42,15 +54,50 @@ export const GuideView = ({
       />
 
       <div className="mt-10 pb-20">
-        {tab === "cuisine" && <FoodGuide groups={FOOD_GUIDE} />}
+        {tab === "cuisine" && (
+          <div className="space-y-8">
+            <div>
+              <SectionLabel>Les plats à goûter</SectionLabel>
+              <FoodGuide groups={FOOD_GUIDE} />
+            </div>
+            <div>
+              <SectionLabel>Où manger · nos adresses</SectionLabel>
+              <RestaurantGuide groups={RESTAURANTS} />
+            </div>
+          </div>
+        )}
+
+        {tab === "afaire" && (
+          <div>
+            <p className="mb-5 text-[15px] text-ink-600 leading-relaxed">
+              Quoi faire dans chaque étape — avec un filtre pour ne garder que les sorties pensées pour Aydann & Milann.
+            </p>
+            <ThingsGuide groups={THINGS_TODO} />
+          </div>
+        )}
 
         {tab === "vols" && (
-          <div>
+          <div className="space-y-4">
             {FLIGHTS.map((leg, i) => (
               <FlightLegCard key={i} leg={leg} />
             ))}
+
+            <DocCard
+              title="Billets internationaux"
+              note="E-ticket Qatar Airways par voyageur (réf X6CPNI) — touchez pour ouvrir le PDF."
+              docs={INTL_TICKETS}
+              icon={Plane}
+            />
+
+            <DocCard
+              title="Escale Doha — hôtel"
+              note="Hôtel offert par Qatar Airways pendant l'escale (~14 h)."
+              docs={DOHA_DOCS}
+              icon={BedDouble}
+            />
+
             <p className="mt-2 pl-3.5 border-l-2 border-jade-400 text-[15px] text-ink-600 leading-relaxed">
-              Tous les vols sont confirmés et payés : billet Qatar Airways émis (réf X6CPNI) et les 4 vols VietJet internes réglés.
+              Tous les vols sont confirmés et payés : billet Qatar Airways émis (réf X6CPNI) et les 4 vols VietJet internes réglés. Chaque vol interne a son billet PDF directement sur la ligne du segment.
             </p>
           </div>
         )}

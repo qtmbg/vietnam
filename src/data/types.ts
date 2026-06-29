@@ -154,8 +154,16 @@ export type FlightSeg = {
   arr: string;
   resa?: string;
   note?: string;
+  doc?: string; // URL to the e-ticket PDF for this segment (served from /public/docs)
 };
 export type FlightLeg = { title: string; sub: string; paid: boolean; segs: FlightSeg[] };
+
+// ---- Travel documents (PDFs served from /public/docs, opened in a new tab) ----
+export type TravelDoc = {
+  label: string; // what / who
+  sub?: string; // route, dates, reference…
+  file: string; // resolved public URL
+};
 
 // ---- Food guide ----
 export type Dish = { name: string; vi: string; desc: string; where?: string; img?: string };
@@ -163,3 +171,31 @@ export type FoodCity = { city: string; emoji: string; dishes: Dish[] };
 
 // ---- Family / crew ----
 export type FamilyMember = { id: CrewId; name: string; desc: string; src: string; fallback: string };
+
+// ---- Restaurants (Time Out-style "où manger" guide) ----
+export type PriceTier = "€" | "€€" | "€€€";
+export type Restaurant = {
+  name: string;
+  cuisine: string; // "Bún chả · grillades au charbon"
+  area: string; // neighbourhood / repère
+  price: PriceTier;
+  signature: string; // the dish to order
+  why: string; // one-line hook
+  kids?: boolean; // comfortable with Aydann & Milann
+  veg?: boolean; // solid vegetarian options
+  mapsQuery?: string; // overrides the default "name + city" Maps search
+};
+export type RestaurantCity = { city: string; emoji: string; blurb?: string; spots: Restaurant[] };
+
+// ---- Things to do (per city, with kid-friendly flags for Aydann 12 & Milann 6) ----
+export type Thing = {
+  name: string;
+  kind: string; // "Culture", "Nature", "Plage", "Parc", "Atelier", "Vue"…
+  why: string;
+  forKids?: boolean; // a highlight for the kids
+  ages?: string; // "tous", "6+", "ado", "petits"…
+  duration?: string;
+  bookUrl?: string; // official / booking link
+  mapsQuery?: string; // overrides the default "name + city" Maps search
+};
+export type ThingsCity = { city: string; emoji: string; spots: Thing[] };

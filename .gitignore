@@ -25,3 +25,8 @@ dist-ssr
 
 # Vercel
 .vercel
+
+# Source PDF originals — heavy duplicates kept locally only.
+# The app serves the lean copies committed under public/docs/.
+/Flights/
+/Accomodation Doha/

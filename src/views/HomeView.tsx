@@ -1,3 +1,4 @@
+import { Utensils, Sparkles, Plane } from "lucide-react";
 import { CinemaHero } from "../components/CinemaHero";
 import { FamilyStrip } from "../components/FamilyStrip";
 import { TipsChecklist } from "../components/TipsChecklist";
@@ -6,6 +7,7 @@ import { FAMILY_MEMBERS, FLIGHTS, TRIP_DATA } from "../data/trip";
 import { cityCoverFromLabel, dayCoverFromDay } from "../lib/assets";
 import type { DaySelection } from "../lib/day";
 import type { TripMode, View } from "../data/types";
+import type { GuideTab } from "./GuideView";
 
 const baseCity = (label: string) => label.split("→").map((s) => s.trim())[0];
 
@@ -13,18 +15,28 @@ const Kicker = ({ children }: { children: string }) => (
   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">{children}</p>
 );
 
-// One clean quick-access to the flights — accent text on a white pill.
-const FlightsLink = ({ onFlights }: { onFlights: () => void }) => (
-  <div className="flex justify-end">
-    <button
-      type="button"
-      onClick={onFlights}
-      className="card rounded-full px-4 py-2 text-[13px] font-semibold text-accent-600 inline-flex items-center gap-1.5 active:scale-95 transition-transform"
-    >
-      Vols <span aria-hidden="true">↗</span>
-    </button>
-  </div>
-);
+// Quick access into the Guide's richest sections — one tap from the accueil.
+const QuickLinks = ({ openGuide }: { openGuide: (t: GuideTab) => void }) => {
+  const links: { tab: GuideTab; label: string; icon: typeof Utensils }[] = [
+    { tab: "afaire", label: "À faire", icon: Sparkles },
+    { tab: "cuisine", label: "Restos", icon: Utensils },
+    { tab: "vols", label: "Vols & docs", icon: Plane },
+  ];
+  return (
+    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">
+      {links.map(({ tab, label, icon: Icon }) => (
+        <button
+          key={tab}
+          type="button"
+          onClick={() => openGuide(tab)}
+          className="card rounded-full px-3.5 py-2 text-[13px] font-semibold text-accent-600 inline-flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition-transform"
+        >
+          <Icon size={15} aria-hidden="true" /> {label}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 export const HomeView = ({
   mode,
@@ -34,7 +46,7 @@ export const HomeView = ({
   currentDay,
   firstCity,
   goView,
-  openFlights,
+  openGuide,
 }: {
   mode: TripMode;
   daysToDeparture: number;
@@ -43,7 +55,7 @@ export const HomeView = ({
   currentDay: DaySelection;
   firstCity: string;
   goView: (v: View) => void;
-  openFlights: () => void;
+  openGuide: (t: GuideTab) => void;
 }) => {
   const travel = mode === "travel";
 
@@ -66,12 +78,12 @@ export const HomeView = ({
       />
 
       <div className="px-7 pt-11 space-y-4">
-        <FlightsLink onFlights={openFlights} />
+        <QuickLinks openGuide={openGuide} />
 
         {!travel && (
           <>
             {/* Prochain jalon — le grand départ (ouvre les vols) */}
-            <button type="button" onClick={openFlights} className="card rounded-card px-5 py-4 w-full text-left group">
+            <button type="button" onClick={() => openGuide("vols")} className="card rounded-card px-5 py-4 w-full text-left group">
               <Kicker>Prochain jalon</Kicker>
               <div className="mt-3 flex items-end justify-between gap-5">
                 <div className="min-w-0">

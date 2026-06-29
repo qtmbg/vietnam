@@ -1,6 +1,10 @@
+import { ExternalLink } from "lucide-react";
+import { INTERNAL_DOC_BY_RESA } from "../data/documents";
 import type { FlightLeg } from "../data/types";
 
 // Flight leg: title, paid status, and segments as a ruled list with codes.
+// When a segment has its own e-ticket PDF (explicit `doc`, or matched by resa),
+// a "Billet ↗" link opens it in one tap.
 export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
   <section className="card rounded-card px-5 py-4 mb-4">
     <div className="flex items-baseline justify-between gap-3">
@@ -10,12 +14,24 @@ export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
     <p className="mt-1 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-500">{leg.sub}</p>
 
     <div className="mt-4 border-t border-ink-200">
-      {leg.segs.map((s, i) => (
+      {leg.segs.map((s, i) => {
+        const doc = s.doc ?? (s.resa ? INTERNAL_DOC_BY_RESA[s.resa] : undefined);
+        return (
         <div key={i} className="py-4 border-b border-ink-200">
           <div className="flex items-baseline gap-2.5 flex-wrap">
             <span className="text-[14px] font-bold text-ink-900 tabular-nums">{s.code}</span>
             <span className="text-[12px] text-ink-600">{s.carrier}</span>
             {s.resa && <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent-600">Réf {s.resa}</span>}
+            {doc && (
+              <a
+                href={doc}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-auto inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-900 underline underline-offset-4 decoration-accent-400 decoration-1 active:text-accent-600 transition-colors"
+              >
+                Billet <ExternalLink size={12} aria-hidden="true" />
+              </a>
+            )}
           </div>
           <div className="mt-2.5 flex items-baseline gap-3">
             <div className="text-left">
@@ -34,7 +50,8 @@ export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
           </div>
           {s.note && <p className="mt-2 text-[14px] text-ink-600 leading-relaxed">{s.note}</p>}
         </div>
-      ))}
+        );
+      })}
     </div>
   </section>
 );

@@ -74,9 +74,10 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0 }));
   };
 
-  // Flights live inside Guide — this jumps straight to that section.
-  const openFlights = useCallback(() => {
-    setGuideTab("vols");
+  // Cuisine, à faire, vols… all live inside Guide — this jumps straight to a
+  // given section (used by the Home quick-links and the "grand départ" card).
+  const openGuide = useCallback((t: GuideTab) => {
+    setGuideTab(t);
     setView("guide");
     requestAnimationFrame(() => window.scrollTo({ top: 0 }));
   }, []);
@@ -110,7 +111,7 @@ export default function App() {
           currentDay={currentDay}
           firstCity={firstCity}
           goView={goView}
-          openFlights={openFlights}
+          openGuide={openGuide}
         />
       )}
 
