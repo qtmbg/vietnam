@@ -49,13 +49,32 @@ export const FAMILY_MEMBERS: FamilyMember[] = [
 // ============================================================
 // STATIC LISTS (Tips)
 // ============================================================
-export const ESSENTIALS_CHECKLIST = [
-  "Passeports (validité 6 mois)",
-  "Trousse pharma (Doliprane, Smecta)",
-  "Adaptateur universel",
-  "Crème solaire & anti-moustique (tropical)",
-  "Dollars / euros (cash secours)",
-  "Grab installée",
+export type EssentialsGroup = { title: string; note?: string; items: string[] };
+
+export const ESSENTIALS_GROUPS: EssentialsGroup[] = [
+  {
+    title: "Indispensables",
+    items: [
+      "Passeports (validité 6 mois)",
+      "Trousse pharma (Doliprane, Smecta)",
+      "Adaptateur universel",
+      "Crème solaire (tropical)",
+      "Dollars / euros (cash secours)",
+      "Grab installée",
+    ],
+  },
+  {
+    title: "Anti-moustiques",
+    note: "Surtout pour les étapes nature : rizières de Ninh Binh et Whale Island.",
+    items: [
+      "Répulsif peau pour adultes",
+      "Répulsif adapté aux enfants (formule enfant)",
+      "Spray ou traitement pour les vêtements",
+      "Diffuseur ou spirales pour la chambre",
+      "Bracelets ou patchs pour les enfants",
+      "Soin après-piqûre",
+    ],
+  },
 ];
 
 export const MONEY_TIPS = [
