@@ -27,6 +27,11 @@ export const VoyageView = ({
   const [detail, setDetail] = useState<DayDetailState | null>(null);
   const moodTheme = MOOD_THEME[mood];
 
+  // Activities are city-level OPTIONS, not date-locked — so each one is shown
+  // once, on the first day of its stop, instead of repeating on every day in
+  // the same city (which read like an error).
+  const seenActivities = new Set<string>();
+
   return (
     <div className="relative motion-safe:animate-fade-up px-7 pt-12">
       {/* Mood ambiance — a soft colour wash that changes with the energy level. */}
@@ -62,12 +67,15 @@ export const VoyageView = ({
       <div className="pb-20">
         {TRIP_DATA.itinerary_days.map((day, i) => {
           const sel = selectDay(day.date);
+          // Keep only activities not already surfaced on an earlier day.
+          const activities = sel.activities.filter((a) => !seenActivities.has(a.id));
+          activities.forEach((a) => seenActivities.add(a.id));
           return (
             <div key={day.date} className="mb-16">
               <DayCardMobile day={day} coverSrc={dayCoverFromDay(day)} mood={mood} dayNumber={i + 1} dayTotal={TRIP_DATA.itinerary_days.length} />
               <div className="mt-6">
                 <DayContext
-                  day={sel}
+                  day={{ ...sel, activities }}
                   onHotel={(hotel) => setDetail({ kind: "hotel", hotel })}
                   onActivity={(activity) => setDetail({ kind: "activity", activity })}
                   onTransfer={(expense) => setDetail({ kind: "transfer", expense })}

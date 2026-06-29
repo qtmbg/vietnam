@@ -45,18 +45,21 @@ export const DayContext = ({
 
       {day.activities.length > 0 && (
         <div className="py-3.5 flex items-baseline gap-4">
-          <Label>Activités</Label>
-          <div className="flex-1 flex flex-wrap gap-x-3 gap-y-1.5">
-            {day.activities.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                onClick={() => onActivity(a)}
-                className="text-[16px] font-medium text-ink-900 underline underline-offset-4 decoration-ink-300 decoration-1 active:text-clay-600 transition-colors text-left"
-              >
-                {a.name}
-              </button>
-            ))}
+          <Label>À faire</Label>
+          <div className="flex-1">
+            <div className="flex flex-wrap gap-x-3 gap-y-1.5">
+              {day.activities.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => onActivity(a)}
+                  className="text-[16px] font-medium text-ink-900 underline underline-offset-4 decoration-ink-300 decoration-1 active:text-clay-600 transition-colors text-left"
+                >
+                  {a.name}
+                </button>
+              ))}
+            </div>
+            <p className="mt-1.5 text-[11px] text-ink-500">Au choix pendant le séjour</p>
           </div>
         </div>
       )}
