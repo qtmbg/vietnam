@@ -10,7 +10,7 @@
     font-size: 19px;
   }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     color: theme("colors.ink.900");
@@ -24,12 +24,12 @@
     font-optical-sizing: auto;
   }
   :where(a, button, input, textarea, [tabindex]):focus-visible {
-    outline: 2px solid theme("colors.clay.600");
+    outline: 2px solid theme("colors.accent.600");
     outline-offset: 2px;
     border-radius: 2px;
   }
   ::selection {
-    background: theme("colors.clay.200");
+    background: theme("colors.accent.200");
     color: theme("colors.ink.900");
   }
 }

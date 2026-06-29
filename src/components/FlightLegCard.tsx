@@ -1,7 +1,6 @@
 import type { FlightLeg } from "../data/types";
 
-// Editorial flight leg: Fraunces title, paid status as small-caps text, the
-// segments as a ruled list with airport codes in display type. No icons.
+// Flight leg: title, paid status, and segments as a ruled list with codes.
 export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
   <section className="card rounded-card px-5 py-4 mb-4">
     <div className="flex items-baseline justify-between gap-3">
@@ -16,7 +15,7 @@ export const FlightLegCard = ({ leg }: { leg: FlightLeg }) => (
           <div className="flex items-baseline gap-2.5 flex-wrap">
             <span className="text-[14px] font-bold text-ink-900 tabular-nums">{s.code}</span>
             <span className="text-[12px] text-ink-600">{s.carrier}</span>
-            {s.resa && <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-clay-600">Réf {s.resa}</span>}
+            {s.resa && <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent-600">Réf {s.resa}</span>}
           </div>
           <div className="mt-2.5 flex items-baseline gap-3">
             <div className="text-left">

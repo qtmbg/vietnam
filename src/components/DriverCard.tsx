@@ -40,7 +40,7 @@ export const DriverCard = ({ driver, fallbackName }: { driver: DriverInfo; fallb
           type="button"
           onClick={copy}
           aria-label={copied ? "Adresse copiée" : "Copier le nom et l'adresse"}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-ink-900 text-sand-50 text-[14px] font-semibold active:scale-95 transition-transform"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-ink-900 text-surface-50 text-[14px] font-semibold active:scale-95 transition-transform"
         >
           {copied ? <Check size={15} /> : <Copy size={15} />} {copied ? "Copié" : "Copier"}
         </button>
@@ -48,7 +48,7 @@ export const DriverCard = ({ driver, fallbackName }: { driver: DriverInfo; fallb
           href={googleMapsSearchUrl(query)}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-900 underline underline-offset-4 decoration-clay-400 decoration-1 active:text-clay-600 transition-colors"
+          className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-900 underline underline-offset-4 decoration-accent-400 decoration-1 active:text-accent-600 transition-colors"
         >
           Ouvrir Maps →
         </a>

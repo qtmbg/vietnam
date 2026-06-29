@@ -19,7 +19,7 @@ const FlightsLink = ({ onFlights }: { onFlights: () => void }) => (
     <button
       type="button"
       onClick={onFlights}
-      className="card rounded-full px-4 py-2 text-[13px] font-semibold text-clay-600 inline-flex items-center gap-1.5 active:scale-95 transition-transform"
+      className="card rounded-full px-4 py-2 text-[13px] font-semibold text-accent-600 inline-flex items-center gap-1.5 active:scale-95 transition-transform"
     >
       Vols <span aria-hidden="true">↗</span>
     </button>

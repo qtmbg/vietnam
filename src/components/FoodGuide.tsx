@@ -1,7 +1,6 @@
 import type { FoodCity } from "../data/types";
 
-// Editorial food guide: Fraunces region headings, dishes as a ruled list with
-// the VN name in italic and the address in small-caps. No emoji, no icons.
+// Food guide: region headings + dishes as a ruled list (VN name + where).
 export const FoodGuide = ({ groups }: { groups: FoodCity[] }) => (
   <div className="space-y-4">
     {groups.map((g) => (
@@ -15,7 +14,7 @@ export const FoodGuide = ({ groups }: { groups: FoodCity[] }) => (
                 <p className="font-display italic text-[15px] text-jade-600">{d.vi}</p>
               </div>
               <p className="mt-1.5 text-[15px] text-ink-600 leading-relaxed">{d.desc}</p>
-              {d.where && <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.13em] text-clay-600">{d.where}</p>}
+              {d.where && <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.13em] text-accent-600">{d.where}</p>}
             </div>
           ))}
         </div>

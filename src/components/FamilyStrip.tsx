@@ -3,8 +3,7 @@ import { P } from "../lib/assets";
 import { crew } from "../theme";
 import type { FamilyMember } from "../data/types";
 
-// Editorial contact-sheet: graded portraits, a thin crew-tint marker, name in
-// Inter and role as a Fraunces italic caption. No status dots.
+// Contact-sheet: graded portraits, a thin crew-tint marker, name + role.
 export const FamilyStrip = ({ members }: { members: FamilyMember[] }) => (
   <div className="flex gap-5 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
     {members.map((m) => (

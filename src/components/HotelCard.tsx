@@ -7,7 +7,7 @@ import { googleMapsSearchUrl } from "../lib/maps";
 import type { HotelItem } from "../data/types";
 
 const linkCls =
-  "text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-900 underline underline-offset-4 decoration-clay-400 decoration-1 active:text-clay-600 transition-colors";
+  "text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-900 underline underline-offset-4 decoration-accent-400 decoration-1 active:text-accent-600 transition-colors";
 
 export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
   const link = hotel.booking_url || hotel.official_url;
@@ -25,7 +25,7 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
             overlay={
               <>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-950/55 via-transparent to-transparent" />
-                <p className="absolute bottom-4 left-5 text-[11px] font-medium uppercase tracking-[0.2em] text-sand-50/85">{hotel.city}</p>
+                <p className="absolute bottom-4 left-5 text-[11px] font-medium uppercase tracking-[0.2em] text-surface-50/85">{hotel.city}</p>
               </>
             }
           />
@@ -35,7 +35,7 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
       <h3 className="mt-5 font-display text-[1.9rem] text-ink-900 leading-tight tracking-[-0.01em]">{hotel.name}</h3>
       <p className="mt-1.5 text-[12px] font-medium uppercase tracking-[0.16em] text-ink-600">{hotel.dates}</p>
 
-      <p className={`mt-3 text-[12px] font-semibold uppercase tracking-[0.14em] ${hotel.paidBy ? "text-jade-600" : "text-clay-600"}`}>
+      <p className={`mt-3 text-[12px] font-semibold uppercase tracking-[0.14em] ${hotel.paidBy ? "text-jade-600" : "text-accent-600"}`}>
         {hotel.paidBy ? `Payé · ${hotel.paidBy}` : "À régler"}
       </p>
       {hotel.paidNote && <p className="mt-1 text-[14px] text-ink-600 leading-snug">{hotel.paidNote}</p>}
@@ -43,7 +43,7 @@ export const HotelCard = ({ hotel }: { hotel: HotelItem }) => {
       <p className="mt-5 font-display italic text-[18px] text-ink-700 leading-relaxed">« {hotel.why} »</p>
 
       {hotel.note && (
-        <p className="mt-4 pl-3.5 border-l-2 border-clay-300 text-[15px] text-ink-600 leading-relaxed">{hotel.note}</p>
+        <p className="mt-4 pl-3.5 border-l-2 border-accent-300 text-[15px] text-ink-600 leading-relaxed">{hotel.note}</p>
       )}
 
       <div className="mt-6 border-y border-ink-200 divide-y divide-ink-200">

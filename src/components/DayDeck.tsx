@@ -102,7 +102,7 @@ export const DayDeck = ({ days, startIndex }: { days: ItineraryDay[]; startIndex
             onClick={() => goTo(i)}
             aria-label={`Aller au jour ${i + 1}`}
             aria-current={i === index ? "true" : undefined}
-            className={`h-2 rounded-full transition-all duration-300 ${i === index ? "w-6 bg-clay-600" : "w-2 bg-ink-300 active:bg-ink-400"}`}
+            className={`h-2 rounded-full transition-all duration-300 ${i === index ? "w-6 bg-accent-600" : "w-2 bg-ink-300 active:bg-ink-400"}`}
           />
         ))}
       </div>

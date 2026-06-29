@@ -1,8 +1,7 @@
 import { formatUSD0, usdToVndLabel } from "../lib/money";
 import type { ExpenseItemUSD } from "../data/types";
 
-// Editorial expense row: hairline block, status + Ja Cosmo as small-caps text,
-// the figure in Fraunces. No icon box, no pill badges.
+// Expense row: status + Ja Cosmo as small-caps, the figure on the right.
 export const ExpenseRow = ({
   item,
   showAlloc,
@@ -45,7 +44,7 @@ export const ExpenseRow = ({
         </div>
 
         <div className="shrink-0 text-right">
-          <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${confirmed ? "text-jade-600" : "text-clay-600"}`}>
+          <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${confirmed ? "text-jade-600" : "text-accent-600"}`}>
             {confirmed ? "Confirmé" : "Estimé"}
           </p>
           <p className="mt-1.5 font-display text-[1.5rem] text-ink-900 leading-none tabular-nums">{formatUSD0(item.price_total_usd)}</p>

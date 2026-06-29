@@ -43,7 +43,7 @@ export const TipsChecklist = () => {
                   >
                     <span
                       className={`w-[20px] h-[20px] shrink-0 flex items-center justify-center rounded-md border text-[12px] leading-none transition-colors ${
-                        on ? "bg-clay-600 border-clay-600 text-white" : "border-ink-300 text-transparent"
+                        on ? "bg-accent-600 border-accent-600 text-white" : "border-ink-300 text-transparent"
                       }`}
                     >
                       ✓

@@ -40,7 +40,7 @@ export const DayDeckCard = ({
   const moments = dayMoments(day);
 
   return (
-    <article className="h-full flex flex-col overflow-hidden rounded-[2rem] bg-sand-50 shadow-card">
+    <article className="h-full flex flex-col overflow-hidden rounded-[2rem] bg-surface-50 shadow-card">
       {/* Image + essence (liquid glass lives here, on the photo) */}
       <div className="relative h-[46%] min-h-[230px] shrink-0">
         <SmartImage
@@ -52,13 +52,13 @@ export const DayDeckCard = ({
         />
         <div className="absolute inset-x-0 bottom-0 p-4">
           <div className="glass-on-photo rounded-[1.6rem] px-5 py-4">
-            <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-sand-50 tabular-nums">
+            <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-surface-50 tabular-nums">
               Jour {String(dayNumber).padStart(2, "0")} / {dayTotal} · {safeDateLabel(day.date)}
             </p>
-            <h2 className="mt-1 font-display font-semibold text-sand-50 text-[2.6rem] leading-[0.95] tracking-[-0.01em]">
+            <h2 className="mt-1 font-display font-semibold text-surface-50 text-[2.6rem] leading-[0.95] tracking-[-0.01em]">
               {day.city}
             </h2>
-            <p className="mt-1.5 text-[16px] font-medium text-sand-50 leading-snug">{dayEssence(day)}</p>
+            <p className="mt-1.5 text-[16px] font-medium text-surface-50 leading-snug">{dayEssence(day)}</p>
           </div>
         </div>
       </div>

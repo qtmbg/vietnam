@@ -1,23 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 // ============================================================
-// DESIGN TOKENS — "Apple / Liquid Glass" art direction.
-// Pure white surfaces, neutral system grays, one vibrant accent.
-//   ink   — neutral gray → near-black (text + neutrals, Apple label scale)
-//   sand  — white → light gray SURFACES (the "paper" is now white)
-//   jade  — systemGreen (paid / online / positive)
-//   clay  — systemBlue, the single accent (links, active, figures)
-// brand (systemIndigo) + sun (systemOrange) kept for the quick-sheet tiles.
-// Token names are unchanged so the whole app re-skins from here.
-// theme.ts mirrors these; keep both in sync. Glass material lives in index.css.
+// DESIGN TOKENS — "Apple / Liquid Glass" art direction. Named BY ROLE.
+//   ink     — neutral gray → near-black (text + neutrals, Apple label scale)
+//   surface — white → light gray surfaces (the "paper", pure white)
+//   jade    — systemGreen (paid / online / positive)
+//   accent  — systemBlue, the single accent (links, active tab, figures)
+// One accent only. Glass material lives in index.css; crew tints in theme.ts.
 // ============================================================
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       fontFamily: {
-        // Apple system stack first (SF Pro on Apple devices), Inter as fallback.
-        sans: ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "Inter", "system-ui", "sans-serif"],
-        display: ["-apple-system", "BlinkMacSystemFont", "SF Pro Display", "Inter", "system-ui", "sans-serif"],
+        // Apple system stack (SF Pro on Apple devices), system-ui elsewhere.
+        sans: ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "system-ui", "sans-serif"],
+        display: ["-apple-system", "BlinkMacSystemFont", "SF Pro Display", "system-ui", "sans-serif"],
       },
       colors: {
         // ink — neutral gray scale → near-black (Apple labels/separators)
@@ -25,30 +22,20 @@ export default {
           50: "#f5f5f7", 100: "#ececee", 200: "#e3e3e6", 300: "#d2d2d7", 400: "#aeaeb2",
           500: "#8e8e93", 600: "#6e6e73", 700: "#48484a", 800: "#2c2c2e", 900: "#1d1d1f", 950: "#000000",
         },
-        // sand — white → light-gray SURFACES (no more beige)
-        sand: {
+        // surface — white → light-gray surfaces (the "paper")
+        surface: {
           50: "#ffffff", 100: "#f5f5f7", 200: "#ececee", 300: "#e3e3e6", 400: "#d2d2d7",
           500: "#aeaeb2", 600: "#8e8e93", 700: "#6e6e73", 800: "#48484a", 900: "#2c2c2e", 950: "#1d1d1f",
         },
-        // jade — systemGreen
+        // jade — systemGreen (paid / online / positive)
         jade: {
           50: "#e9f9ef", 100: "#ccf0d8", 200: "#9fe3b5", 300: "#5fd089", 400: "#34c759",
           500: "#28a745", 600: "#1f8c3a", 700: "#1a7331", 800: "#185f2b", 900: "#144d24", 950: "#0a2e15",
         },
-        // clay — systemBlue, the single accent
-        clay: {
+        // accent — systemBlue, the single accent
+        accent: {
           50: "#eaf3ff", 100: "#d6e9ff", 200: "#aed2ff", 300: "#6db8ff", 400: "#2e9bff",
           500: "#0a84ff", 600: "#0071e3", 700: "#0062c4", 800: "#0050a0", 900: "#003f7e", 950: "#002a55",
-        },
-        // brand — systemIndigo (quick-sheet tile)
-        brand: {
-          50: "#eeeefe", 100: "#e0e0fd", 200: "#c6c5fb", 300: "#a5a3f7", 400: "#8482f1",
-          500: "#5e5ce6", 600: "#4b48d6", 700: "#3e3bb5", 800: "#343293", 900: "#2e2c75", 950: "#1c1b46",
-        },
-        // sun — systemOrange (quick-sheet tile)
-        sun: {
-          50: "#fff4e6", 100: "#ffe6c4", 200: "#ffcd89", 300: "#ffb24d", 400: "#ff9f0a",
-          500: "#f59000", 600: "#d97b06", 700: "#b4610b", 800: "#924e0e", 900: "#78400f", 950: "#451f03",
         },
       },
       backgroundImage: {

@@ -10,7 +10,7 @@
  * clair quand il n'y a pas de connexion).
  * ============================================================ */
 
-const VERSION = "v1";
+const VERSION = "v2";
 const CACHE = `vietnam2026-${VERSION}`;
 
 // Coquille minimale précachée à l'installation. Le JS/CSS hashés et les images
@@ -35,9 +35,6 @@ self.addEventListener("activate", (event) => {
       .then(() => self.clients.claim())
   );
 });
-
-const isFont = (url) =>
-  url.hostname.includes("fonts.googleapis.com") || url.hostname.includes("fonts.gstatic.com");
 
 const cacheable = (res) => res && (res.ok || res.type === "opaque");
 
@@ -75,10 +72,11 @@ self.addEventListener("fetch", (event) => {
 
   const sameOrigin = url.origin === self.location.origin;
 
-  // Assets same-origin (JS/CSS/images/SVG) + polices Google : stale-while-revalidate.
-  // On sert immédiatement la version en cache si elle existe, et on rafraîchit en
-  // arrière-plan. Hors-ligne, on garde la copie en cache.
-  if (sameOrigin || isFont(url)) {
+  // Assets same-origin (JS/CSS/images/SVG) : stale-while-revalidate. On sert
+  // immédiatement la version en cache si elle existe, et on rafraîchit en
+  // arrière-plan. Hors-ligne, on garde la copie en cache. (Polices = SF Pro
+  // système, plus aucun téléchargement de font.)
+  if (sameOrigin) {
     event.respondWith(
       caches.open(CACHE).then((cache) =>
         cache.match(request).then((cached) => {

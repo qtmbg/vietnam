@@ -116,8 +116,8 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
             </div>
 
             {!online && (
-              <div className="flex items-start gap-2.5 px-4 py-3 bg-clay-50 border-b border-clay-100 text-[14px] text-clay-800 leading-snug">
-                <WifiOff size={16} className="shrink-0 mt-0.5 text-clay-600" />
+              <div className="flex items-start gap-2.5 px-4 py-3 bg-accent-50 border-b border-accent-100 text-[14px] text-accent-800 leading-snug">
+                <WifiOff size={16} className="shrink-0 mt-0.5 text-accent-600" />
                 <p>
                   <b>Hors-ligne.</b> Mr. Tang a besoin d’une connexion internet pour répondre. Le reste du carnet — itinéraire, hôtels, transferts, budget, guide — reste consultable sans réseau.
                 </p>
@@ -136,7 +136,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
               {messages.map((m, i) =>
                 m.role === "user" ? (
                   <div key={i} className="flex justify-end">
-                    <div className="max-w-[82%] rounded-2xl rounded-tr-md bg-clay-600 text-white p-3 text-sm leading-relaxed whitespace-pre-wrap">{m.content}</div>
+                    <div className="max-w-[82%] rounded-2xl rounded-tr-md bg-accent-600 text-white p-3 text-sm leading-relaxed whitespace-pre-wrap">{m.content}</div>
                   </div>
                 ) : (
                   <div key={i} className="flex gap-2.5">
@@ -146,7 +146,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                       {m.sources && m.sources.length > 0 && (
                         <div className="mt-1.5 flex flex-wrap gap-1.5">
                           {m.sources.map((s, j) => (
-                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[14px] font-semibold text-clay-700 max-w-[170px] truncate">
+                            <a key={j} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-ink-100 text-[14px] font-semibold text-accent-700 max-w-[170px] truncate">
                               <Compass size={11} className="shrink-0" /> {s.title}
                             </a>
                           ))}
@@ -202,7 +202,7 @@ export const MrTang = ({ tripContext, today }: { tripContext: string; today: str
                 type="submit"
                 disabled={loading || !input.trim() || !online}
                 aria-label={online ? "Envoyer" : "Hors-ligne"}
-                className="w-11 h-11 rounded-full bg-clay-600 text-white flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shrink-0"
+                className="w-11 h-11 rounded-full bg-accent-600 text-white flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shrink-0"
               >
                 {loading ? <Loader2 size={18} className="animate-spin" /> : online ? <Send size={18} /> : <WifiOff size={18} />}
               </button>

@@ -7,12 +7,12 @@ import { googleMapsSearchUrl } from "../lib/maps";
 import type { PlannedActivity } from "../data/types";
 
 const linkCls =
-  "text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-900 underline underline-offset-4 decoration-clay-400 decoration-1 active:text-clay-600 transition-colors";
+  "text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-900 underline underline-offset-4 decoration-accent-400 decoration-1 active:text-accent-600 transition-colors";
 
 const Spec = ({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) => (
   <div className="py-3 flex items-baseline gap-4">
     <span className="w-[4.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">{label}</span>
-    <span className={`flex-1 text-[15px] leading-snug ${accent ? "font-semibold text-clay-600" : "font-medium text-ink-800"}`}>{value}</span>
+    <span className={`flex-1 text-[15px] leading-snug ${accent ? "font-semibold text-accent-600" : "font-medium text-ink-800"}`}>{value}</span>
   </div>
 );
 
@@ -59,7 +59,7 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
           overlay={
             <>
               <div className="absolute inset-0 bg-gradient-to-t from-ink-950/45 via-transparent to-transparent" />
-              <p className="absolute bottom-4 left-5 text-[11px] font-medium uppercase tracking-[0.2em] text-sand-50/85">
+              <p className="absolute bottom-4 left-5 text-[11px] font-medium uppercase tracking-[0.2em] text-surface-50/85">
                 {a.city}
                 {a.window ? ` · ${a.window}` : ""}
               </p>
@@ -78,7 +78,7 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
         <div className="py-3 flex items-baseline gap-4">
           <span className="w-[4.5rem] shrink-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">Prix</span>
           <span className="flex-1">
-            <span className="block text-[16px] font-semibold text-clay-600">{priceLine}</span>
+            <span className="block text-[16px] font-semibold text-accent-600">{priceLine}</span>
             {rawLine && <span className="block mt-0.5 text-[14px] text-ink-600 tabular-nums">{rawLine}</span>}
           </span>
         </div>

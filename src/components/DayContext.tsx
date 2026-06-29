@@ -6,7 +6,7 @@ const Label = ({ children }: { children: string }) => (
   <span className="w-[5.5rem] shrink-0 pt-0.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-600">{children}</span>
 );
 
-// The unified per-day context (selectDay) rendered as an editorial specs list:
+// The unified per-day context (selectDay) rendered as a ruled specs list:
 // where you sleep, the day's activities, the dated transfer(s), the day cost.
 // Thin rules, no icons; each row taps through to its detail.
 export const DayContext = ({
@@ -53,7 +53,7 @@ export const DayContext = ({
                   key={a.id}
                   type="button"
                   onClick={() => onActivity(a)}
-                  className="text-[16px] font-medium text-ink-900 underline underline-offset-4 decoration-ink-300 decoration-1 active:text-clay-600 transition-colors text-left"
+                  className="text-[16px] font-medium text-ink-900 underline underline-offset-4 decoration-ink-300 decoration-1 active:text-accent-600 transition-colors text-left"
                 >
                   {a.name}
                 </button>
@@ -67,7 +67,7 @@ export const DayContext = ({
       {day.cost.total > 0 && (
         <div className="py-3.5 flex items-baseline gap-4">
           <Label>Coût du jour</Label>
-          <span className="flex-1 text-[16px] font-semibold text-clay-600 tabular-nums">{formatUSD0(day.cost.total)}</span>
+          <span className="flex-1 text-[16px] font-semibold text-accent-600 tabular-nums">{formatUSD0(day.cost.total)}</span>
         </div>
       )}
     </div>

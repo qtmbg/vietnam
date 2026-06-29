@@ -49,7 +49,7 @@ export const CarteView = () => {
                   href={googleMapsSearchUrl(city + " Vietnam")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shrink-0 text-[12px] font-semibold uppercase tracking-[0.14em] text-clay-600 underline underline-offset-4 decoration-clay-300 decoration-1"
+                  className="shrink-0 text-[12px] font-semibold uppercase tracking-[0.14em] text-accent-600 underline underline-offset-4 decoration-accent-300 decoration-1"
                 >
                   Ville ↗
                 </a>

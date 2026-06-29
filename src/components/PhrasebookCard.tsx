@@ -1,7 +1,6 @@
 import type { PhraseItem } from "../data/types";
 
-// Editorial phrasebook: FR as a small-caps label, VN in bold, phonetics in
-// Fraunces italic. Ruled list, no icons.
+// Phrasebook: FR label, VN in bold, phonetics. Ruled list.
 export const PhrasebookCard = ({ items }: { items: PhraseItem[] }) => (
   <section className="card rounded-card px-5 py-4">
     <h3 className="font-display text-[1.7rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">Mots utiles</h3>

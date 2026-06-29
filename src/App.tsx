@@ -140,7 +140,7 @@ export default function App() {
                 aria-label={tab.label}
                 aria-current={active ? "page" : undefined}
                 className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 rounded-[1.4rem] transition-all duration-300 ${
-                  active ? "bg-white text-clay-600 shadow-soft" : "text-ink-500 active:scale-95"
+                  active ? "bg-white text-accent-600 shadow-soft" : "text-ink-500 active:scale-95"
                 }`}
               >
                 <Icon size={21} aria-hidden="true" />

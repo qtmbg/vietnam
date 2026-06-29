@@ -22,7 +22,7 @@ export const Segmented = ({
           onClick={() => onChange(it.id)}
           style={on && accent ? { color: accent } : undefined}
           className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] font-semibold whitespace-nowrap transition-all duration-300 ${
-            on ? `bg-white shadow-soft${accent ? "" : " text-clay-600"}` : "text-ink-500 active:text-ink-700"
+            on ? `bg-white shadow-soft${accent ? "" : " text-accent-600"}` : "text-ink-500 active:text-ink-700"
           }`}
         >
           {it.label}
