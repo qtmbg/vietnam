@@ -158,7 +158,7 @@ export type FlightSeg = {
 export type FlightLeg = { title: string; sub: string; paid: boolean; segs: FlightSeg[] };
 
 // ---- Food guide ----
-export type Dish = { name: string; vi: string; desc: string; where?: string };
+export type Dish = { name: string; vi: string; desc: string; where?: string; img?: string };
 export type FoodCity = { city: string; emoji: string; dishes: Dish[] };
 
 // ---- Family / crew ----
