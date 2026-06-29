@@ -66,16 +66,6 @@ export default function App() {
   const currentDay = useMemo(() => selectDay(currentDayDate), [currentDayDate]);
   const firstCity = baseCity(days[0].city);
 
-  // Strictly AFTER the current day, so it isn't the same transfer already
-  // shown inside the current day's context.
-  const nextTransfer = useMemo(
-    () =>
-      TRIP_DATA.expenses_usd
-        .filter((e) => e.category === "transport" && e.date && e.date > currentDayDate)
-        .sort((a, b) => (a.date! < b.date! ? -1 : 1))[0] ?? null,
-    [currentDayDate]
-  );
-
   const budget = useMemo(() => computeBudget(TRIP_DATA.expenses_usd, TRIP_DATA.hotels), []);
   const tripContext = useMemo(() => buildTripContext(todayISO), [todayISO]);
 
@@ -119,7 +109,6 @@ export default function App() {
           tripLen={tripLen}
           currentDay={currentDay}
           firstCity={firstCity}
-          nextTransfer={nextTransfer}
           goView={goView}
           openFlights={openFlights}
         />
