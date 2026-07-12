@@ -10,7 +10,7 @@
  * clair quand il n'y a pas de connexion).
  * ============================================================ */
 
-const VERSION = "v2";
+const VERSION = "v3";
 const CACHE = `vietnam2026-${VERSION}`;
 
 // Coquille minimale précachée à l'installation. Le JS/CSS hashés et les images
