@@ -32,7 +32,8 @@ export const CarteView = () => {
       </div>
 
       <p className="mb-6 text-[15px] text-ink-600 leading-relaxed">
-        Touchez un lieu pour son adresse à montrer au chauffeur (en vietnamien, à copier) et l'ouvrir dans Maps.
+        Vols et hôtels sont réservés — vos points d'ancrage. Les lieux listés sont des <b>idées</b> à piocher, pas un
+        programme figé : touchez-en un pour l'adresse à montrer au chauffeur (en vietnamien, à copier) et l'ouvrir dans Maps.
       </p>
 
       <div className="space-y-4 pb-20">
@@ -63,7 +64,7 @@ export const CarteView = () => {
                     <NavRow key={h.name} kind="Hôtel" label={h.name} sub={h.dates} onClick={() => setDetail({ kind: "hotel", hotel: h })} />
                   ))}
                   {acts.map((a) => (
-                    <NavRow key={a.id} kind="Lieu" label={a.name} sub={a.window} onClick={() => setDetail({ kind: "activity", activity: a })} />
+                    <NavRow key={a.id} kind="Idée" label={a.name} sub={a.window} onClick={() => setDetail({ kind: "activity", activity: a })} />
                   ))}
                 </div>
               )}

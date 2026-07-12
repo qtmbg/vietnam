@@ -1,39 +1,17 @@
-import { useState } from "react";
 import { MapPin, Baby, ExternalLink } from "lucide-react";
 import { AskTang } from "./AskTang";
 import { googleMapsSearchUrl } from "../lib/maps";
 import type { ThingsCity } from "../data/types";
 
-// "À faire" — things to do, one section per city. A top toggle filters to the
-// kid-friendly highlights (for Aydann 12 & Milann 6). Each spot shows its kind,
-// a hook, ages/duration, a Maps link and an optional booking link.
+// "À faire" — things to do, one section per city: a menu of ideas, nothing
+// booked. Each spot shows its kind, a hook, ages/duration, a Maps link and an
+// optional booking link. A 👶 badge simply flags the family favourites.
 export const ThingsGuide = ({ groups }: { groups: ThingsCity[] }) => {
-  const [kidsOnly, setKidsOnly] = useState(false);
-
   return (
     <div>
-      {/* Kids filter — friendly, prominent */}
-      <div className="mb-5 flex items-center justify-between gap-3 card rounded-card px-4 py-3">
-        <span className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink-800">
-          <Baby size={17} className="text-accent-600" aria-hidden="true" />
-          Avec Aydann & Milann
-        </span>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={kidsOnly}
-          onClick={() => setKidsOnly((v) => !v)}
-          className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-300 ${kidsOnly ? "bg-accent-600" : "bg-ink-300"}`}
-        >
-          <span
-            className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-soft transition-transform duration-300 ${kidsOnly ? "translate-x-[1.4rem]" : "translate-x-0.5"}`}
-          />
-        </button>
-      </div>
-
       <div className="space-y-4">
         {groups.map((g) => {
-          const spots = kidsOnly ? g.spots.filter((s) => s.forKids) : g.spots;
+          const spots = g.spots;
           if (spots.length === 0) return null;
           return (
             <section key={g.city} className="card rounded-card px-5 py-4">

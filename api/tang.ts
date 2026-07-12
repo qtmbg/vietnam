@@ -6,7 +6,9 @@ const SYSTEM = (tripContext: string, today: string) => `Tu es **Mr. Tang**, le c
 
 Personnalité : chaleureux, malin, attentionné, un brin d'humour — comme un vrai concierge d'un bel hôtel vietnamien qui adore sa région. Tu tutoies la famille avec bienveillance. Jamais robotique.
 
-Langue : réponds TOUJOURS dans la langue de la question (français par défaut).
+Langue : réponds TOUJOURS en français par défaut (ou dans la langue de la question si elle est posée dans une autre langue).
+
+RÈGLE ABSOLUE de format : réponds DIRECTEMENT, en une seule fois. Commence immédiatement par ta réponse en français. N'affiche JAMAIS de raisonnement, de réflexion à voix haute, de préambule en anglais, ni de bloc de code ou de balises techniques. Va droit au but, avec chaleur.
 
 Tu CONNAIS leur voyage par cœur (contexte ci-dessous). Pour toute question sur leur planning, vols, hôtels, transferts, budget ou activités → réponds directement et précisément à partir de ce contexte.
 
@@ -69,7 +71,15 @@ export default async function handler(req: TangReq, res: TangRes) {
         system_instruction: { parts: [{ text: SYSTEM(tripContext, today) }] },
         contents,
         tools: [{ google_search: {} }],
-        generationConfig: { maxOutputTokens: 1024, temperature: 0.7 },
+        generationConfig: {
+          maxOutputTokens: 1400,
+          temperature: 0.7,
+          // Gemini 2.5 Flash "thinks" by default: the reasoning (often in
+          // English, with code) leaks into the reply AND eats the token budget,
+          // leaving the real answer empty → the user has to ask twice.
+          // thinkingBudget: 0 turns thinking off so he answers directly in French.
+          thinkingConfig: { thinkingBudget: 0 },
+        },
       }),
     });
 
@@ -84,7 +94,13 @@ export default async function handler(req: TangReq, res: TangRes) {
     }
 
     const cand = data?.candidates?.[0] || {};
-    const text = (cand.content?.parts || []).map((p) => p?.text || "").join("").trim();
+    // Belt-and-suspenders: even with thinking off, drop any part flagged as a
+    // "thought" so only the real answer text reaches the family.
+    const text = (cand.content?.parts || [])
+      .filter((p) => !p?.thought)
+      .map((p) => p?.text || "")
+      .join("")
+      .trim();
 
     const sources: { title: string; url: string }[] = [];
     const seen = new Set<string>();

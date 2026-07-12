@@ -70,7 +70,8 @@ export const GuideView = ({
         {tab === "afaire" && (
           <div>
             <p className="mb-5 text-[15px] text-ink-600 leading-relaxed">
-              Quoi faire dans chaque étape — avec un filtre pour ne garder que les sorties pensées pour Aydann & Milann.
+              Un <b>menu d'idées</b> par étape — rien n'est réservé ni figé. On pioche au fil de l'envie, de la météo et de
+              l'énergie du jour. Le badge 👶 repère simplement les sorties qui plaisent le plus à Aydann & Milann.
             </p>
             <ThingsGuide groups={THINGS_TODO} />
           </div>

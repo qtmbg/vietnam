@@ -3,6 +3,7 @@ import { X, Send, Loader2, Compass, WifiOff } from "lucide-react";
 import { TANG_SUGGESTIONS } from "../data/trip";
 import { useTang } from "../lib/tangCtx";
 import { useOnline } from "../lib/useOnline";
+import { useBackClose } from "../lib/useBackClose";
 
 const TangAvatar = ({ size = 48, className = "" }: { size?: number; className?: string }) => (
   <svg viewBox="0 0 48 48" width={size} height={size} className={className} aria-hidden="true">
@@ -27,6 +28,8 @@ type TangMsg = { role: "user" | "assistant"; content: string; sources?: { title:
 export const MrTang = ({ tripContext, today }: { tripContext: string; today: string }) => {
   const { open, prefill, openTang, closeTang } = useTang();
   const online = useOnline();
+  // Back gesture closes the concierge instead of leaving the app.
+  useBackClose(open, closeTang);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);

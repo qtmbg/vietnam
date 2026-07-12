@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { useBackClose } from "../lib/useBackClose";
 
 // Generic bottom-sheet modal — reuses the concierge/quick-sheet pattern so
 // any existing card (HotelCard, ActivityCard, ExpenseRow…) can be shown as a
@@ -19,6 +20,9 @@ export const DetailSheet = ({
   onClose: () => void;
   children: ReactNode;
 }) => {
+  // The phone's back gesture closes the sheet instead of leaving the app.
+  useBackClose(open, onClose);
+
   // Lock background scroll while the sheet is open.
   useEffect(() => {
     if (!open) return;
