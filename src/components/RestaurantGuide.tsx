@@ -42,7 +42,7 @@ export const RestaurantGuide = ({ groups }: { groups: RestaurantCity[] }) => (
                   </div>
                 )}
 
-                {(s.must || s.michelin) && (
+                {(s.must || s.michelin || s.timeout) && (
                   <div className="mb-2 flex items-center flex-wrap gap-2">
                     {s.must && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-accent-600 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-white">
@@ -52,6 +52,11 @@ export const RestaurantGuide = ({ groups }: { groups: RestaurantCity[] }) => (
                     {s.michelin && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-ink-900 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-surface-50">
                         <Award size={11} aria-hidden="true" /> Michelin · {s.michelin}
+                      </span>
+                    )}
+                    {s.timeout && (
+                      <span className="inline-flex items-center rounded-full border border-ink-300 bg-white px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-ink-700">
+                        Time Out
                       </span>
                     )}
                   </div>

@@ -186,7 +186,8 @@ export type Restaurant = {
   mapsQuery?: string; // overrides the default "name + city" Maps search
   must?: boolean; // incontournable — the table you don't skip in this city
   img?: string; // photo (typically the signature dish), shown for incontournables
-  michelin?: string; // Michelin Guide distinction, e.g. "Bib Gourmand", "★ (1 étoile)"
+  michelin?: string; // Michelin Guide distinction, e.g. "Bib Gourmand", "Sélection"
+  timeout?: boolean; // recommended by Time Out (timeout.com)
 };
 export type RestaurantCity = { city: string; emoji: string; blurb?: string; spots: Restaurant[] };
 
