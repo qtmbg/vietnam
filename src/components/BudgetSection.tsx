@@ -104,6 +104,16 @@ export const BudgetSection = ({ budget }: { budget: BudgetComputed }) => {
             <Row key={a.id} title={a.title} amount={formatUSD0(a.price_total_usd)} />
           ))}
         </div>
+        {activities.paidItems.length > 0 && (
+          <div className="mt-2 pt-3 border-t border-ink-200 space-y-2">
+            {activities.paidItems.map((a) => (
+              <div key={a.id} className="flex items-baseline justify-between gap-3">
+                <span className="min-w-0 flex-1 text-[14px] text-ink-500 leading-snug truncate">{a.title}</span>
+                <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-jade-500">Payé ✓</span>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Ce qui est compté */}

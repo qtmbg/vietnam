@@ -3,6 +3,7 @@
 // TRIP_DATA, FLIGHTS, FOOD_GUIDE, FAMILY_MEMBERS + static lists.
 // ============================================================
 import { vndToUsdRounded, usdRounded } from "../lib/money";
+import { P } from "../lib/assets";
 import type { TripData, FlightLeg, FoodCity, FamilyMember } from "./types";
 
 // ============================================================
@@ -235,7 +236,10 @@ export const TRIP_DATA: TripData = {
         { label: "Escale", plan: "Escale 14h à Doha prise en charge par Qatar Airways (hôtel + repos). Vol QR982 Doha→Hanoi décollage 20:05 (25 juil) → arrivée Noi Bai le 26 à 07:15." },
         { label: "Matin", plan: "Arrivée 07:15 (terminal T2). Récupérer les bagages, traverser le hall → PILIER N°10 : chauffeur Ja Cosmo avec pancarte au nom (voiture 16 places). Transfert privé, check-in / dépôt bagages, petit-déj + repos. Contact Michael : +84 812 738 866." },
         { label: "Aprem", plan: "Old Quarter + lac Hoan Kiem + cafés (rythme doux, jet-lag)." },
-        { label: "Soir", plan: "Street food + spectacle marionnettes sur l’eau (kids-friendly).", links: ["https://nhahatmuaroithanglong.vn/en/ticket-book/"] },
+        {
+          label: "Soir",
+          plan: "18:15 : départ à pied du Ja Cosmo vers le théâtre Thang Long (57B Đinh Tiên Hoàng, ~450 m, 5–6 min le long du lac). Retrait des billets au guichet (réservé Viator, réf 1422116985) → 18:30 spectacle marionnettes sur l'eau (1 h, places VIP). Après : street food dans le Vieux Quartier.",
+        },
       ],
     },
     {
@@ -611,12 +615,13 @@ export const TRIP_DATA: TripData = {
           operator: "Other",
           operated_by_ja_cosmo: false,
           status: "CONFIRMED",
-          date: null,
+          date: "2026-07-26",
           title: "Spectacle marionnettes sur l'eau (Thang Long) — Hanoi",
           price_total_usd: 29,
           payer_rule: "adult_equal_split",
-          notes: "5 pers × 150 000 VND = $28.88 arrondi à $29.",
-          tags: ["hanoi", "show", "kids"],
+          paid: true,
+          notes: "Réservé & payé via Viator (réf 1422116985) — dim 26 juil 18:30, 5 places VIP.",
+          tags: ["hanoi", "show", "kids", "réservé"],
         },
         {
           id: "A-HAN-002",
@@ -775,22 +780,25 @@ export const TRIP_DATA: TripData = {
         note: "Au bord nord-est du lac Hoàn Kiếm (Hồ Gươm).",
       },
       city: "Hanoi",
-      window: "25–28 juil + 15–17 août",
+      window: "dim 26 juil · 18:30",
       name: "Spectacle marionnettes sur l’eau (Thang Long)",
       category: "show",
-      duration: "50 min",
+      duration: "1 h",
       bestTime: "Soir",
       pricing: {
         currency: "VND",
         vnd_adult: 150_000,
         estimatedUSD_adult: vndToUsdRounded(150_000),
       },
-      kidsRule: "5 personnes × 150 000 VND. Siège Standard.",
+      kidsRule: "5 places VIP 1ʳᵉ classe (rangs A–G).",
       payMode: "réservation",
-      provider: "Officiel",
-      sourceUrl: "https://nhahatmuaroithanglong.vn/en/ticket-book/",
-      notes: "Total : 750 000 VND = $28.88 pour 5 pers. Arriver 20–30 min avant.",
-      tags: ["kids", "soir"],
+      provider: "Viator · Asia Travel Legend",
+      sourceUrl: "https://nhahatmuaroithanglong.vn/en/",
+      booked: true,
+      doc: P("/docs/activities/billet-marionnettes-thang-long-26juil.pdf"),
+      notes:
+        "Réservé & payé (Viator, réf 1422116985 · conf. VIA-97037536). Retrait des billets au guichet du théâtre ~10 min avant → viser 18:15. Théâtre au bord du lac Hoàn Kiếm, ~450 m du Ja Cosmo (5–6 min à pied).",
+      tags: ["kids", "soir", "réservé"],
     },
     {
       id: "ACT-HAN-002",

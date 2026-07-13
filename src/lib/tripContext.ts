@@ -16,7 +16,12 @@ export const buildTripContext = (today: string) => {
   const days = d.itinerary_days
     .map((x) => `${x.date} ${x.city} [${x.theme.join(", ")}] : ${x.blocks.map((b) => `${b.label}: ${b.plan}`).join(" | ")}`)
     .join("\n");
-  const acts = d.planned_activities.map((a) => `${a.city} — ${a.name} (${a.duration ?? ""}, ${a.bestTime ?? ""})`).join(" ; ");
+  const acts = d.planned_activities
+    .map(
+      (a) =>
+        `${a.city} — ${a.name}${a.window ? ` [${a.window}]` : ""} (${a.duration ?? ""}, ${a.bestTime ?? ""})${a.booked ? " — RÉSERVÉ & PAYÉ, billets en poche" : ""}`
+    )
+    .join(" ; ");
   const transfers = d.expenses_usd
     .filter((e) => e.category === "transport" && e.mode !== "flight_domestic")
     .map((e) => `${e.date ?? "?"} ${e.from}→${e.to}`)

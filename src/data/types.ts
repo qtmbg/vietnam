@@ -116,6 +116,8 @@ export type PlannedActivity = {
   tags?: string[];
   impact?: boolean; // for mode kids
   driver?: DriverInfo; // "à montrer au chauffeur" hand-off
+  booked?: boolean; // réservé & payé — plus rien à organiser
+  doc?: string; // billet/voucher PDF (servi depuis /public/docs)
 };
 
 export interface TripData {

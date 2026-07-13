@@ -36,3 +36,12 @@ export const DOHA_DOCS: TravelDoc[] = [
   { label: "Confirmation hôtel — chambre 2", sub: "Escale Doha · 25 juil", file: P("/docs/doha/receipt-2.pdf") },
   { label: "Confirmation hôtel — chambre 3", sub: "Escale Doha · 25 juil", file: P("/docs/doha/receipt-3.pdf") },
 ];
+
+// Activity tickets — booked & paid in advance (voucher to show / exchange on site).
+export const ACTIVITY_DOCS: TravelDoc[] = [
+  {
+    label: "Marionnettes sur l'eau — Thăng Long",
+    sub: "Dim 26 juil · 18:30 · 5 places VIP · réf Viator 1422116985",
+    file: P("/docs/activities/billet-marionnettes-thang-long-26juil.pdf"),
+  },
+];

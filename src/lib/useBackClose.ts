@@ -8,7 +8,9 @@ import { useEffect, useRef } from "react";
 // way everyone expects on mobile — the same gesture everywhere.
 export function useBackClose(open: boolean, onClose: () => void) {
   const cb = useRef(onClose);
-  cb.current = onClose;
+  useEffect(() => {
+    cb.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return;

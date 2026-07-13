@@ -445,11 +445,11 @@ export const THINGS_TODO: ThingsCity[] = [
       {
         name: "Marionnettes sur l'eau — Thăng Long",
         kind: "Spectacle",
-        why: "Marionnettes dansant sur l'eau, musique live : zéro barrière de langue, parfait pour les petits.",
+        why: "Marionnettes dansant sur l'eau, musique live : zéro barrière de langue, parfait pour les petits. ✓ Déjà réservé pour le dim 26 juil à 18:30 (5 places VIP) — billets à retirer au guichet.",
         forKids: true,
         ages: "tous",
-        duration: "50 min",
-        bookUrl: "https://nhahatmuaroithanglong.vn/en/ticket-book/",
+        duration: "1 h",
+        mapsQuery: "Thang Long Water Puppet Theatre Hanoi",
       },
       {
         name: "Lac Hoàn Kiếm & temple Ngọc Sơn",

@@ -24,9 +24,8 @@ export type BudgetComputed = {
     items: ExpenseItemUSD[]; // unpaid transfers only (flights excluded)
   };
   activities: {
-    total: number; // still to settle on site
-    items: ExpenseItemUSD[]; // unpaid activities only
-    paidItems: ExpenseItemUSD[]; // booked & paid in advance (e.g. Viator)
+    total: number;
+    items: ExpenseItemUSD[];
   };
   grand: { toPay: number };
 };
@@ -48,17 +47,14 @@ export const computeBudget = (expenses: ExpenseItemUSD[], hotels: HotelItem[]): 
     .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? -1 : 1));
   const transfersToPay = sum(transferItems.map((e) => e.price_total_usd));
 
-  // Activities: on-site tickets — booked & paid ones (e.g. Viator) drop out
-  // of the "to settle" total and are listed as already paid.
-  const allActivities = expenses.filter((e) => e.category === "activity");
-  const activityItems = allActivities.filter((e) => !e.paid);
-  const paidActivities = allActivities.filter((e) => e.paid);
+  // Activities: on-site tickets
+  const activityItems = expenses.filter((e) => e.category === "activity");
   const activitiesTotal = sum(activityItems.map((e) => e.price_total_usd));
 
   return {
     hotels: { toPay: hotelsToPay, toPayItems, paidItems },
     transport: { toPay: transfersToPay, paid: flightsPaid, items: transferItems },
-    activities: { total: activitiesTotal, items: activityItems, paidItems: paidActivities },
+    activities: { total: activitiesTotal, items: activityItems },
     grand: { toPay: hotelsToPay + transfersToPay + activitiesTotal },
   };
 };

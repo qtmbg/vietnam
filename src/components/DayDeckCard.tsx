@@ -29,12 +29,14 @@ export const DayDeckCard = ({
   dayNumber,
   dayTotal,
   coverSrc,
+  isToday = false,
   onOpenPractical,
 }: {
   day: ItineraryDay;
   dayNumber: number;
   dayTotal: number;
   coverSrc: string;
+  isToday?: boolean;
   onOpenPractical: () => void;
 }) => {
   const moments = dayMoments(day);
@@ -52,8 +54,14 @@ export const DayDeckCard = ({
         />
         <div className="absolute inset-x-0 bottom-0 p-4">
           <div className="glass-on-photo rounded-[1.6rem] px-5 py-4">
-            <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-surface-50 tabular-nums">
+            <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-surface-50 tabular-nums flex items-center gap-2 flex-wrap">
               Jour {String(dayNumber).padStart(2, "0")} / {dayTotal} · {safeDateLabel(day.date)}
+              {isToday && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-jade-400 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-[0.1em] text-ink-950">
+                  <span className="w-1.5 h-1.5 rounded-full bg-ink-950 motion-safe:animate-breathe" aria-hidden="true" />
+                  Aujourd'hui
+                </span>
+              )}
             </p>
             <h2 className="mt-1 font-display font-semibold text-surface-50 text-[2.6rem] leading-[0.95] tracking-[-0.01em]">
               {day.city}

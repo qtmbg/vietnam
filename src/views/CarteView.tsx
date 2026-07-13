@@ -112,7 +112,12 @@ export const CarteView = () => {
                       <div className="mt-1 border-t border-ink-200 divide-y divide-ink-200">
                         {acts.map((a) => (
                           <div key={a.id} className="py-1">
-                            <NavRow kind="Lieu" label={a.name} sub={a.window} onClick={() => setDetail({ kind: "activity", activity: a })} />
+                            <NavRow
+                              kind="Lieu"
+                              label={a.name}
+                              sub={[a.window, a.booked ? "✓ réservé — billets en poche" : null].filter(Boolean).join(" · ")}
+                              onClick={() => setDetail({ kind: "activity", activity: a })}
+                            />
                             <div className="pb-2.5">
                               <Trajet origin={origin} destination={a.driver?.address ?? `${a.name} ${city}`} />
                             </div>

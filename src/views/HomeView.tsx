@@ -1,4 +1,4 @@
-import { Utensils, Sparkles, Plane } from "lucide-react";
+import { Utensils, Sparkles, Plane, ArrowRightLeft } from "lucide-react";
 import { CinemaHero } from "../components/CinemaHero";
 import { FamilyStrip } from "../components/FamilyStrip";
 import { TipsChecklist } from "../components/TipsChecklist";
@@ -21,6 +21,7 @@ const QuickLinks = ({ openGuide }: { openGuide: (t: GuideTab) => void }) => {
     { tab: "afaire", label: "À faire", icon: Sparkles },
     { tab: "cuisine", label: "Restos", icon: Utensils },
     { tab: "vols", label: "Vols & docs", icon: Plane },
+    { tab: "budget", label: "€ ↔ ₫", icon: ArrowRightLeft },
   ];
   return (
     <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">

@@ -6,7 +6,7 @@ import { DayDetail, type DayDetailState } from "./DayDetail";
 import { DetailSheet } from "./DetailSheet";
 import { selectDay, type DaySelection } from "../lib/day";
 import { dayCoverFromDay } from "../lib/assets";
-import { safeDateLabel } from "../lib/dates";
+import { safeDateLabel, toISO } from "../lib/dates";
 import type { ItineraryDay } from "../data/types";
 
 const reducedMotion = () => typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -51,6 +51,13 @@ export const DayDeck = ({ days, startIndex }: { days: ItineraryDay[]; startIndex
     return { ...s, activities };
   });
 
+  // "Aujourd'hui" = the current itinerary day, only while the trip is running
+  // (itinerary dates aren't consecutive: a day card covers until the next one).
+  const todayISO = toISO(new Date());
+  const inTrip = todayISO >= days[0].date && todayISO <= days[days.length - 1].date;
+  const isToday = (i: number) =>
+    inTrip && days[i].date <= todayISO && (i === days.length - 1 || days[i + 1].date > todayISO);
+
   return (
     <div className="relative">
       <div
@@ -65,6 +72,7 @@ export const DayDeck = ({ days, startIndex }: { days: ItineraryDay[]; startIndex
               dayNumber={i + 1}
               dayTotal={days.length}
               coverSrc={dayCoverFromDay(day)}
+              isToday={isToday(i)}
               onOpenPractical={() => setPractical({ day, sel: sels[i] })}
             />
           </div>

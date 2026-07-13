@@ -1,4 +1,4 @@
-import { Plane, BedDouble } from "lucide-react";
+import { Plane, BedDouble, Ticket } from "lucide-react";
 import { Segmented } from "../components/Segmented";
 import { FoodGuide } from "../components/FoodGuide";
 import { RestaurantGuide } from "../components/RestaurantGuide";
@@ -10,9 +10,10 @@ import { PhrasebookCard } from "../components/PhrasebookCard";
 import { TipsChecklist } from "../components/TipsChecklist";
 import { SimpleListCard } from "../components/SimpleListCard";
 import { BudgetSection } from "../components/BudgetSection";
+import { CurrencyConverter } from "../components/CurrencyConverter";
 import { FOOD_GUIDE, FLIGHTS, MONEY_TIPS, TRIP_DATA } from "../data/trip";
 import { RESTAURANTS, THINGS_TODO } from "../data/guide";
-import { INTL_TICKETS, DOHA_DOCS } from "../data/documents";
+import { INTL_TICKETS, DOHA_DOCS, ACTIVITY_DOCS } from "../data/documents";
 import type { BudgetComputed } from "../lib/budget";
 
 export type GuideTab = "cuisine" | "afaire" | "vols" | "budget" | "infos" | "conseils";
@@ -97,13 +98,25 @@ export const GuideView = ({
               icon={BedDouble}
             />
 
+            <DocCard
+              title="Billets activités"
+              note="Réservés & payés — voucher à présenter sur place (retrait au guichet ~10 min avant)."
+              docs={ACTIVITY_DOCS}
+              icon={Ticket}
+            />
+
             <p className="mt-2 pl-3.5 border-l-2 border-jade-400 text-[15px] text-ink-600 leading-relaxed">
               Tous les vols sont confirmés et payés : billet Qatar Airways émis (réf X6CPNI) et les 4 vols VietJet internes réglés. Chaque vol interne a son billet PDF directement sur la ligne du segment.
             </p>
           </div>
         )}
 
-        {tab === "budget" && <BudgetSection budget={budget} />}
+        {tab === "budget" && (
+          <div className="space-y-4">
+            <CurrencyConverter />
+            <BudgetSection budget={budget} />
+          </div>
+        )}
 
         {tab === "infos" && (
           <div className="space-y-4">

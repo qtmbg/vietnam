@@ -73,6 +73,11 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
         {a.category}
         {a.payMode ? ` · ${a.payMode}` : ""} · {a.provider}
       </p>
+      {a.booked && (
+        <p className="mt-2.5 text-[12px] font-semibold uppercase tracking-[0.14em] text-jade-600">
+          ✓ Réservé · payé — billets en poche
+        </p>
+      )}
 
       <div className="mt-4 border-y border-ink-200 divide-y divide-ink-200">
         <div className="py-3 flex items-baseline gap-4">
@@ -89,6 +94,11 @@ export const ActivityCard = ({ a }: { a: PlannedActivity }) => {
       {a.notes && <p className="mt-4 text-[15px] text-ink-600 leading-relaxed">{a.notes}</p>}
 
       <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+        {a.doc && (
+          <a href={a.doc} target="_blank" rel="noopener noreferrer" className={`${linkCls} text-jade-700 decoration-jade-400`}>
+            🎟 Billet (PDF) →
+          </a>
+        )}
         {a.sourceUrl && (
           <a href={a.sourceUrl} target="_blank" rel="noopener noreferrer" className={linkCls}>
             Source →
