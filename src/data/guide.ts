@@ -3,7 +3,7 @@
 // "À faire" (things to do, kid-friendly flags for Aydann 12 & Milann 6).
 // Curated real, well-known spots per stop on the route.
 // ============================================================
-import type { RestaurantCity, ThingsCity } from "./types";
+import type { RestaurantCity, ThingsCity, CityIdeasGroup } from "./types";
 
 // ============================================================
 // RESTAURANTS — where to eat, per city. Foodie-first picks: the
@@ -23,6 +23,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Le « combo Obama » (bún chả + nem + bière)",
         why: "Là où Obama et Bourdain ont dîné en 2016. Le bún chả de Hanoi dans sa version culte.",
         kids: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/B%C3%BAn_ch%E1%BA%A3_Vietnamese_food.jpg?width=640",
       },
       {
         name: "Phở Gia Truyền Bát Đàn",
@@ -32,6 +34,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Phở bò tái (bœuf saignant)",
         why: "On fait la queue, on paie, on s'assoit : un des phở les plus respectés de la ville.",
         kids: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/Bowl_of_Meatball_pho.jpg?width=640",
       },
       {
         name: "Chả Cá Thăng Long",
@@ -41,6 +45,9 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Chả cá grillé à la poêle, à votre table",
         why: "Un seul plat, grillé devant vous avec vermicelles et cacahuètes. Une institution.",
         kids: true,
+        must: true,
+        michelin: "Bib Gourmand",
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/Ch%E1%BA%A3_c%C3%A1_L%C3%A3_V%E1%BB%8Dng_H%C3%A0_N%E1%BB%99i.jpg?width=640",
       },
       {
         name: "Cà Phê Giảng",
@@ -50,6 +57,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Café à l'œuf (inventé ici en 1946)",
         why: "Le berceau du café à l'œuf : une mousse de jaune d'œuf battue, dense comme un tiramisu.",
         kids: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/C%C3%A0_ph%C3%AA_tr%E1%BB%A9ng.jpg?width=640",
       },
       {
         name: "Pizza 4P's",
@@ -86,6 +95,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Dê tái chanh (chèvre citronnée) + cơm cháy",
         why: "Jardin paisible près des rizières, la référence pour goûter la chèvre de Ninh Bình.",
         kids: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/C%C6%A1m_ch%C3%A1y_kho_qu%E1%BA%B9t.jpg?width=640",
       },
       {
         name: "Father Cooking Restaurant",
@@ -131,6 +142,7 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Chả mực (gâteau de calamar) de Hạ Long",
         why: "Une institution locale des fruits de mer, parfaite pour goûter le fameux chả mực.",
         kids: true,
+        must: true,
       },
       {
         name: "Cua Vàng Restaurant",
@@ -167,6 +179,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         why: "Rendu célèbre par Anthony Bourdain : « le meilleur sandwich du monde ». Incontournable.",
         kids: true,
         veg: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/B%C3%A1nh_m%C3%AC_th%E1%BB%8Bt_n%C6%B0%E1%BB%9Bng.png?width=640",
       },
       {
         name: "Madam Khánh — The Bánh Mì Queen",
@@ -187,6 +201,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         why: "Le restaurant de la chef Miss Vy : tous les classiques de Hội An, bien faits, cadre superbe.",
         kids: true,
         veg: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/Cao_l%E1%BA%A7u_H%E1%BB%99i_An_%282024%29.jpg?width=640",
       },
       {
         name: "Reaching Out Tea House",
@@ -234,6 +250,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Mì Quảng poulet/crevette",
         why: "La référence pour le plat-emblème de Da Nang : nouilles jaunes, peu de bouillon, galette grillée.",
         kids: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/M%C3%AC_Qu%E1%BA%A3ng%2C_Da_Nang%2C_Vietnam.jpg?width=640",
       },
       {
         name: "Bánh Xèo Bà Dưỡng",
@@ -243,6 +261,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Crêpes croustillantes + brochettes nem lụi",
         why: "Au fond d'une ruelle pleine de monde : on roule soi-même les crêpes dans la galette de riz.",
         kids: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/Banh_Xeo_with_fish_sauce_and_vegetables.jpg?width=640",
       },
       {
         name: "Madame Lân",
@@ -278,6 +298,9 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Côte de porc géante grillée + riz brisé",
         why: "Souvent cité comme le meilleur cơm tấm de la ville : la côtelette déborde de l'assiette.",
         kids: true,
+        must: true,
+        michelin: "Bib Gourmand",
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/C%C6%A1m_T%E1%BA%A5m%2C_Da_Nang%2C_Vietnam.jpg?width=640",
       },
       {
         name: "Bánh Mì Huỳnh Hoa",
@@ -287,6 +310,8 @@ export const RESTAURANTS: RestaurantCity[] = [
         signature: "Bánh mì « tout » ultra-garni",
         why: "Le bánh mì le plus généreux de Saigon : charcuterie, pâté, beurre, herbes. Démesuré et culte.",
         kids: true,
+        must: true,
+        img: "https://commons.wikimedia.org/wiki/Special:FilePath/B%C3%A1nh_m%C3%AC_Vi%E1%BB%87t_Anh%2C_Th%C3%A0nh_ph%E1%BB%91_H%E1%BB%93_Ch%C3%AD_Minh.jpg?width=640",
       },
       {
         name: "Quán Ăn Ngon (138 Nam Kỳ)",
@@ -859,6 +884,84 @@ export const THINGS_TODO: ThingsCity[] = [
         duration: "Soirée",
         mapsQuery: "Saigon River dinner cruise Bach Dang",
       },
+    ],
+  },
+];
+
+// ============================================================
+// CITY_IDEAS — pour la Carte : une réserve d'idées par ville, notées 1–5 ★
+// selon l'importance de ne pas les rater. Rien de réservé : on pioche selon
+// l'envie. Les ★★★★★ sont les grands classiques ; les plus basses, des bonus.
+// ============================================================
+export const CITY_IDEAS: CityIdeasGroup[] = [
+  {
+    city: "Hanoi",
+    ideas: [
+      { name: "Vieux Quartier & lac Hoàn Kiếm", kind: "Balade", stars: 5, why: "Le cœur battant de Hanoi, à faire à pied : ruelles des 36 corporations, pont rouge et temple sur l'îlot.", mapsQuery: "Hoan Kiem Lake Hanoi" },
+      { name: "Train Street (Phố đường tàu)", kind: "Insolite", stars: 4, why: "Le train frôle les cafés : grand frisson pour les enfants, à l'heure du passage.", mapsQuery: "Hanoi Train Street Phung Hung" },
+      { name: "Temple de la Littérature", kind: "Culture", stars: 4, why: "Première université du Vietnam (1070), jardins et pavillons paisibles.", mapsQuery: "Temple of Literature Hanoi" },
+      { name: "Musée d'ethnographie", kind: "Musée", stars: 3, why: "Maisons sur pilotis à explorer dehors, marionnettes : très vivant pour les petits.", mapsQuery: "Vietnam Museum of Ethnology" },
+      { name: "Cité impériale de Thăng Long", kind: "Histoire", stars: 3, why: "Portes, palais et bunker de guerre à explorer, en plein centre (UNESCO).", mapsQuery: "Imperial Citadel of Thang Long Hanoi" },
+    ],
+  },
+  {
+    city: "Ninh Binh",
+    ideas: [
+      { name: "Tam Cốc — barque (rivière Ngô Đồng)", kind: "Nature", stars: 5, why: "La « baie d'Hạ Long terrestre » : deux heures de barque entre rizières et falaises.", mapsQuery: "Tam Coc boat tour Ninh Binh" },
+      { name: "Hang Múa — point de vue du dragon", kind: "Rando", stars: 4, why: "~500 marches jusqu'à la vue plongeante sur Tam Cốc. Défi et récompense.", mapsQuery: "Hang Mua viewpoint Ninh Binh" },
+      { name: "Vélo dans les rizières", kind: "Vélo", stars: 4, why: "Routes plates entre pains de sucre et buffles : la liberté à hauteur d'enfant.", mapsQuery: "Tam Coc rice fields cycling" },
+      { name: "Ancienne capitale Hoa Lư", kind: "Histoire", stars: 3, why: "Première capitale du Vietnam (Xᵉ s.) : deux temples royaux au pied des montagnes.", mapsQuery: "Hoa Lu Ancient Capital Ninh Binh" },
+      { name: "Parc national de Cúc Phương", kind: "Nature", stars: 3, why: "Centre de sauvegarde des primates et forêt primaire : superbe demi-journée nature.", mapsQuery: "Cuc Phuong National Park" },
+    ],
+  },
+  {
+    city: "Ha Long",
+    ideas: [
+      { name: "Croisière — kayak & grottes", kind: "Nature", stars: 5, why: "Le cœur du séjour : karsts, baignade, grotte de la Surprise, calmar le soir.", mapsQuery: "Halong Bay cruise" },
+      { name: "Île Ti Tốp — plage & belvédère", kind: "Plage", stars: 4, why: "Baignade puis montée rapide à un point de vue à 360° sur la baie.", mapsQuery: "Ti Top Island Halong" },
+      { name: "Grottes Thiên Cung & Đầu Gỗ", kind: "Nature", stars: 4, why: "Deux grandes grottes illuminées, concrétions spectaculaires : sec et magique.", mapsQuery: "Thien Cung Cave Halong" },
+      { name: "Village flottant de Cửa Vạn", kind: "Culture", stars: 3, why: "Barque à rames entre les maisons sur l'eau du village de pêcheurs. Hors du temps.", mapsQuery: "Cua Van floating village Halong" },
+      { name: "Sun World — téléphérique & parc", kind: "Parc", stars: 2, why: "Cabine géante, grande roue et parc aquatique : journée kids si le temps le permet.", mapsQuery: "Sun World Halong" },
+    ],
+  },
+  {
+    city: "Hoi An",
+    ideas: [
+      { name: "Vieille ville la nuit (lanternes)", kind: "Balade", stars: 5, why: "Rues piétonnes baignées de lanternes, ponts, échoppes de soie : la carte postale.", mapsQuery: "Hoi An Ancient Town" },
+      { name: "Lâcher de lanternes sur la rivière", kind: "Magie", stars: 4, why: "En barque, on dépose une lanterne-bougie sur l'eau. Inoubliable pour les enfants.", mapsQuery: "Hoi An lantern boat Thu Bon" },
+      { name: "Plage d'An Bàng", kind: "Plage", stars: 4, why: "Sable doux, paillotes décontractées, mer calme : la parenthèse baignade.", mapsQuery: "An Bang Beach Hoi An" },
+      { name: "Sanctuaire de Mỹ Sơn (UNESCO)", kind: "Histoire", stars: 3, why: "Tours-temples Cham en briques rouges dans la jungle : excursion matinale.", mapsQuery: "My Son Sanctuary" },
+      { name: "Barque-panier de Cẩm Thanh", kind: "Nature", stars: 3, why: "Tour en thúng chai dans la cocoteraie, danses de barques et crabes. Très drôle.", mapsQuery: "Cam Thanh basket boat Hoi An" },
+    ],
+  },
+  {
+    city: "Da Nang",
+    ideas: [
+      { name: "Bà Nà Hills & Pont d'Or", kind: "Parc", stars: 5, why: "Téléphérique record, Mains géantes et Fantasy Park couvert. La grosse journée fun.", mapsQuery: "Ba Na Hills Golden Bridge Da Nang" },
+      { name: "Montagnes de Marbre", kind: "Nature", stars: 4, why: "Grottes-pagodes, escaliers et ascenseur panoramique. Aventure de pierre.", mapsQuery: "Marble Mountains Da Nang" },
+      { name: "Sơn Trà & Bouddha géant (Linh Ứng)", kind: "Nature", stars: 3, why: "Bouddha blanc de 67 m face à la mer, singes langurs et vue immense.", mapsQuery: "Linh Ung Pagoda Son Tra" },
+      { name: "Pont du Dragon — show feu & eau", kind: "Spectacle", stars: 3, why: "Sam. & dim. 21 h : le dragon crache feu et eau au-dessus de la foule. Gratuit.", mapsQuery: "Dragon Bridge Da Nang" },
+      { name: "Plage de Mỹ Khê", kind: "Plage", stars: 3, why: "Longue plage de sable, vagues douces : pause baignade entre deux visites.", mapsQuery: "My Khe Beach Da Nang" },
+    ],
+  },
+  {
+    city: "Whale Island",
+    ideas: [
+      { name: "Snorkeling dans le lagon", kind: "Mer", stars: 5, why: "Masque & tuba devant le resort : poissons colorés et eau claire, pour tous.", mapsQuery: "Whale Island Resort Vietnam" },
+      { name: "Kayak & paddle", kind: "Mer", stars: 4, why: "On longe l'île à son rythme, on accoste sur des criques désertes. Liberté totale." },
+      { name: "Plage & farniente", kind: "Plage", stars: 4, why: "Hamacs, sable, zéro voiture, zéro écran : le luxe de la déconnexion." },
+      { name: "Sortie bateau vers les criques", kind: "Mer", stars: 3, why: "Le resort emmène vers des plages désertes et spots de snorkeling rien qu'à soi." },
+      { name: "Randonnée sur l'île", kind: "Rando", stars: 2, why: "Un sentier grimpe jusqu'à un point de vue sur la baie de Vân Phong." },
+    ],
+  },
+  {
+    city: "Ho Chi Minh City",
+    ideas: [
+      { name: "Delta du Mékong — à la journée", kind: "Nature", stars: 5, why: "Barque dans les arroyos, vergers, fabrique de bonbons coco. Grand dépaysement.", mapsQuery: "Mekong Delta My Tho day tour" },
+      { name: "AO Show — Opéra de Saigon", kind: "Spectacle", stars: 4, why: "Acrobaties en bambou, musique live, poésie sans paroles : bluffant à tout âge.", mapsQuery: "Saigon Opera House AO Show" },
+      { name: "Musée des vestiges de la guerre", kind: "Histoire", stars: 4, why: "Le musée le plus marquant sur la guerre. Poignant — plutôt pour Aydann.", mapsQuery: "War Remnants Museum Ho Chi Minh City" },
+      { name: "Poste centrale & Notre-Dame", kind: "Culture", stars: 3, why: "Saigon coloniale en 30 min de marche : la poste signée Eiffel, la cathédrale rouge.", mapsQuery: "Saigon Central Post Office" },
+      { name: "Marché Bến Thành", kind: "Marché", stars: 3, why: "Souvenirs, fruits exotiques et street-food : on marchande en s'amusant.", mapsQuery: "Ben Thanh Market Ho Chi Minh City" },
     ],
   },
 ];

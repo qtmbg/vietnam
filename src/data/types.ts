@@ -184,8 +184,21 @@ export type Restaurant = {
   kids?: boolean; // comfortable with Aydann & Milann
   veg?: boolean; // solid vegetarian options
   mapsQuery?: string; // overrides the default "name + city" Maps search
+  must?: boolean; // incontournable — the table you don't skip in this city
+  img?: string; // photo (typically the signature dish), shown for incontournables
+  michelin?: string; // Michelin Guide distinction, e.g. "Bib Gourmand", "★ (1 étoile)"
 };
 export type RestaurantCity = { city: string; emoji: string; blurb?: string; spots: Restaurant[] };
+
+// ---- Carte ideas (per city, rated 1–5 stars by "must-do" importance) ----
+export type CityIdea = {
+  name: string;
+  kind: string; // "Culture", "Nature", "Plage", "Vue"…
+  stars: 1 | 2 | 3 | 4 | 5; // importance : 5 = à ne surtout pas rater
+  why: string; // one-line hook
+  mapsQuery?: string; // overrides the default "name + city" Maps search
+};
+export type CityIdeasGroup = { city: string; ideas: CityIdea[] };
 
 // ---- Things to do (per city, with kid-friendly flags for Aydann 12 & Milann 6) ----
 export type Thing = {
