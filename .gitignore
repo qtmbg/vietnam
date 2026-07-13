@@ -30,3 +30,6 @@ dist-ssr
 # The app serves the lean copies committed under public/docs/.
 /Flights/
 /Accomodation Doha/
+
+# macOS/VS Code sync-conflict copies ("file 2.ts") — never commit these
+* 2.*
