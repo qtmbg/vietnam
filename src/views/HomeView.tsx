@@ -1,18 +1,81 @@
-import { Utensils, Sparkles, Plane, ArrowRightLeft } from "lucide-react";
+import { useState } from "react";
+import { Utensils, Sparkles, Plane, ArrowRightLeft, BedDouble } from "lucide-react";
 import { CinemaHero } from "../components/CinemaHero";
 import { FamilyStrip } from "../components/FamilyStrip";
-import { TipsChecklist } from "../components/TipsChecklist";
 import { DayDeck } from "../components/DayDeck";
+import { DayDetail, type DayDetailState } from "../components/DayDetail";
+import { FlightLegCard } from "../components/FlightLegCard";
+import { SmartImage } from "../components/SmartImage";
 import { FAMILY_MEMBERS, FLIGHTS, TRIP_DATA } from "../data/trip";
-import { cityCoverFromLabel, dayCoverFromDay } from "../lib/assets";
+import { ASSETS, P, cityCoverFromLabel, dayCoverFromDay } from "../lib/assets";
 import type { DaySelection } from "../lib/day";
-import type { TripMode, View } from "../data/types";
+import type { HotelItem, TripMode, View } from "../data/types";
 import type { GuideTab } from "./GuideView";
 
 const baseCity = (label: string) => label.split("→").map((s) => s.trim())[0];
 
 const Kicker = ({ children }: { children: string }) => (
   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-600">{children}</p>
+);
+
+// The next international leg, in full — real segments, times, codes, "Payé".
+// A ticket, not a teaser: this IS the flight, not a link promising one.
+const NextFlight = ({ leg, onSeeAll }: { leg: (typeof FLIGHTS)[number]; onSeeAll: () => void }) => (
+  <div>
+    <div className="mb-3 flex items-center justify-between gap-3">
+      <div className="flex items-center gap-2.5">
+        <Plane size={17} className="text-accent-600" aria-hidden="true" />
+        <Kicker>Prochain vol</Kicker>
+      </div>
+      <button
+        type="button"
+        onClick={onSeeAll}
+        className="shrink-0 text-[12px] font-semibold uppercase tracking-[0.14em] text-accent-600 active:text-accent-700"
+      >
+        Tous les vols →
+      </button>
+    </div>
+    <div className="[&>section]:mb-0">
+      <FlightLegCard leg={leg} />
+    </div>
+  </div>
+);
+
+// Where we sleep, as a swipeable strip of real photos — the whole chain at a
+// glance. One tap opens the full HotelCard (address, driver, booking link)
+// via the shared DayDetail sheet: an action away, never a dead end.
+const StayStrip = ({ hotels, onOpen }: { hotels: HotelItem[]; onOpen: (h: HotelItem) => void }) => (
+  <div>
+    <div className="mb-3 flex items-center gap-2.5">
+      <BedDouble size={17} className="text-accent-600" aria-hidden="true" />
+      <Kicker>{`Logement · ${hotels.length} étapes`}</Kicker>
+    </div>
+    <div className="-mx-7 flex gap-3.5 overflow-x-auto no-scrollbar snap-x snap-mandatory px-7 pb-1">
+      {hotels.map((h) => (
+        <button
+          key={h.name}
+          type="button"
+          onClick={() => onOpen(h)}
+          className="relative h-[13rem] w-[76%] max-w-[19rem] shrink-0 snap-start overflow-hidden rounded-[1.6rem] text-left active:scale-[0.98] transition-transform"
+        >
+          <SmartImage
+            src={h.cover ? P(h.cover) : ASSETS.covers.sections.hotels}
+            alt={h.name}
+            fallback={ASSETS.covers.sections.hotels}
+            className="absolute inset-0 h-full w-full"
+            overlay={<div className="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/15 to-transparent" />}
+          />
+          <div className="absolute inset-x-0 bottom-0 p-3.5">
+            <div className="glass-on-photo rounded-[1.2rem] px-4 py-3">
+              <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-surface-50/80">{h.city}</p>
+              <p className="mt-1 font-display text-[1.3rem] text-surface-50 leading-tight truncate">{h.name}</p>
+              <p className="mt-1 text-[12px] font-medium text-surface-50/85">{h.dates}</p>
+            </div>
+          </div>
+        </button>
+      ))}
+    </div>
+  </div>
 );
 
 // Quick access into the Guide's richest sections — one tap from the accueil.
@@ -59,6 +122,7 @@ export const HomeView = ({
   openGuide: (t: GuideTab) => void;
 }) => {
   const travel = mode === "travel";
+  const [detail, setDetail] = useState<DayDetailState | null>(null);
 
   const currentCity = currentDay.city ? baseCity(currentDay.city) : firstCity;
   const heroCity = travel ? currentCity : firstCity;
@@ -78,24 +142,15 @@ export const HomeView = ({
         isWithinTrip={travel}
       />
 
-      <div className="px-7 pt-11 space-y-4">
+      <div className="px-7 pt-11 space-y-6">
         <QuickLinks openGuide={openGuide} />
 
+        {/* Avant le départ, l'accueil EST le tableau de bord pratique : vol, puis logement. */}
         {!travel && (
           <>
-            {/* Prochain jalon — le grand départ (ouvre les vols) */}
-            <button type="button" onClick={() => openGuide("vols")} className="card rounded-card px-5 py-4 w-full text-left group">
-              <Kicker>Prochain jalon</Kicker>
-              <div className="mt-3 flex items-end justify-between gap-5">
-                <div className="min-w-0">
-                  <h2 className="font-display text-[2.1rem] text-ink-900 leading-[1.0] tracking-[-0.015em]">Le grand départ</h2>
-                  <p className="mt-2 text-[15px] font-medium text-ink-600">Marrakech → Hanoi · {aller.segs[0]?.dep}</p>
-                </div>
-                <span className="shrink-0 text-ink-300 text-xl leading-none group-active:translate-x-0.5 transition-transform">›</span>
-              </div>
-            </button>
+            <NextFlight leg={aller} onSeeAll={() => openGuide("vols")} />
 
-            <TipsChecklist />
+            <StayStrip hotels={TRIP_DATA.hotels} onOpen={(h) => setDetail({ kind: "hotel", hotel: h })} />
 
             <button
               type="button"
@@ -105,6 +160,8 @@ export const HomeView = ({
               <span className="font-display text-[1.6rem] font-semibold text-ink-900 leading-none tracking-[-0.01em]">Le voyage, jour par jour</span>
               <span className="shrink-0 text-ink-500 text-xl leading-none group-active:translate-x-0.5 transition-transform">→</span>
             </button>
+
+            <DayDetail detail={detail} onClose={() => setDetail(null)} />
           </>
         )}
 
