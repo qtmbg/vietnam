@@ -25,9 +25,13 @@ export const INTERNAL_DOC_BY_RESA: Record<string, string> = {
 
 export const INTERNAL_TICKETS: TravelDoc[] = [
   { label: "VJ723 · HPH → DAD", sub: "01 août · réf 7BYD6X", file: INTERNAL_DOC_BY_RESA["7BYD6X"] },
+  { label: "VJ723 · QR check-in", sub: "À présenter à l'aéroport", file: P("/docs/flights/internal/vj723-hph-dad-qr.pdf") },
   { label: "VJ581 · DAD → CXR", sub: "08 août · réf GPXYYA", file: INTERNAL_DOC_BY_RESA.GPXYYA },
+  { label: "VJ581 · QR check-in", sub: "À présenter à l'aéroport", file: P("/docs/flights/internal/vj581-dad-cxr-qr.pdf") },
   { label: "VJ601 · CXR → SGN", sub: "12 août · réf E9UN3Z", file: INTERNAL_DOC_BY_RESA.E9UN3Z },
+  { label: "VJ601 · QR check-in", sub: "À présenter à l'aéroport", file: P("/docs/flights/internal/vj601-cxr-sgn-qr.pdf") },
   { label: "VJ136 · SGN → HAN", sub: "15 août · réf FCRQ6G", file: INTERNAL_DOC_BY_RESA.FCRQ6G },
+  { label: "VJ136 · QR check-in", sub: "À présenter à l'aéroport", file: P("/docs/flights/internal/vj136-sgn-han-qr.pdf") },
 ];
 
 // Doha stopover — hotel offered by Qatar Airways during the ~14 h layover.
